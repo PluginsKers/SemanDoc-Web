@@ -8,7 +8,7 @@ import { Suspense } from 'react';
 export const metadata = {
   title: '知识库管理系统',
   description:
-    'A user admin dashboard configured with Next.js, Postgres, NextAuth, Tailwind CSS, TypeScript, ESLint, and Prettier.'
+    '用于检索服务的知识库内容管理'
 };
 
 export default function RootLayout({

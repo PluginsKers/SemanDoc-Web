@@ -76,7 +76,7 @@ export default function Add() {
     return (
         <div className="relative w-full text-left rounded-tremor-default bg-tremor-background shadow-tremor-card border-0 p-4 py-6 mt-6">
             <div className="bg-white px-1 py-3 pb-2 pt-3 sm:p-0 sm:pb-2">
-                <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
+                <div className="mt-3 sm:ml-4 sm:mt-0 text-left">
                     <h3 className="text-base font-semibold leading-6 text-gray-900">
                         添加数据
                     </h3>
