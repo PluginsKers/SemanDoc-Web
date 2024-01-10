@@ -8,8 +8,8 @@ import { signIn, signOut } from 'next-auth/react';
 import Image from 'next/image';
 
 const navigation = [
-  { name: 'Dashboard', href: '/' },
-  { name: 'Playground', href: '/playground' }
+  { name: '管理面板', href: '/' },
+  { name: '数据分析', href: '/playground' }
 ];
 
 function classNames(...classes: string[]) {
@@ -115,7 +115,7 @@ export default function Navbar({ user }: { user: any }) {
                               )}
                               onClick={() => signIn('github')}
                             >
-                              Sign in
+                              登录
                             </button>
                           )}
                         </Menu.Item>

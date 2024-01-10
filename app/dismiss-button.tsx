@@ -14,7 +14,7 @@ export default function DismissButton() {
         router.refresh();
       }}
     >
-      Dismiss →
+      忽略 →
     </button>
   );
 }

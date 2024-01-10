@@ -1,0 +1,13 @@
+/* 鼠标悬停时显示隐藏的列 */
+.table-fixed {
+    table-layout: fixed;
+    width: 100%;
+}
+
+.table-fixed .hidden {
+    display: none;
+}
+
+.table-fixed:hover .hidden {
+    display: table-cell;
+}
