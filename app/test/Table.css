@@ -1,0 +1,26 @@
+/* Table.css */
+
+.table-container {
+    overflow-x: auto;
+}
+
+.custom-table {
+    border-collapse: collapse;
+    width: 100%;
+    table-layout: fixed;
+}
+
+.fixed-column {
+    position: sticky;
+    left: 0;
+    background-color: white;
+    z-index: 1;
+}
+
+.slideable {
+    transition: transform 0.3s ease;
+}
+
+.slideable.swiped {
+    transform: translateX(100%);
+}

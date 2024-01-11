@@ -1,20 +1,23 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios';
+import moment from 'moment';
 
 export default function Add() {
     const [tags, setTags] = useState<string[]>([]);
     const [pageContent, setPageContent] = useState('');
     const [tagValue, setTagValue] = useState('');
-    const [selectedDatetime, setSelectedDatetime] = useState(new Date().toISOString().slice(0, 16));
+    const [selectedDatetime, setSelectedDatetime] = useState(moment().format('YYYY-MM-DDTHH:mm'));
 
     async function fetchData() {
         try {
+            const valid_time = Math.round(getTimeDifference(selectedDatetime) / 1000);
+            if (valid_time <= 0) throw new Error('有效时间必须大于0秒');
             const response = await axios.get('https://ai.app.nbpt.edu.cn/api/edit/add', {
                 params: {
                     data: pageContent,
                     metadata: JSON.stringify({
                         tags: tags,
-                        valid_time: getTimeDifference(selectedDatetime)
+                        valid_time: valid_time
                     })
                 },
             });
@@ -26,31 +29,23 @@ export default function Add() {
 
     const getTimeDifference = (d: any) => {
         const currentTime = Date.now();
-        return new Date(d).getTime() - currentTime;
-    };
-
-    const formatDateTime = (e: any) => {
-        const time = e;
-        const parsedDateTime = new Date(time);
-        const formattedDateTime = `${parsedDateTime.getFullYear()}-${String(
-            parsedDateTime.getMonth() + 1
-        ).padStart(2, '0')}-${String(parsedDateTime.getDate()).padStart(2, '0')} ${String(
-            parsedDateTime.getHours()
-        ).padStart(2, '0')}:${String(parsedDateTime.getMinutes()).padStart(2, '0')}`;
-
-        return formattedDateTime;
+        return moment(d).diff(currentTime, 'milliseconds');
     };
 
     const handleDateTimeChange = (e: any) => {
         const selectedDateTime = e.target.value;
-        console.log(selectedDateTime)
-        const currentTime = new Date().toISOString().slice(0, 16);
+        const currentTime = moment().format('YYYY-MM-DDTHH:mm');
+
         if (selectedDateTime < currentTime) {
             return;
         }
+
         setSelectedDatetime(selectedDateTime);
     };
 
+    const formatDateTime = (dateTime: string) => {
+        return moment(dateTime).format('YYYY-MM-DD HH:mm');
+    };
 
     const handlePageContentChange = (e: any) => {
         setPageContent(e.target.value);
@@ -58,7 +53,6 @@ export default function Add() {
 
     const handleTagChange = (e: any) => {
         setTagValue(e.target.value);
-        console.log(tags)
     };
 
     const handleTagKeyPress = (e: any) => {
@@ -116,7 +110,7 @@ export default function Add() {
                                                 type="text"
                                                 value={tagValue}
                                                 onChange={handleTagChange}
-                                                onKeyPress={handleTagKeyPress}
+                                                onKeyDown={handleTagKeyPress}
                                                 className="shadow-sm appearance-none border rounded-md w-full block py-2 px-3 pl-2 text-gray-900 placeholder:text-gray-400 sm:text-sm sm:leading-6 focus:outline-none focus:shadow-outline"
                                                 placeholder="按下回车添加标签"
                                             />

@@ -11,3 +11,18 @@
 .table-fixed:hover .hidden {
     display: table-cell;
 }
+
+.control {
+    right: -64px;
+    top: 0px;
+    height: 100%;
+}
+
+.data-area-row {
+    transition: all .05s;
+}
+
+
+.data-area-row:hover {
+    transform: translateX(-64px);
+}

@@ -56,7 +56,7 @@ export default function IndexPage({
             <Title>知识库</Title>
             <Text>用于检索服务的知识库内容管理</Text>
             <Search searchValue={search} />
-            <Table docs={memoizedDocs} searchValue={search} />
+            <Table docs={memoizedDocs} searchValue={search} setDocs={setDocs} />
             <Add />
         </main>
     );
