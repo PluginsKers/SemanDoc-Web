@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
-import { Title, Text } from '@tremor/react';
 import Search from './search';
 import Table from './table';
 import Add from './add';
@@ -53,8 +52,8 @@ export default function IndexPage({
 
     return (
         <main className="p-4 md:p-10 mx-auto max-w-7xl">
-            <Title>知识库</Title>
-            <Text>用于检索服务的知识库内容管理</Text>
+            <p className='font-medium text-tremor-title text-tremor-content-emphasis'>知识库</p>
+            <p className='text-sm text-gray-500'>用于检索服务的知识库内容管理</p>
             <Search searchValue={search} />
             <Table docs={memoizedDocs} searchValue={search} setDocs={setDocs} />
             <Add docs={memoizedDocs} setDocs={setDocs} />

@@ -1,14 +1,20 @@
+"use client"
+
 import React, { useState, useEffect } from 'react'
 import axios from 'axios';
 import moment from 'moment';
 import { Document } from './page';
+import "easymde/dist/easymde.min.css";
+
+import dynamic from 'next/dynamic'
+const SimpleMdeReact = dynamic(() => import('react-simplemde-editor'), { ssr: false })
 
 export default function Add({ docs, setDocs }: { docs: Document[], setDocs?: any }) {
     const [tags, setTags] = useState<string[]>([]);
     const [pageContent, setPageContent] = useState('');
     const [tagValue, setTagValue] = useState('');
     const [selectedDatetime, setSelectedDatetime] = useState(moment().format('YYYY-MM-DD HH:mm'));
-    const [tip, setTip] = useState<{ status: 'success' | 'error' | null, msg: string }>({ status: null, msg: '' });
+    const [tip, setTip] = useState<{ status: 'success' | 'error' | 'loading' | null, msg: string }>({ status: null, msg: '' });
 
     const clearFormData = () => {
         setPageContent('');
@@ -23,6 +29,7 @@ export default function Add({ docs, setDocs }: { docs: Document[], setDocs?: any
     };
 
     async function fetchData() {
+        setTip({ status: 'loading', msg: '添加中...' });
         try {
             const valid_time = Math.round(getTimeDifference(selectedDatetime) / 1000);
             if (valid_time <= 0) throw '有效时间必须大于0秒';
@@ -40,7 +47,7 @@ export default function Add({ docs, setDocs }: { docs: Document[], setDocs?: any
                 setTip({ status: 'success', msg: '添加成功' });
                 setDocs([...docs, ...result['data']]);
             } else {
-                setTip({ status: 'error', msg: `出现错误：${result['msg']}` });
+                setTip({ status: 'error', msg: result['msg'] });
             }
         } catch (error) {
             console.error('Error fetching data:', error);
@@ -69,7 +76,7 @@ export default function Add({ docs, setDocs }: { docs: Document[], setDocs?: any
     };
 
     const handlePageContentChange = (e: any) => {
-        setPageContent(e.target.value);
+        setPageContent(e);
     };
 
     const handleTagChange = (e: any) => {
@@ -101,14 +108,13 @@ export default function Add({ docs, setDocs }: { docs: Document[], setDocs?: any
                             <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                                 <div className="col-span-full">
                                     <div className="mt-4">
-                                        <textarea
-                                            id="about"
-                                            name="about"
+                                        <SimpleMdeReact
+                                            id="page_content"
                                             value={pageContent}
+                                            options={{ styleSelectedText: false }}
                                             placeholder='请填写 文档/知识 内容，不少于5个字符...'
                                             onChange={handlePageContentChange}
-                                            rows={3}
-                                            className="block w-full rounded-md border py-2 px-3 text-gray-900 shadow-sm placeholder:text-gray-400 sm:leading-6 focus:bg-gray-50"
+                                            className="block w-full rounded-md text-gray-900 placeholder:text-gray-400 sm:leading-6 focus:bg-gray-50"
                                         />
                                     </div>
 
@@ -124,7 +130,7 @@ export default function Add({ docs, setDocs }: { docs: Document[], setDocs?: any
                                                     value={tagValue}
                                                     onChange={handleTagChange}
                                                     onKeyDown={handleTagKeyDown}
-                                                    className="shadow-sm border rounded-md w-full block py-2 px-3 pl-2 text-gray-900 placeholder:text-gray-400 sm:leading-6 focus:bg-gray-50"
+                                                    className="shadow-sm border rounded-md w-full block py-2 px-3 pl-2 text-gray-900 placeholder:text-gray-400 focus:bg-gray-50"
                                                     placeholder="按下回车添加标签"
                                                 />
                                                 <div className='mt-3'>
@@ -172,23 +178,38 @@ export default function Add({ docs, setDocs }: { docs: Document[], setDocs?: any
             </div>
             <div className="py-3 sm:flex sm:flex-row-reverse sm:px-1">
                 <button
-                    type="button"
-                    className="inline-flex w-full justify-center rounded-md bg-slate-500 px-5 py-2 text-white shadow-sm hover:bg-slate-600 sm:ml-3 sm:w-auto"
+                    disabled={tip.status === 'loading'}
+                    className={"cursor-pointer inline-flex w-full justify-center rounded-sm px-5 py-2 text-white shadow-md sm:ml-3 sm:w-auto " + (tip.status === 'loading' ? 'opacity-80 cursor-not-allowed bg-black px-6 ' : (tip.status === 'error' ? 'bg-red-500 hover:bg-red-600 ' : tip.status === 'success' ? 'bg-green-500 hover:bg-green-600 ' : 'bg-slate-500 hover:bg-slate-600 '))}
                     onClick={() => fetchData()}
                 >
-                    添加
+                    {tip.status === 'loading' ? (<svg
+                        className="animate-spin h-5 w-5 text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                    >
+                        <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                        />
+                        <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        />
+                    </svg>) : (tip.status !== null ? tip.msg : '添加')}
                 </button>
                 <button
-                    type="button"
-                    className="mt-3 inline-flex w-full justify-center rounded-md px-5 py-2 text-white shadow-sm bg-red-500 hover:bg-red-600 sm:mt-0 sm:w-auto"
+                    className="cursor-pointer mt-3 inline-flex w-full justify-center rounded-sm px-5 py-2 text-white shadow-md bg-gray-500 hover:bg-gray-600 sm:mt-0 sm:w-auto"
                     onClick={() => clearFormData()}
                 >
                     重置
                 </button>
             </div>
-            {tip.status != null &&
-                (<div className={(tip.status === 'success' ? 'text-green-500' : 'text-red-600') + " py-3 sm:flex sm:flex-row-reverse sm:px-1"}>{tip.msg}</div>)
-            }
         </div>
     );
 }
