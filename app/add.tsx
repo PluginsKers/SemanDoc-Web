@@ -179,7 +179,7 @@ export default function Add({ docs, setDocs }: { docs: Document[], setDocs?: any
             <div className="py-3 sm:flex sm:flex-row-reverse sm:px-1">
                 <button
                     disabled={tip.status === 'loading'}
-                    className={"cursor-pointer inline-flex w-full justify-center rounded-sm px-5 py-2 text-white shadow-md sm:ml-3 sm:w-auto " + (tip.status === 'loading' ? 'opacity-80 cursor-not-allowed bg-black px-6 ' : (tip.status === 'error' ? 'bg-red-500 hover:bg-red-600 ' : tip.status === 'success' ? 'bg-green-500 hover:bg-green-600 ' : 'bg-slate-500 hover:bg-slate-600 '))}
+                    className={"cursor-pointer inline-flex w-full justify-center rounded-sm px-5 py-2 text-white shadow-md sm:ml-3 sm:w-auto " + (tip.status === 'loading' ? 'opacity-80 cursor-not-allowed bg-black px-6 ' : (tip.status === 'error' ? 'bg-red-500 hover:bg-red-600 ' : tip.status === 'success' ? 'bg-green-500 hover:bg-green-600 ' : 'bg-sky-400 hover:bg-sky-500 '))}
                     onClick={() => fetchData()}
                 >
                     {tip.status === 'loading' ? (<svg
