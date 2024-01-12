@@ -76,7 +76,7 @@ export default function Add({ docs, setDocs }: { docs: Document[], setDocs?: any
     };
 
     const handlePageContentChange = (e: any) => {
-        setPageContent(e);
+        setPageContent(e.target.value);
     };
 
     const handleTagChange = (e: any) => {
@@ -108,10 +108,10 @@ export default function Add({ docs, setDocs }: { docs: Document[], setDocs?: any
                             <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                                 <div className="col-span-full">
                                     <div className="mt-4">
-                                        <SimpleMdeReact
+                                        <textarea
                                             id="page_content"
                                             value={pageContent}
-                                            options={{ styleSelectedText: false }}
+                                            rows={5}
                                             placeholder='请填写 文档/知识 内容，不少于5个字符...'
                                             onChange={handlePageContentChange}
                                             className="block w-full rounded-md text-gray-900 placeholder:text-gray-400 sm:leading-6 focus:bg-gray-50"
