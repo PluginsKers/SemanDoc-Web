@@ -17,7 +17,6 @@ export default function Table({ docs, searchValue, setDocs }: { docs: Document[]
                         params: { type: 'ids', target: JSON.stringify([ids]) },
                     });
                     const result = response.data;
-                    console.log(result['code']);
                     if (result['code'] == 200) {
                         successed = true;
                     }

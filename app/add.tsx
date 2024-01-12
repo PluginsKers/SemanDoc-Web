@@ -135,7 +135,7 @@ export default function Add({ docs, setDocs }: { docs: Document[], setDocs?: any
                                                 />
                                                 <div className='mt-3'>
                                                     {tags.map((label, index) => (
-                                                        <span key={index} onClick={() => handleTagDelete(index)} className="cursor-pointer select-none inline-block bg-slate-600 hover:bg-slate-500 rounded-sm px-1.5 py-1 font-semibold text-white mr-1 mb-1">
+                                                        <span key={index} onClick={() => handleTagDelete(index)} className="cursor-pointer select-none inline-block bg-slate-600 hover:bg-slate-500 rounded-sm px-1.5 py-1 text-white mr-1 mb-1">
                                                             {label}
                                                         </span>
                                                     ))}
@@ -161,13 +161,13 @@ export default function Add({ docs, setDocs }: { docs: Document[], setDocs?: any
                                             )}
                                         </div>
                                         <div className="mb-4">
-                                            <div onClick={() => addMinutesToSelectedDatetime(30)} className='cursor-pointer select-none inline-block bg-slate-600 hover:bg-slate-500 rounded-sm px-2 py-1 font-semibold text-white mr-1 mb-1'>30分钟</div>
-                                            <div onClick={() => addMinutesToSelectedDatetime(60)} className='cursor-pointer select-none inline-block bg-slate-600 hover:bg-slate-500 rounded-sm px-2 py-1 font-semibold text-white mr-1 mb-1'>1小时</div>
-                                            <div onClick={() => addMinutesToSelectedDatetime(360)} className='cursor-pointer select-none inline-block bg-slate-600 hover:bg-slate-500 rounded-sm px-2 py-1 font-semibold text-white mr-1 mb-1'>6小时</div>
-                                            <div onClick={() => addMinutesToSelectedDatetime(1440)} className='cursor-pointer select-none inline-block bg-slate-600 hover:bg-slate-500 rounded-sm px-2 py-1 font-semibold text-white mr-1 mb-1'>1天</div>
-                                            <div onClick={() => addMinutesToSelectedDatetime(10080)} className='cursor-pointer select-none inline-block bg-slate-600 hover:bg-slate-500 rounded-sm px-2 py-1 font-semibold text-white mr-1 mb-1'>7天</div>
-                                            <div onClick={() => addMinutesToSelectedDatetime(43200)} className='cursor-pointer select-none inline-block bg-slate-600 hover:bg-slate-500 rounded-sm px-2 py-1 font-semibold text-white mr-1 mb-1'>30天</div>
-                                            <div onClick={() => addMinutesToSelectedDatetime(518400)} className='cursor-pointer select-none inline-block bg-slate-600 hover:bg-slate-500 rounded-sm px-2 py-1 font-semibold text-white mr-1 mb-1'>1年</div>
+                                            <div onClick={() => addMinutesToSelectedDatetime(30)} className='cursor-pointer select-none inline-block bg-slate-600 hover:bg-slate-500 rounded-sm px-2 py-1 text-white mr-1 mb-1'>30分钟</div>
+                                            <div onClick={() => addMinutesToSelectedDatetime(60)} className='cursor-pointer select-none inline-block bg-slate-600 hover:bg-slate-500 rounded-sm px-2 py-1 text-white mr-1 mb-1'>1小时</div>
+                                            <div onClick={() => addMinutesToSelectedDatetime(360)} className='cursor-pointer select-none inline-block bg-slate-600 hover:bg-slate-500 rounded-sm px-2 py-1 text-white mr-1 mb-1'>6小时</div>
+                                            <div onClick={() => addMinutesToSelectedDatetime(1440)} className='cursor-pointer select-none inline-block bg-slate-600 hover:bg-slate-500 rounded-sm px-2 py-1 text-white mr-1 mb-1'>1天</div>
+                                            <div onClick={() => addMinutesToSelectedDatetime(10080)} className='cursor-pointer select-none inline-block bg-slate-600 hover:bg-slate-500 rounded-sm px-2 py-1 text-white mr-1 mb-1'>7天</div>
+                                            <div onClick={() => addMinutesToSelectedDatetime(43200)} className='cursor-pointer select-none inline-block bg-slate-600 hover:bg-slate-500 rounded-sm px-2 py-1 text-white mr-1 mb-1'>30天</div>
+                                            <div onClick={() => addMinutesToSelectedDatetime(518400)} className='cursor-pointer select-none inline-block bg-slate-600 hover:bg-slate-500 rounded-sm px-2 py-1 text-white mr-1 mb-1'>365天</div>
                                         </div>
                                     </div>
                                 </div>
@@ -179,7 +179,7 @@ export default function Add({ docs, setDocs }: { docs: Document[], setDocs?: any
             <div className="py-3 sm:flex sm:flex-row-reverse sm:px-1">
                 <button
                     disabled={tip.status === 'loading'}
-                    className={"cursor-pointer inline-flex w-full justify-center rounded-sm px-5 py-2 text-white shadow-md sm:ml-3 sm:w-auto " + (tip.status === 'loading' ? 'opacity-80 cursor-not-allowed bg-black px-6 ' : (tip.status === 'error' ? 'bg-red-500 hover:bg-red-600 ' : tip.status === 'success' ? 'bg-green-500 hover:bg-green-600 ' : 'bg-sky-400 hover:bg-sky-500 '))}
+                    className={"cursor-pointer inline-flex w-full justify-center rounded-sm px-5 py-2 text-white shadow-sm sm:ml-3 sm:w-auto " + (tip.status === 'loading' ? 'opacity-80 cursor-not-allowed bg-black px-6 ' : (tip.status === 'error' ? 'bg-red-500 hover:bg-red-600 ' : tip.status === 'success' ? 'bg-green-500 hover:bg-green-600 ' : 'bg-sky-400 hover:bg-sky-500 '))}
                     onClick={() => fetchData()}
                 >
                     {tip.status === 'loading' ? (<svg
@@ -204,7 +204,7 @@ export default function Add({ docs, setDocs }: { docs: Document[], setDocs?: any
                     </svg>) : (tip.status !== null ? tip.msg : '添加')}
                 </button>
                 <button
-                    className="cursor-pointer mt-3 inline-flex w-full justify-center rounded-sm px-5 py-2 text-white shadow-md bg-gray-500 hover:bg-gray-600 sm:mt-0 sm:w-auto"
+                    className="cursor-pointer mt-3 inline-flex w-full justify-center rounded-sm px-5 py-2 text-white shadow-sm bg-gray-500 hover:bg-gray-600 sm:mt-0 sm:w-auto"
                     onClick={() => clearFormData()}
                 >
                     重置
