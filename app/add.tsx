@@ -114,7 +114,7 @@ export default function Add({ docs, setDocs }: { docs: Document[], setDocs?: any
                                             rows={5}
                                             placeholder='请填写 文档/知识 内容，不少于5个字符...'
                                             onChange={handlePageContentChange}
-                                            className="block w-full rounded-md text-gray-900 placeholder:text-gray-400 sm:leading-6 focus:bg-gray-50"
+                                            className="block w-full rounded-md border py-2 px-3 text-gray-900 shadow-sm placeholder:text-gray-400 sm:leading-6 focus:bg-gray-50"
                                         />
                                     </div>
 
