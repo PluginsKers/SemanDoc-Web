@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios';
 import moment from 'moment';
+import { Document } from './page';
 
-export default function Add() {
+export default function Add({ docs, setDocs }: { docs: Document[], setDocs?: any }) {
     const [tags, setTags] = useState<string[]>([]);
     const [pageContent, setPageContent] = useState('');
     const [tagValue, setTagValue] = useState('');
     const [selectedDatetime, setSelectedDatetime] = useState(moment().format('YYYY-MM-DD HH:mm'));
+    const [tip, setTip] = useState<{ status: 'success' | 'error' | null, msg: string }>({ status: null, msg: '' });
 
     const clearFormData = () => {
         setPageContent('');
@@ -15,10 +17,15 @@ export default function Add() {
         setSelectedDatetime(moment().format('YYYY-MM-DD HH:mm'));
     }
 
+    const addMinutesToSelectedDatetime = (minutesToAdd: number) => {
+        const newDatetime = moment().add(minutesToAdd, 'minutes').format('YYYY-MM-DD HH:mm');
+        setSelectedDatetime(newDatetime);
+    };
+
     async function fetchData() {
         try {
             const valid_time = Math.round(getTimeDifference(selectedDatetime) / 1000);
-            if (valid_time <= 0) throw new Error('有效时间必须大于0秒');
+            if (valid_time <= 0) throw '有效时间必须大于0秒';
             const response = await axios.get('https://ai.app.nbpt.edu.cn/api/edit/add', {
                 params: {
                     data: pageContent,
@@ -29,8 +36,15 @@ export default function Add() {
                 },
             });
             const result = response.data;
+            if (result['code'] === 200) {
+                setTip({ status: 'success', msg: '添加成功' });
+                setDocs([...docs, ...result['data']]);
+            } else {
+                setTip({ status: 'error', msg: `出现错误：${result['msg']}` });
+            }
         } catch (error) {
             console.error('Error fetching data:', error);
+            setTip({ status: 'error', msg: `出现错误：${error}` });
         }
     }
 
@@ -128,7 +142,7 @@ export default function Add() {
                                         <label htmlFor="datePicker" className="my-2 mt-4 text-base block font-medium leading-6 text-gray-900">
                                             截止日期
                                         </label>
-                                        <div className="pb-4">
+                                        <div className="mb-2">
                                             <input
                                                 id="datePicker"
                                                 type="datetime-local"
@@ -137,8 +151,17 @@ export default function Add() {
                                                 className="shadow-sm border rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:bg-gray-50"
                                             />
                                             {selectedDatetime && (
-                                                <p className="text-gray-500 mt-2">选择的日期: {formatDateTime(selectedDatetime)}</p>
+                                                <p className="text-gray-400 mt-2">选择的日期: {formatDateTime(selectedDatetime)}</p>
                                             )}
+                                        </div>
+                                        <div className="mb-4">
+                                            <div onClick={() => addMinutesToSelectedDatetime(30)} className='cursor-pointer select-none inline-block bg-slate-600 hover:bg-slate-500 rounded-sm px-2 py-1 font-semibold text-white mr-1 mb-1'>30分钟</div>
+                                            <div onClick={() => addMinutesToSelectedDatetime(60)} className='cursor-pointer select-none inline-block bg-slate-600 hover:bg-slate-500 rounded-sm px-2 py-1 font-semibold text-white mr-1 mb-1'>1小时</div>
+                                            <div onClick={() => addMinutesToSelectedDatetime(360)} className='cursor-pointer select-none inline-block bg-slate-600 hover:bg-slate-500 rounded-sm px-2 py-1 font-semibold text-white mr-1 mb-1'>6小时</div>
+                                            <div onClick={() => addMinutesToSelectedDatetime(1440)} className='cursor-pointer select-none inline-block bg-slate-600 hover:bg-slate-500 rounded-sm px-2 py-1 font-semibold text-white mr-1 mb-1'>1天</div>
+                                            <div onClick={() => addMinutesToSelectedDatetime(10080)} className='cursor-pointer select-none inline-block bg-slate-600 hover:bg-slate-500 rounded-sm px-2 py-1 font-semibold text-white mr-1 mb-1'>7天</div>
+                                            <div onClick={() => addMinutesToSelectedDatetime(43200)} className='cursor-pointer select-none inline-block bg-slate-600 hover:bg-slate-500 rounded-sm px-2 py-1 font-semibold text-white mr-1 mb-1'>30天</div>
+                                            <div onClick={() => addMinutesToSelectedDatetime(518400)} className='cursor-pointer select-none inline-block bg-slate-600 hover:bg-slate-500 rounded-sm px-2 py-1 font-semibold text-white mr-1 mb-1'>1年</div>
                                         </div>
                                     </div>
                                 </div>
@@ -163,6 +186,9 @@ export default function Add() {
                     重置
                 </button>
             </div>
+            {tip.status != null &&
+                (<div className={(tip.status === 'success' ? 'text-green-500' : 'text-red-600') + " py-3 sm:flex sm:flex-row-reverse sm:px-1"}>{tip.msg}</div>)
+            }
         </div>
     );
 }

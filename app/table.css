@@ -15,7 +15,7 @@
 .control {
     right: -64px;
     top: 0px;
-    height: 101%;
+    height: 100%;
     width: 64px;
 }
 
@@ -25,5 +25,5 @@
 
 
 .data-area-row:hover {
-    transform: translateX(-64px);
+    transform: translateX(-60px);
 }
