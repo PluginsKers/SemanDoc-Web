@@ -1,3 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+textarea,
+input {
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+}

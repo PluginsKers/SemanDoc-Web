@@ -6,7 +6,14 @@ export default function Add() {
     const [tags, setTags] = useState<string[]>([]);
     const [pageContent, setPageContent] = useState('');
     const [tagValue, setTagValue] = useState('');
-    const [selectedDatetime, setSelectedDatetime] = useState(moment().format('YYYY-MM-DDTHH:mm'));
+    const [selectedDatetime, setSelectedDatetime] = useState(moment().format('YYYY-MM-DD HH:mm'));
+
+    const clearFormData = () => {
+        setPageContent('');
+        setTagValue('');
+        setTags([]);
+        setSelectedDatetime(moment().format('YYYY-MM-DD HH:mm'));
+    }
 
     async function fetchData() {
         try {
@@ -55,8 +62,12 @@ export default function Add() {
         setTagValue(e.target.value);
     };
 
-    const handleTagKeyPress = (e: any) => {
+    const handleTagKeyDown = (e: any) => {
         if (e.key === 'Enter') {
+            if (tagValue.length == 0) return;
+            for (let i = 0; i < tags.length; i++) {
+                if (tags[i] == tagValue) return;
+            }
             setTags([...tags, tagValue]);
             setTagValue('');
         }
@@ -68,68 +79,67 @@ export default function Add() {
     };
 
     return (
-        <div className="relative w-full text-left rounded-tremor-default bg-tremor-background shadow-tremor-card border-0 p-4 py-6 mt-6">
+        <div className="relative w-full text-sm text-left rounded-lg bg-white shadow-sm p-4 py-4 mt-6">
             <div className="bg-white px-1 py-3 pb-2 pt-3 sm:p-0 sm:pb-2">
-                <div className="mt-3 sm:ml-4 sm:mt-0 text-left">
-                    <h3 className="text-base font-semibold leading-6 text-gray-900">
-                        添加数据
-                    </h3>
+                <div className="sm:ml-4 sm:mt-0 text-left">
                     <div className="mt-2">
                         <div className="space-y-12">
-                            <div className="mt-2 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                            <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                                 <div className="col-span-full">
-                                    <label htmlFor="about" className="block text-sm font-medium leading-6 text-gray-900">
-                                        内容
-                                    </label>
-                                    <div className="mt-2">
+                                    <div className="mt-4">
                                         <textarea
                                             id="about"
                                             name="about"
                                             value={pageContent}
+                                            placeholder='请填写 文档/知识 内容，不少于5个字符...'
                                             onChange={handlePageContentChange}
                                             rows={3}
-                                            className="block w-full rounded-md border py-2 px-3 text-gray-900 shadow-sm placeholder:text-gray-400 sm:text-sm sm:leading-6 focus:outline-none focus:shadow-outline"
+                                            className="block w-full rounded-md border py-2 px-3 text-gray-900 shadow-sm placeholder:text-gray-400 sm:leading-6 focus:bg-gray-50"
                                         />
                                     </div>
-                                    <p className="mt-2 text-sm leading-6 text-gray-600">内容需至少有5个字符</p>
 
-                                    <label htmlFor="tagPicker" className="mt-4 block text-sm font-medium leading-6 text-gray-900">
-                                        添加数据标签
-                                    </label>
-                                    <div className='mb-4'>
-                                        <div>
-                                            <div className='mb-2'>
-                                                {tags.map((label, index) => (
-                                                    <span key={index} onClick={() => handleTagDelete(index)} className="cursor-pointer inline-block bg-gray-200 hover:bg-gray-300 rounded-md px-3 py-1.5 text-sm font-semibold text-gray-700 mr-1.5 mt-1.5">
-                                                        {label}
-                                                    </span>
-                                                ))}
+                                    <div className="mt-8">
+                                        <label htmlFor="tagPicker" className="my-2 mt-4 text-base block font-medium leading-6 text-gray-900">
+                                            数据标签
+                                        </label>
+                                        <div className='mb-2'>
+                                            <div>
+                                                <input
+                                                    id="tagPicker"
+                                                    type="text"
+                                                    value={tagValue}
+                                                    onChange={handleTagChange}
+                                                    onKeyDown={handleTagKeyDown}
+                                                    className="shadow-sm border rounded-md w-full block py-2 px-3 pl-2 text-gray-900 placeholder:text-gray-400 sm:leading-6 focus:bg-gray-50"
+                                                    placeholder="按下回车添加标签"
+                                                />
+                                                <div className='mt-3'>
+                                                    {tags.map((label, index) => (
+                                                        <span key={index} onClick={() => handleTagDelete(index)} className="cursor-pointer select-none inline-block bg-slate-600 hover:bg-slate-500 rounded-sm px-1.5 py-1 font-semibold text-white mr-1 mb-1">
+                                                            {label}
+                                                        </span>
+                                                    ))}
+                                                </div>
                                             </div>
-                                            <input
-                                                id="tagPicker"
-                                                type="text"
-                                                value={tagValue}
-                                                onChange={handleTagChange}
-                                                onKeyDown={handleTagKeyPress}
-                                                className="shadow-sm appearance-none border rounded-md w-full block py-2 px-3 pl-2 text-gray-900 placeholder:text-gray-400 sm:text-sm sm:leading-6 focus:outline-none focus:shadow-outline"
-                                                placeholder="按下回车添加标签"
-                                            />
                                         </div>
                                     </div>
-                                    <label htmlFor="datePicker" className="mt-4 block text-sm font-medium leading-6 text-gray-900">
-                                        选择截止的日期
-                                    </label>
-                                    <div className="pb-4">
-                                        <input
-                                            id="datePicker"
-                                            type="datetime-local"
-                                            value={selectedDatetime}
-                                            onChange={handleDateTimeChange}
-                                            className="shadow-sm appearance-none border rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                        />
-                                        {selectedDatetime && (
-                                            <p className="text-gray-500 text-sm mt-2">选择的日期: {formatDateTime(selectedDatetime)}</p>
-                                        )}
+
+                                    <div className="mt-8">
+                                        <label htmlFor="datePicker" className="my-2 mt-4 text-base block font-medium leading-6 text-gray-900">
+                                            截止日期
+                                        </label>
+                                        <div className="pb-4">
+                                            <input
+                                                id="datePicker"
+                                                type="datetime-local"
+                                                value={selectedDatetime}
+                                                onChange={handleDateTimeChange}
+                                                className="shadow-sm border rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:bg-gray-50"
+                                            />
+                                            {selectedDatetime && (
+                                                <p className="text-gray-500 mt-2">选择的日期: {formatDateTime(selectedDatetime)}</p>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -140,14 +150,15 @@ export default function Add() {
             <div className="py-3 sm:flex sm:flex-row-reverse sm:px-1">
                 <button
                     type="button"
-                    className="inline-flex w-full justify-center rounded-md bg-blue-600 px-5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 sm:ml-3 sm:w-auto"
+                    className="inline-flex w-full justify-center rounded-md bg-slate-500 px-5 py-2 text-white shadow-sm hover:bg-slate-600 sm:ml-3 sm:w-auto"
                     onClick={() => fetchData()}
                 >
                     添加
                 </button>
                 <button
                     type="button"
-                    className="mt-3 inline-flex w-full justify-center rounded-md px-5 py-2 text-sm font-semibold text-white shadow-sm bg-red-700 hover:bg-red-800 sm:mt-0 sm:w-auto"
+                    className="mt-3 inline-flex w-full justify-center rounded-md px-5 py-2 text-white shadow-sm bg-red-500 hover:bg-red-600 sm:mt-0 sm:w-auto"
+                    onClick={() => clearFormData()}
                 >
                     重置
                 </button>

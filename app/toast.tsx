@@ -6,8 +6,8 @@ export default function Toast() {
   const isHidden = cookieStore.get('template-banner-hidden');
 
   return isHidden ? null : (
-    <div className="sticky rounded-2xl w-11/12 sm:w-[581px] h-40 sm:h-[80px] p-0.5 z-10 bottom-10 left-0 right-0 mx-auto">
-      <div className="rounded-[14px] w-full h-full bg-gray-50 border border-gray-200 flex flex-col sm:flex-row items-center justify-center sm:justify-between space-y-3 sm:space-y-0 px-5">
+    <div className="absolute w-full h-40 z-10 bottom-0 left-0 right-0">
+      <div className="w-full h-full bg-gray-50 border-t border-gray-200 flex flex-col items-center justify-center space-y-3 px-5">
         <p className="text-black text-[13px] font-mono w-[304px] h-10 flex items-center justify-center p-3">
           该项目正处于开发阶段 <DismissButton />
         </p>

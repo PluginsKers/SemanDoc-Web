@@ -29,11 +29,17 @@ export default function Search({ disabled, searchValue }: { disabled?: boolean, 
 		});
 	}
 
+	const handleSearchKeyDown = (e: any) => {
+		if (e.key === 'Enter') {
+			handleSearch(e.target.value)
+		}
+	};
+
 	return (
-		<div className="flex flex-col mt-5 lg:flex-row lg:items-start lg:justify-between">
+		<div className="flex flex-col text-sm mt-5 lg:flex-row lg:items-start lg:justify-between">
 			<div className="relative lg:mr-5 lg:mb-0 lg:w-1/3">
 				<label htmlFor="search" className="sr-only">
-					搜索
+					检索
 				</label>
 				<div className="rounded-md shadow-sm">
 					<div
@@ -50,12 +56,13 @@ export default function Search({ disabled, searchValue }: { disabled?: boolean, 
 						name="search"
 						id="search"
 						disabled={disabled}
-						className="block w-full rounded-md border-0 py-1.5 pl-9 pr-20 text-gray-900 placeholder:text-gray-400 sm:text-sm sm:leading-6 focus:outline-none focus:shadow-outline"
-						placeholder="搜索内容..."
+						className="block w-full rounded-md border border-gray-50 py-1.5 pl-9 pr-20 text-gray-900 placeholder:text-gray-400 sm:leading-6 focus:bg-gray-50 focus:border focus:border-gray-200"
+						placeholder="检索内容..."
 						spellCheck={false}
 						value={inputValue}
 						onBlur={(e) => handleSearch(e.target.value)}
 						onChange={(e) => handleChange(e.target.value)}
+						onKeyDown={(e) => handleSearchKeyDown(e)}
 					/>
 				</div>
 
@@ -85,7 +92,7 @@ export default function Search({ disabled, searchValue }: { disabled?: boolean, 
 				)}
 			</div>
 			{/* <div className="mt-4 lg:mt-0">
-				<button className="p-2 drop-shadow-sm px-3 py-2 font-semibold text-sm bg-white text-slate-700 rounded-md shadow-sm ring-1 ring-slate-900/5 hover:bg-neutral-100">
+				<button className="p-2 drop-shadow-sm px-3 py-2 font-semibold bg-white text-slate-700 rounded-md shadow-sm ring-1 ring-slate-900/5 hover:bg-neutral-100">
 					添加数据
 				</button>
 			</div> */}
