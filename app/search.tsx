@@ -15,8 +15,8 @@ export default function Search({ disabled, searchValue }: { disabled?: boolean, 
 		setInputValue(term);
 	};
 
-	const handleSearch = (term: string) => {
-		if (searchValue == term) return;
+	const handleSearch = (term: string, focus_loader: boolean = false) => {
+		if (searchValue == term && !focus_loader) return;
 		const params = new URLSearchParams(window.location.search);
 		if (term) {
 			params.set('q', term);
@@ -31,7 +31,7 @@ export default function Search({ disabled, searchValue }: { disabled?: boolean, 
 
 	const handleSearchKeyDown = (e: any) => {
 		if (e.key === 'Enter') {
-			handleSearch(e.target.value)
+			handleSearch(e.target.value, true)
 		}
 	};
 
