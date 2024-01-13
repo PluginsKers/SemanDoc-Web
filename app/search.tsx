@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { MagnifyingGlassIcon } from '@heroicons/react/24/solid';
 import { usePathname, useRouter } from 'next/navigation';
 import { useTransition } from 'react';
@@ -10,6 +10,7 @@ export default function Search({ disabled, searchValue }: { disabled?: boolean, 
 	const pathname = usePathname();
 	const [inputValue, setInputValue] = useState(searchValue || '');
 	const [isPending, startTransition] = useTransition();
+	const inputRef = useRef<HTMLInputElement>(null);
 
 	const handleChange = (term: string) => {
 		setInputValue(term);
@@ -31,7 +32,8 @@ export default function Search({ disabled, searchValue }: { disabled?: boolean, 
 
 	const handleSearchKeyDown = (e: any) => {
 		if (e.key === 'Enter') {
-			handleSearch(e.target.value, true)
+			handleSearch(e.target.value, true);
+			inputRef.current?.focus();
 		}
 	};
 
@@ -60,6 +62,7 @@ export default function Search({ disabled, searchValue }: { disabled?: boolean, 
 						placeholder="检索内容..."
 						spellCheck={false}
 						value={inputValue}
+						ref={inputRef}
 						onBlur={(e) => handleSearch(e.target.value)}
 						onChange={(e) => handleChange(e.target.value)}
 						onKeyDown={(e) => handleSearchKeyDown(e)}
