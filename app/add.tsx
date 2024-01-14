@@ -105,6 +105,9 @@ export default function Add({ docs, setDocs }: { docs: Document[], setDocs?: any
                     <div className="mt-2">
                         <div className="w-full">
                             <div className="mt-4">
+                                <label htmlFor="tagPicker" className="my-2 mt-4 ml-[.2px] text-base block font-medium leading-6 text-gray-900">
+                                    正文内容
+                                </label>
                                 <textarea
                                     id="page_content"
                                     value={pageContent}
@@ -116,7 +119,7 @@ export default function Add({ docs, setDocs }: { docs: Document[], setDocs?: any
                             </div>
 
                             <div className="mt-10">
-                                <label htmlFor="tagPicker" className="my-2 mt-4 text-base block font-medium leading-6 text-gray-900">
+                                <label htmlFor="tagPicker" className="my-2 mt-4 ml-[.2px] text-base block font-medium leading-6 text-gray-900">
                                     数据标签
                                 </label>
                                 <div className='mb-2'>
@@ -155,7 +158,7 @@ export default function Add({ docs, setDocs }: { docs: Document[], setDocs?: any
                                 </div>
 
                                 <div className="mt-10">
-                                    <label htmlFor="datePicker" className="my-2 mt-4 text-base block font-medium leading-6 text-gray-900">
+                                    <label htmlFor="datePicker" className="my-2 mt-4 ml-[.2px] text-base block font-medium leading-6 text-gray-900">
                                         截止日期
                                     </label>
                                     <div className="mb-2">
