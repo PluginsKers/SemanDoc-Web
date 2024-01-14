@@ -97,88 +97,87 @@ export default function Add({ docs, setDocs }: { docs: Document[], setDocs?: any
 
     return (
         <div className="relative w-full text-sm text-left rounded-lg bg-white shadow-sm p-4 py-4 mt-6">
-            <div className="bg-white px-1 py-3 pb-2 pt-3 sm:p-0 sm:pb-2">
+            <div className="bg-white px-1 py-3 pb-2 pt-3 sm:p-0 sm:pb-2 sm:pr-4">
                 <div className="sm:ml-4 sm:mt-0 text-left">
-                    <div className="mt-2">
-                        <div className="space-y-12">
-                            <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-                                <div className="col-span-full">
-                                    <div className="mt-4">
-                                        <textarea
-                                            id="page_content"
-                                            value={pageContent}
-                                            rows={5}
-                                            placeholder='请填写 文档/知识 内容，不少于5个字符...'
-                                            onChange={handlePageContentChange}
-                                            className="block w-full rounded-sm border py-2 px-3 text-gray-900 shadow-sm placeholder:text-gray-300 sm:leading-6 focus:bg-gray-50"
+                    <div className="mt-2 space-y-6">
+                        <div className="text-2xl">
+                            <h2>添加数据</h2>
+                        </div>
+                        <div className="w-full">
+                            <div className="mt-4">
+                                <textarea
+                                    id="page_content"
+                                    value={pageContent}
+                                    rows={5}
+                                    placeholder='请填写 文档/知识 内容，不少于5个字符...'
+                                    onChange={handlePageContentChange}
+                                    className="block w-full rounded-sm border py-2 px-3 text-gray-900 shadow-sm placeholder:text-gray-300 sm:leading-6 focus:bg-gray-50"
+                                />
+                            </div>
+
+                            <div className="mt-10">
+                                <label htmlFor="tagPicker" className="my-2 mt-4 text-base block font-medium leading-6 text-gray-900">
+                                    数据标签
+                                </label>
+                                <div className='mb-2'>
+                                    <div>
+                                        <input
+                                            id="tagPicker"
+                                            type="text"
+                                            value={tagValue}
+                                            onChange={handleTagChange}
+                                            onKeyDown={handleTagKeyDown}
+                                            className="shadow-sm border rounded-sm w-full block py-2 px-3 pl-2 text-gray-900 placeholder:text-gray-300 focus:bg-gray-50"
+                                            placeholder="按下回车添加标签"
                                         />
-                                    </div>
-
-                                    <div className="mt-8">
-                                        <label htmlFor="tagPicker" className="my-2 mt-4 text-base block font-medium leading-6 text-gray-900">
-                                            数据标签
-                                        </label>
-                                        <div className='mb-2'>
-                                            <div>
-                                                <input
-                                                    id="tagPicker"
-                                                    type="text"
-                                                    value={tagValue}
-                                                    onChange={handleTagChange}
-                                                    onKeyDown={handleTagKeyDown}
-                                                    className="shadow-sm border rounded-sm w-full block py-2 px-3 pl-2 text-gray-900 placeholder:text-gray-300 focus:bg-gray-50"
-                                                    placeholder="按下回车添加标签"
-                                                />
-                                                <div className='mt-3'>
-                                                    {tags.length > 0 &&
-                                                        tags.map((label, index) => (
-                                                            <span key={index} onClick={() => handleTagDelete(index)} className="cursor-pointer shadow-sm select-none inline-block bg-slate-600 hover:bg-slate-500 rounded-sm px-1.5 py-1 text-white mr-1 mb-1">
-                                                                {label}
-                                                            </span>
-                                                        ))
-                                                        ||
-                                                        (<div className="relative h-8 overflow-hidden rounded-sm border border-dashed border-gray-400 opacity-75">
-                                                            <svg className="absolute inset-0 h-full w-full stroke-gray-900/10" fill="none">
-                                                                <defs>
-                                                                    <pattern id="pattern-d09edaee-fc6a-4f25-aca5-bf9f5f77e14a" x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse">
-                                                                        <path d="M-3 13 15-5M-5 5l18-18M-1 21 17 3"></path>
-                                                                    </pattern>
-                                                                </defs>
-                                                                <rect stroke="none" fill="url(#pattern-d09edaee-fc6a-4f25-aca5-bf9f5f77e14a)" width="100%" height="100%"></rect>
-                                                            </svg>
-                                                            <div className='absolute text-center text-[12px] text-gray-900/50 tracking-[1em] h-full w-full flex flex-col justify-center select-none'>请添加至少一个标签</div>
-                                                        </div>)
-                                                    }
-                                                </div>
-                                            </div>
+                                        <div className='mt-3'>
+                                            {tags.length > 0 &&
+                                                tags.map((label, index) => (
+                                                    <span key={index} onClick={() => handleTagDelete(index)} className="cursor-pointer shadow-sm select-none inline-block bg-slate-600 hover:bg-slate-500 rounded-sm px-1.5 py-1 text-white mr-1 mb-1">
+                                                        {label}
+                                                    </span>
+                                                ))
+                                                ||
+                                                (<div className="relative h-8 overflow-hidden rounded-sm border border-dashed border-gray-400 opacity-75">
+                                                    <svg className="absolute inset-0 h-full w-full stroke-gray-900/10" fill="none">
+                                                        <defs>
+                                                            <pattern id="pattern-d09edaee-fc6a-4f25-aca5-bf9f5f77e14a" x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse">
+                                                                <path d="M-3 13 15-5M-5 5l18-18M-1 21 17 3"></path>
+                                                            </pattern>
+                                                        </defs>
+                                                        <rect stroke="none" fill="url(#pattern-d09edaee-fc6a-4f25-aca5-bf9f5f77e14a)" width="100%" height="100%"></rect>
+                                                    </svg>
+                                                    <div className='absolute text-center text-[12px] text-gray-900/50 tracking-[1em] h-full w-full flex flex-col justify-center select-none'>请添加至少一个标签</div>
+                                                </div>)
+                                            }
                                         </div>
                                     </div>
+                                </div>
 
-                                    <div className="mt-8">
-                                        <label htmlFor="datePicker" className="my-2 mt-4 text-base block font-medium leading-6 text-gray-900">
-                                            截止日期
-                                        </label>
-                                        <div className="mb-2">
-                                            <input
-                                                id="datePicker"
-                                                type="datetime-local"
-                                                value={selectedDatetime}
-                                                onChange={handleDateTimeChange}
-                                                className="shadow-sm border rounded-sm w-full py-2 px-3 text-gray-700 leading-tight focus:bg-gray-50"
-                                            />
-                                            {selectedDatetime && (
-                                                <p className="text-gray-400 mt-2">当前选择的日期: {formatDateTime(selectedDatetime)}</p>
-                                            )}
-                                        </div>
-                                        <div className="mb-4">
-                                            <div onClick={() => addMinutesToSelectedDatetime(30)} className='cursor-pointer shadow-sm select-none inline-block bg-slate-600 hover:bg-slate-500 rounded-sm px-2 py-1 text-white mr-1 mb-1'>30分钟</div>
-                                            <div onClick={() => addMinutesToSelectedDatetime(60)} className='cursor-pointer shadow-sm select-none inline-block bg-slate-600 hover:bg-slate-500 rounded-sm px-2 py-1 text-white mr-1 mb-1'>1小时</div>
-                                            <div onClick={() => addMinutesToSelectedDatetime(360)} className='cursor-pointer shadow-sm select-none inline-block bg-slate-600 hover:bg-slate-500 rounded-sm px-2 py-1 text-white mr-1 mb-1'>6小时</div>
-                                            <div onClick={() => addMinutesToSelectedDatetime(1440)} className='cursor-pointer shadow-sm select-none inline-block bg-slate-600 hover:bg-slate-500 rounded-sm px-2 py-1 text-white mr-1 mb-1'>1天</div>
-                                            <div onClick={() => addMinutesToSelectedDatetime(10080)} className='cursor-pointer shadow-sm select-none inline-block bg-slate-600 hover:bg-slate-500 rounded-sm px-2 py-1 text-white mr-1 mb-1'>7天</div>
-                                            <div onClick={() => addMinutesToSelectedDatetime(43200)} className='cursor-pointer shadow-sm select-none inline-block bg-slate-600 hover:bg-slate-500 rounded-sm px-2 py-1 text-white mr-1 mb-1'>30天</div>
-                                            <div onClick={() => addMinutesToSelectedDatetime(518400)} className='cursor-pointer shadow-sm select-none inline-block bg-slate-600 hover:bg-slate-500 rounded-sm px-2 py-1 text-white mr-1 mb-1'>365天</div>
-                                        </div>
+                                <div className="mt-10">
+                                    <label htmlFor="datePicker" className="my-2 mt-4 text-base block font-medium leading-6 text-gray-900">
+                                        截止日期
+                                    </label>
+                                    <div className="mb-2">
+                                        <input
+                                            id="datePicker"
+                                            type="datetime-local"
+                                            value={selectedDatetime}
+                                            onChange={handleDateTimeChange}
+                                            className="shadow-sm border rounded-sm w-full py-2 px-3 text-gray-700 leading-tight focus:bg-gray-50"
+                                        />
+                                        {selectedDatetime && (
+                                            <p className="text-gray-400 mt-2">当前选择的日期: {formatDateTime(selectedDatetime)}</p>
+                                        )}
+                                    </div>
+                                    <div className="mb-4">
+                                        <div onClick={() => addMinutesToSelectedDatetime(30)} className='cursor-pointer shadow-sm select-none inline-block bg-slate-600 hover:bg-slate-500 rounded-sm px-2 py-1 text-white mr-1 mb-1'>30分钟</div>
+                                        <div onClick={() => addMinutesToSelectedDatetime(60)} className='cursor-pointer shadow-sm select-none inline-block bg-slate-600 hover:bg-slate-500 rounded-sm px-2 py-1 text-white mr-1 mb-1'>1小时</div>
+                                        <div onClick={() => addMinutesToSelectedDatetime(360)} className='cursor-pointer shadow-sm select-none inline-block bg-slate-600 hover:bg-slate-500 rounded-sm px-2 py-1 text-white mr-1 mb-1'>6小时</div>
+                                        <div onClick={() => addMinutesToSelectedDatetime(1440)} className='cursor-pointer shadow-sm select-none inline-block bg-slate-600 hover:bg-slate-500 rounded-sm px-2 py-1 text-white mr-1 mb-1'>1天</div>
+                                        <div onClick={() => addMinutesToSelectedDatetime(10080)} className='cursor-pointer shadow-sm select-none inline-block bg-slate-600 hover:bg-slate-500 rounded-sm px-2 py-1 text-white mr-1 mb-1'>7天</div>
+                                        <div onClick={() => addMinutesToSelectedDatetime(43200)} className='cursor-pointer shadow-sm select-none inline-block bg-slate-600 hover:bg-slate-500 rounded-sm px-2 py-1 text-white mr-1 mb-1'>30天</div>
+                                        <div onClick={() => addMinutesToSelectedDatetime(518400)} className='cursor-pointer shadow-sm select-none inline-block bg-slate-600 hover:bg-slate-500 rounded-sm px-2 py-1 text-white mr-1 mb-1'>365天</div>
                                     </div>
                                 </div>
                             </div>
@@ -189,7 +188,7 @@ export default function Add({ docs, setDocs }: { docs: Document[], setDocs?: any
             <div className="py-3 mt-3 sm:flex sm:flex-row-reverse sm:px-1 select-none   ">
                 <button
                     disabled={tip.status === 'loading'}
-                    className={"cursor-pointer border inline-flex w-full justify-center rounded px-5 py-2 text-white sm:ml-3 sm:w-auto " + (tip.status === 'loading' ? 'opacity-80 cursor-not-allowed bg-black px-6 ' : (tip.status === 'error' ? 'bg-red-500 hover:bg-red-600 border-red-600  ' : tip.status === 'success' ? 'bg-green-500 hover:bg-green-600 border-green-600 ' : 'bg-sky-400 hover:bg-sky-500 border-sky-500 '))}
+                    className={"cursor-pointer border inline-flex w-full justify-center rounded-sm px-5 py-2 text-white sm:ml-3 sm:w-auto " + (tip.status === 'loading' ? 'opacity-80 cursor-not-allowed bg-black px-6 ' : (tip.status === 'error' ? 'bg-red-500 hover:bg-red-600 border-red-600  ' : tip.status === 'success' ? 'bg-green-500 hover:bg-green-600 border-green-600 ' : 'bg-sky-400 hover:bg-sky-500 border-sky-500 '))}
                     onClick={() => fetchData()}
                 >
                     {tip.status === 'loading' ? (<svg
@@ -214,7 +213,7 @@ export default function Add({ docs, setDocs }: { docs: Document[], setDocs?: any
                     </svg>) : (tip.status !== null ? tip.msg : '添加')}
                 </button>
                 <button
-                    className="cursor-pointer border border-gray-300 mt-3 inline-flex w-full justify-center rounded px-5 py-2 text-black bg-gray-200 hover:bg-gray-300/90 sm:mt-0 sm:w-auto"
+                    className="cursor-pointer border border-gray-300 mt-3 inline-flex w-full justify-center rounded-sm px-5 py-2 text-black bg-gray-200 hover:bg-gray-300/90 sm:mt-0 sm:w-auto"
                     onClick={() => clearFormData()}
                 >
                     重置
