@@ -53,7 +53,7 @@ export default function Table({ docs, searchValue, setDocs }: { docs: Document[]
                             >
                                 <div className="w-full px-4 sm:px-8">
                                     <div
-                                        className="absolute bottom-0 right-0 h-full bg-gray-200/30 z-1"
+                                        className={"absolute bg-gray-300/20 bottom-0 right-0 h-full z-1 " + (calculateTimePercentage(doc.metadata.start_time, doc.metadata.valid_time) != 0 ? 'border-l border-l-gray-200 ' : '')}
                                         style={{
                                             width: `${calculateTimePercentage(doc.metadata.start_time, doc.metadata.valid_time)}%`
                                         }}

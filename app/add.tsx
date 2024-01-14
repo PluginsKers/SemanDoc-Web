@@ -110,7 +110,7 @@ export default function Add({ docs, setDocs }: { docs: Document[], setDocs?: any
                                             rows={5}
                                             placeholder='请填写 文档/知识 内容，不少于5个字符...'
                                             onChange={handlePageContentChange}
-                                            className="block w-full rounded-md border py-2 px-3 text-gray-900 shadow-sm placeholder:text-gray-400 sm:leading-6 focus:bg-gray-50"
+                                            className="block w-full rounded-md border py-2 px-3 text-gray-900 shadow-sm placeholder:text-gray-300 sm:leading-6 focus:bg-gray-50"
                                         />
                                     </div>
 
@@ -126,15 +126,29 @@ export default function Add({ docs, setDocs }: { docs: Document[], setDocs?: any
                                                     value={tagValue}
                                                     onChange={handleTagChange}
                                                     onKeyDown={handleTagKeyDown}
-                                                    className="shadow-sm border rounded-md w-full block py-2 px-3 pl-2 text-gray-900 placeholder:text-gray-400 focus:bg-gray-50"
+                                                    className="shadow-sm border rounded-md w-full block py-2 px-3 pl-2 text-gray-900 placeholder:text-gray-300 focus:bg-gray-50"
                                                     placeholder="按下回车添加标签"
                                                 />
                                                 <div className='mt-3'>
-                                                    {tags.map((label, index) => (
-                                                        <span key={index} onClick={() => handleTagDelete(index)} className="cursor-pointer shadow-sm select-none inline-block bg-slate-600 hover:bg-slate-500 rounded-sm px-1.5 py-1 text-white mr-1 mb-1">
-                                                            {label}
-                                                        </span>
-                                                    ))}
+                                                    {tags.length > 0 &&
+                                                        tags.map((label, index) => (
+                                                            <span key={index} onClick={() => handleTagDelete(index)} className="cursor-pointer shadow-sm select-none inline-block bg-slate-600 hover:bg-slate-500 rounded-sm px-1.5 py-1 text-white mr-1 mb-1">
+                                                                {label}
+                                                            </span>
+                                                        ))
+                                                        ||
+                                                        (<div className="relative h-8 overflow-hidden rounded-sm border border-dashed border-gray-400 opacity-75">
+                                                            <svg className="absolute inset-0 h-full w-full stroke-gray-900/10" fill="none">
+                                                                <defs>
+                                                                    <pattern id="pattern-d09edaee-fc6a-4f25-aca5-bf9f5f77e14a" x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse">
+                                                                        <path d="M-3 13 15-5M-5 5l18-18M-1 21 17 3"></path>
+                                                                    </pattern>
+                                                                </defs>
+                                                                <rect stroke="none" fill="url(#pattern-d09edaee-fc6a-4f25-aca5-bf9f5f77e14a)" width="100%" height="100%"></rect>
+                                                            </svg>
+                                                            <div className='absolute text-center text-[12px] text-gray-900/50 tracking-[1em] h-full w-full flex flex-col justify-center select-none'>请添加至少一个标签</div>
+                                                        </div>)
+                                                    }
                                                 </div>
                                             </div>
                                         </div>
@@ -153,7 +167,7 @@ export default function Add({ docs, setDocs }: { docs: Document[], setDocs?: any
                                                 className="shadow-sm border rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:bg-gray-50"
                                             />
                                             {selectedDatetime && (
-                                                <p className="text-gray-400 mt-2">选择的日期: {formatDateTime(selectedDatetime)}</p>
+                                                <p className="text-gray-400 mt-2">当前选择的日期: {formatDateTime(selectedDatetime)}</p>
                                             )}
                                         </div>
                                         <div className="mb-4">
