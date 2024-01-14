@@ -33,7 +33,7 @@ export default function Search({ disabled, searchValue }: { disabled?: boolean, 
 	const handleSearchKeyDown = (e: any) => {
 		if (e.key === 'Enter') {
 			handleSearch(e.target.value, true);
-			inputRef.current?.focus();
+			e.preventDefault();
 		}
 	};
 
