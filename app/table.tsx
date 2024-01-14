@@ -1,10 +1,16 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import moment from 'moment';
 import { Document } from './page';
 import './table.css';
 
 export default function Table({ docs, searchValue, setDocs }: { docs: Document[], searchValue?: string, setDocs?: any }) {
     const [confirmDelete, setConfirmDelete] = useState<number | null>(null);
+
+    function calculateTimePercentage(start_time: number, valid_time: number) {
+        return valid_time == -1 ? 0 : Math.round(((moment().unix() - start_time) / valid_time) * 100);
+    }
+
 
     const handleDelete = async (docId: number) => {
         if (confirmDelete === docId) {
@@ -45,8 +51,16 @@ export default function Table({ docs, searchValue, setDocs }: { docs: Document[]
                                 className={'data-area-row relative cursor-default border-b border-gray-200 hover:bg-gray-50 py-4'}
                                 key={doc.metadata['ids']}
                             >
-                                <div className="w-full px-4 sm:px-8">{doc.page_content}</div>
-                                <div className='absolute control flex'>
+                                <div className="w-full px-4 sm:px-8">
+                                    <div
+                                        className="absolute bottom-0 right-0 h-full bg-gray-200/30 z-1"
+                                        style={{
+                                            width: `${calculateTimePercentage(doc.metadata.start_time, doc.metadata.valid_time)}%`
+                                        }}
+                                    ></div>
+                                    <div className='relative select-all z-2'>{doc.page_content}</div>
+                                    </div>
+                                <div className='absolute control flex z-2'>
                                     <div
                                         className={`flex px-4 flex-col content-center justify-center cursor-pointer select-none ${confirmDelete === doc.metadata['ids'] ? 'bg-green-500 hover:bg-green-600' : 'bg-red-500 hover:bg-red-600'} text-white`}
                                         onClick={() => handleDelete(doc.metadata['ids'])}
