@@ -175,7 +175,7 @@ export default function Add({ docs, setDocs }: { docs: Document[], setDocs?: any
             <div className="py-3 mt-3 sm:flex sm:flex-row-reverse sm:px-1 select-none   ">
                 <button
                     disabled={tip.status === 'loading'}
-                    className={"cursor-pointer border inline-flex w-full justify-center rounded px-5 py-2 text-white shadow-sm sm:ml-3 sm:w-auto " + (tip.status === 'loading' ? 'opacity-80 cursor-not-allowed bg-black px-6 ' : (tip.status === 'error' ? 'bg-red-500 hover:bg-red-600 ' : tip.status === 'success' ? 'bg-green-500 hover:bg-green-600 ' : 'bg-sky-400 hover:bg-sky-500 '))}
+                    className={"cursor-pointer border inline-flex w-full justify-center rounded px-5 py-2 text-white sm:ml-3 sm:w-auto " + (tip.status === 'loading' ? 'opacity-80 cursor-not-allowed bg-black px-6 ' : (tip.status === 'error' ? 'bg-red-500 hover:bg-red-600 border-red-600  ' : tip.status === 'success' ? 'bg-green-500 hover:bg-green-600 border-green-600 ' : 'bg-sky-400 hover:bg-sky-500 border-sky-500 '))}
                     onClick={() => fetchData()}
                 >
                     {tip.status === 'loading' ? (<svg
@@ -200,7 +200,7 @@ export default function Add({ docs, setDocs }: { docs: Document[], setDocs?: any
                     </svg>) : (tip.status !== null ? tip.msg : '添加')}
                 </button>
                 <button
-                    className="cursor-pointer border mt-3 inline-flex w-full justify-center rounded px-5 py-2 text-black shadow-sm bg-gray-200 hover:bg-gray-300/90 sm:mt-0 sm:w-auto"
+                    className="cursor-pointer border border-gray-300 mt-3 inline-flex w-full justify-center rounded px-5 py-2 text-black bg-gray-200 hover:bg-gray-300/90 sm:mt-0 sm:w-auto"
                     onClick={() => clearFormData()}
                 >
                     重置
