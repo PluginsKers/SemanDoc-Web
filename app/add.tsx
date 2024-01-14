@@ -99,10 +99,10 @@ export default function Add({ docs, setDocs }: { docs: Document[], setDocs?: any
         <div className="relative w-full text-sm text-left rounded-lg bg-white shadow-sm p-4 py-4 mt-6">
             <div className="bg-white px-1 py-3 pb-2 pt-3 sm:p-0 sm:pb-2 sm:pr-4">
                 <div className="sm:ml-4 sm:mt-0 text-left">
-                    <div className="mt-2 space-y-6">
-                        <div className="text-2xl">
-                            <h2>添加数据</h2>
-                        </div>
+                    <div className="text-2xl mt-[-12px] sm:mt-2">
+                        <h2>添加数据</h2>
+                    </div>
+                    <div className="mt-2">
                         <div className="w-full">
                             <div className="mt-4">
                                 <textarea
