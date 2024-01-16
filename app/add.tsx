@@ -134,25 +134,33 @@ export default function Add({ docs, setDocs }: { docs: Document[], setDocs?: any
                                             placeholder="按下回车添加标签"
                                         />
                                         <div className='mt-3'>
-                                            {tags.length > 0 &&
-                                                tags.map((label, index) => (
-                                                    <span key={index} onClick={() => handleTagDelete(index)} className="cursor-pointer shadow-sm select-none inline-block bg-slate-600 hover:bg-slate-500 rounded-sm px-1.5 py-1 text-white mr-1 mb-1">
-                                                        {label}
-                                                    </span>
-                                                ))
-                                                ||
-                                                (<div className="relative h-8 overflow-hidden rounded-sm border border-dashed border-gray-400 opacity-75">
-                                                    <svg className="absolute inset-0 h-full w-full stroke-gray-900/10" fill="none">
-                                                        <defs>
-                                                            <pattern id="pattern-d09edaee-fc6a-4f25-aca5-bf9f5f77e14a" x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse">
-                                                                <path d="M-3 13 15-5M-5 5l18-18M-1 21 17 3"></path>
-                                                            </pattern>
-                                                        </defs>
-                                                        <rect stroke="none" fill="url(#pattern-d09edaee-fc6a-4f25-aca5-bf9f5f77e14a)" width="100%" height="100%"></rect>
-                                                    </svg>
-                                                    <div className='absolute text-center text-[12px] text-gray-900/50 tracking-[1em] h-full w-full flex flex-col justify-center select-none'>请添加至少一个标签</div>
-                                                </div>)
-                                            }
+                                            <label htmlFor="tagPicker" className="my-2 mt-4 ml-[.2px] text-base block font-medium leading-6 text-gray-900">
+                                                当前标签
+                                            </label>
+                                            <div className="relative overflow-hidden rounded-sm border border-dashed border-gray-400 opacity-75 flex flex-row items-center flex-wrap p-1 pb-0">
+                                                {tags.length > 0 &&
+                                                    tags.map((label, index) => (
+                                                        <span key={index} onClick={() => handleTagDelete(index)} className="cursor-pointer shadow-sm select-none inline-block bg-slate-600 hover:bg-slate-500 rounded-sm px-1.5 py-1 text-white mr-1 mb-1">
+                                                            {label}
+                                                        </span>
+                                                    ))
+                                                    ||
+                                                    (<div>
+                                                        <svg className="absolute inset-0 h-full w-full stroke-gray-900/10" fill="none">
+                                                            <defs>
+                                                                <pattern id="pattern-d09edaee-fc6a-4f25-aca5-bf9f5f77e14a" x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse">
+                                                                    <path d="M-3 13 15-5M-5 5l18-18M-1 21 17 3"></path>
+                                                                </pattern>
+                                                            </defs>
+                                                            <rect stroke="none" fill="url(#pattern-d09edaee-fc6a-4f25-aca5-bf9f5f77e14a)" width="100%" height="100%"></rect>
+                                                        </svg>
+                                                        {/* <div className='absolute text-center top-0 left-0 text-[12px] text-gray-900/50 tracking-[.8em] h-full w-full flex flex-col justify-center select-none text-nowrap z-0'>请添加至少一个标签</div> */}
+                                                        <span className="relative shadow-sm select-none inline-block bg-gray-400/80 rounded-sm px-1.5 py-1 text-white mr-1 mb-1 z-1">
+                                                            请添加标签
+                                                        </span>
+                                                    </div>)
+                                                }
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
