@@ -9,7 +9,7 @@ import Image from 'next/image';
 
 const navigation = [
   { name: '管理面板', href: '/' },
-  { name: '数据分析', href: '/playground' }
+  // { name: '数据分析', href: '/playground' }
 ];
 
 function classNames(...classes: string[]) {
