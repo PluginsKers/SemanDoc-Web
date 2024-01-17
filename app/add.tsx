@@ -105,7 +105,7 @@ export default function Add({ docs, setDocs }: { docs: Document[], setDocs?: any
                     <div className="mt-2">
                         <div className="w-full">
                             <div className="mt-4">
-                                <label htmlFor="tagPicker" className="my-2 mt-4 ml-[.2px] text-base block font-medium leading-6 text-gray-900">
+                                <label htmlFor="tagPicker" className="my-2 mt-4 ml-[.2px] text-base block font-medium text-gray-900">
                                     正文内容
                                 </label>
                                 <textarea
@@ -114,12 +114,12 @@ export default function Add({ docs, setDocs }: { docs: Document[], setDocs?: any
                                     rows={5}
                                     placeholder='请填写 文档/知识 内容，不少于5个字符...'
                                     onChange={handlePageContentChange}
-                                    className="block w-full rounded-sm border py-2 px-3 text-gray-900 shadow-sm placeholder:text-gray-300 sm:leading-6 focus:bg-gray-50"
+                                    className="block w-full rounded-sm border py-2 px-3 text-gray-900 shadow-sm placeholder:text-gray-300 focus:bg-gray-50"
                                 />
                             </div>
 
                             <div className="mt-10">
-                                <label htmlFor="tagPicker" className="my-2 mt-4 ml-[.2px] text-base block font-medium leading-6 text-gray-900">
+                                <label htmlFor="tagPicker" className="my-2 mt-4 ml-[.2px] text-base block font-medium text-gray-900">
                                     数据标签
                                 </label>
                                 <div className='mb-2'>
@@ -130,11 +130,11 @@ export default function Add({ docs, setDocs }: { docs: Document[], setDocs?: any
                                             value={tagValue}
                                             onChange={handleTagChange}
                                             onKeyDown={handleTagKeyDown}
-                                            className="shadow-sm border rounded-sm w-full block py-2 px-3 pl-2 text-gray-900 placeholder:text-gray-300 focus:bg-gray-50"
+                                            className="shadow-sm border rounded-sm w-full block py-2 px-3 pl-2 placeholder:text-[13px] text-gray-900 placeholder:text-gray-300 focus:bg-gray-50"
                                             placeholder="按下回车添加标签"
                                         />
                                         <div className='mt-3'>
-                                            <label htmlFor="tagPicker" className="my-2 mt-4 ml-[.2px] text-base block font-medium leading-6 text-gray-900">
+                                            <label htmlFor="tagPicker" className="my-2 mt-4 ml-[.2px] text-base block font-medium text-gray-900">
                                                 当前标签
                                             </label>
                                             <div className="relative overflow-hidden rounded-sm border border-dashed border-gray-400 opacity-75 flex flex-row items-center flex-wrap p-1 pb-0">
@@ -166,7 +166,7 @@ export default function Add({ docs, setDocs }: { docs: Document[], setDocs?: any
                                 </div>
 
                                 <div className="mt-10">
-                                    <label htmlFor="datePicker" className="my-2 mt-4 ml-[.2px] text-base block font-medium leading-6 text-gray-900">
+                                    <label htmlFor="datePicker" className="my-2 mt-4 ml-[.2px] text-base block font-medium text-gray-900">
                                         截止日期
                                     </label>
                                     <div className="mb-2">

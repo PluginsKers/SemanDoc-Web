@@ -5,19 +5,38 @@ import { MagnifyingGlassIcon } from '@heroicons/react/24/solid';
 import { usePathname, useRouter } from 'next/navigation';
 import { useTransition } from 'react';
 
-export default function Search({ disabled, searchValue }: { disabled?: boolean, searchValue?: string }) {
+export default function Search({ disabled, searchValue, kValue }: { disabled?: boolean, searchValue?: string, kValue?: string }) {
 	const { replace } = useRouter();
 	const pathname = usePathname();
-	const [inputValue, setInputValue] = useState(searchValue || '');
+	const [inputSearchValue, setInputSearchValue] = useState(searchValue || '');
+	const [inputKValue, setInputKValue] = useState(kValue || '');
+	const [filterPanelOpen, setfilterPanelOpen] = useState(false);
 	const [isPending, startTransition] = useTransition();
 	const inputRef = useRef<HTMLInputElement>(null);
 
-	const handleChange = (term: string) => {
-		setInputValue(term);
+	const handleFilterButtonClick = () => {
+		setfilterPanelOpen(!filterPanelOpen);
+	}
+
+	const handleKSet = (_k: string, focus: boolean = false) => {
+		if (kValue == _k && !focus) return;
+		const params = new URLSearchParams(window.location.search);
+		if (_k) {
+			params.set('k', _k);
+		} else {
+			params.delete('k');
+		}
+		replace(`${pathname}?${params.toString()}`);
+	}
+
+	const handleKSetKeyDown = (e: any) => {
+		if (e.key === 'Enter') {
+			handleKSet(e.target.value, true);
+		}
 	};
 
-	const handleSearch = (term: string, focus_loader: boolean = false) => {
-		if (searchValue == term && !focus_loader) return;
+	const handleSearchSet = (term: string, focus: boolean = false) => {
+		if (searchValue == term && !focus) return;
 		const params = new URLSearchParams(window.location.search);
 		if (term) {
 			params.set('q', term);
@@ -32,8 +51,7 @@ export default function Search({ disabled, searchValue }: { disabled?: boolean, 
 
 	const handleSearchKeyDown = (e: any) => {
 		if (e.key === 'Enter') {
-			handleSearch(e.target.value, true);
-			e.preventDefault();
+			handleSearchSet(e.target.value, true);
 		}
 	};
 
@@ -61,10 +79,10 @@ export default function Search({ disabled, searchValue }: { disabled?: boolean, 
 						className="block w-full rounded-md border border-gray-50 py-1.5 pl-9 pr-20 text-gray-900 placeholder:text-gray-400 sm:leading-6 focus:bg-gray-50 focus:border focus:border-gray-200"
 						placeholder="检索内容..."
 						spellCheck={false}
-						value={inputValue}
+						value={inputSearchValue}
 						ref={inputRef}
-						onBlur={(e) => handleSearch(e.target.value)}
-						onChange={(e) => handleChange(e.target.value)}
+						onBlur={(e) => handleSearchSet(e.target.value)}
+						onChange={(e) => setInputSearchValue(e.target.value)}
 						onKeyDown={(e) => handleSearchKeyDown(e)}
 					/>
 				</div>
@@ -94,11 +112,37 @@ export default function Search({ disabled, searchValue }: { disabled?: boolean, 
 					</div>
 				)}
 			</div>
-			{/* <div className="mt-4 lg:mt-0">
-				<button className="p-2 drop-shadow-sm px-3 py-2 font-semibold bg-white text-slate-700 rounded-md shadow-sm ring-1 ring-slate-900/5 hover:bg-neutral-100">
-					添加数据
-				</button>
-			</div> */}
+			<div className="relative mt-1 lg:mt-0 bg-white text-slate-700 rounded-md shadow-sm">
+				{filterPanelOpen &&
+					(
+						<div className="px-3 py-3 h-full w-full">
+							<div className="flex flex-row items-center justify-between pb-4 text-sm">
+								<div className="items-center">
+									<input
+										id='k'
+										type='number'
+										value={inputKValue}
+										spellCheck={false}
+										placeholder='最大检索数量'
+										className="w-full rounded-md py-2 px-3 text-gray-900 ring-1 ring-gray-100 shadow-sm placeholder:text-gray-300 focus:bg-gray-50"
+										onBlur={(e) => handleKSet(e.target.value)}
+										onChange={(e) => setInputKValue(e.target.value)}
+										onKeyDown={(e) => handleKSetKeyDown(e)}
+									/>
+								</div>
+							</div>
+							<button className="px-3 py-2 h-full w-full rounded-md bg-gray-50 ring-gray-100 ring-1 hover:bg-neutral-100" onClick={handleFilterButtonClick}>
+								检索筛选
+							</button>
+						</div>
+					)
+					||
+					(
+						<button className="px-3 py-2 h-full w-full rounded-md hover:ring-1 hover:ring-slate-900/5 hover:bg-neutral-100" onClick={handleFilterButtonClick}>
+							检索筛选
+						</button>
+					)}
+			</div>
 		</div>
 	);
 }

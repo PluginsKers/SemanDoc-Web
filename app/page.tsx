@@ -23,9 +23,10 @@ export interface Document {
 export default function IndexPage({
     searchParams,
 }: {
-    searchParams: { q: string };
+    searchParams: { q: string, k: string };
 }) {
     let search = searchParams.q ?? '';
+    let K = searchParams.k ?? '';
     const [docs, setDocs] = useState<Document[]>([]);
 
     const memoizedDocs = useMemo(() => docs, [docs]);
@@ -35,7 +36,7 @@ export default function IndexPage({
             setDocs([]);
             try {
                 const response = await axios.get('https://ai.app.nbpt.edu.cn/api/query', {
-                    params: { query: search },
+                    params: { query: search, k: K },
                 });
                 const result = response.data;
                 setDocs(result.data || []);
@@ -48,13 +49,13 @@ export default function IndexPage({
         } else {
             setDocs([]);
         }
-    }, [search]);
+    }, [search, K]);
 
     return (
         <main className="p-4 md:p-10 mx-auto max-w-7xl">
             <p className='font-medium text-tremor-title text-tremor-content-emphasis'>知识库</p>
             <p className='text-sm text-gray-500'>用于检索服务的知识库内容管理</p>
-            <Search searchValue={search} />
+            <Search searchValue={search} kValue={K} />
             <Table docs={memoizedDocs} searchValue={search} setDocs={setDocs} />
             <Add docs={memoizedDocs} setDocs={setDocs} />
         </main>
