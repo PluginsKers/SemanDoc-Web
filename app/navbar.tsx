@@ -74,7 +74,7 @@ export default function Navbar({ user }: { user: any }) {
                       <span className="sr-only">打开用户面板</span>
                       <Image
                         className="h-8 w-8 rounded-full"
-                        src={user?.image || 'https://avatar.vercel.sh/leerob'}
+                        src={user?.image || '/avatar.jpg'}
                         height={32}
                         width={32}
                         alt={`${user?.name || 'placeholder'} avatar`}

@@ -116,20 +116,18 @@ export default function Search({ disabled, searchValue, kValue }: { disabled?: b
 				{filterPanelOpen &&
 					(
 						<div className="px-3 py-3 h-full w-full">
-							<div className="flex flex-row items-center justify-between pb-4 text-sm">
-								<div className="items-center">
-									<input
-										id='k'
-										type='number'
-										value={inputKValue}
-										spellCheck={false}
-										placeholder='最大检索数量'
-										className="w-full rounded-md py-2 px-3 text-gray-900 ring-1 ring-gray-100 shadow-sm placeholder:text-gray-300 focus:bg-gray-50"
-										onBlur={(e) => handleKSet(e.target.value)}
-										onChange={(e) => setInputKValue(e.target.value)}
-										onKeyDown={(e) => handleKSetKeyDown(e)}
-									/>
-								</div>
+							<div className="flex flex-row items-center justify-between pb-3 text-sm">
+								<input
+									id='k'
+									type='number'
+									value={inputKValue}
+									spellCheck={false}
+									placeholder='最大检索数量'
+									className="w-full rounded-md py-2 px-3 text-gray-900 ring-1 ring-gray-100 shadow-sm placeholder:text-gray-300 focus:bg-gray-50"
+									onBlur={(e) => handleKSet(e.target.value)}
+									onChange={(e) => setInputKValue(e.target.value)}
+									onKeyDown={(e) => handleKSetKeyDown(e)}
+								/>
 							</div>
 							<button className="px-3 py-2 h-full w-full rounded-md bg-gray-50 ring-gray-100 ring-1 hover:bg-neutral-100" onClick={handleFilterButtonClick}>
 								检索筛选
