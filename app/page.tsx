@@ -38,11 +38,11 @@ export default function IndexPage({
             let filter: any = {}
             console.log(tagsArray)
             if (tagsArray.length > 0) {
-                filter['tags'] = [tagsArray]
+                filter['tags'] = tagsArray
             }
             setDocs([]);
             try {
-                const response = await axios.get('https://ai.app.nbpt.edu.cn/api/query', {
+                const response = await axios.get('https://ai.app.nbpt.edu.cn/api/search', {
                     params: { query: search, k: K, filter: JSON.stringify(filter) },
                 });
                 const result = response.data;
