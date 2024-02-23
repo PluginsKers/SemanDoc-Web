@@ -42,7 +42,7 @@ export default function IndexPage({
             }
             setDocs([]);
             try {
-                const response = await axios.get('https://ai.app.nbpt.edu.cn/api/search', {
+                const response = await axios.get('https://ai.app.nbpt.edu.cn/api/query', {
                     params: { query: search, k: K, filter: JSON.stringify(filter) },
                 });
                 const result = response.data;
