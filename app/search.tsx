@@ -149,7 +149,7 @@ export default function Search({ disabled, searchValue, kValue, tagsValue }: { d
 					</div>
 				)}
 			</div>
-			<div className="relative mt-1 lg:mt-0 bg-white text-slate-700 rounded-md shadow-sm">
+			<div className="relative mt-1 lg:mt-0 bg-white text-slate-700 rounded-md shadow-sm lg:w-2/3">
 				{filterPanelOpen &&
 					(
 						<div className="px-3 py-3 h-full w-full">
