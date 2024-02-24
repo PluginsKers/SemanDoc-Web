@@ -1,9 +1,9 @@
-import './globals.css';
-
 import { Analytics } from '@vercel/analytics/react';
-import Nav from './nav';
-import Toast from './toast';
+import Nav from '../components/nav';
+import Toast from '../components/toast';
 import { Suspense } from 'react';
+
+import '../styles/globals.css';
 
 export const metadata = {
   title: '知识库管理系统',

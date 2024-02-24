@@ -27,3 +27,7 @@
 .data-area-row:hover {
     transform: translateX(-60px);
 }
+
+ul li:last-child {
+    border-bottom: none;
+}  

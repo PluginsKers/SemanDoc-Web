@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import moment from 'moment';
-import { Document } from './page';
-import './table.css';
+import { Document } from '../../pages/home/page';
+import '../../styles/table.css';
 
 export default function Table({ docs, searchValue, setDocs }: { docs: Document[], searchValue?: string, setDocs?: any }) {
     const [confirmDelete, setConfirmDelete] = useState<number | null>(null);

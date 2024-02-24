@@ -2,9 +2,9 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
-import Search from './search';
-import Table from './table';
-import Add from './add';
+import Search from '../../components/home/search';
+import Table from '../../components/home/table';
+import Add from '../../components/home/add';
 
 export interface Metadata {
     ids: number;

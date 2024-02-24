@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios';
 import moment from 'moment';
-import { Document } from './page';
+import { Document } from '../../pages/home/page';
 
 export default function Add({ docs, setDocs }: { docs: Document[], setDocs?: any }) {
     const [tags, setTags] = useState<string[]>([]);
@@ -114,7 +114,7 @@ export default function Add({ docs, setDocs }: { docs: Document[], setDocs?: any
                                     rows={5}
                                     placeholder='请填写 文档/知识 内容，不少于5个字符...'
                                     onChange={handlePageContentChange}
-                                    className="block w-full rounded-sm border py-2 px-3 text-gray-900 shadow-sm placeholder:text-gray-300 focus:bg-gray-50"
+                                    className="block w-full min-h-[100px] rounded-sm border py-2 px-3 text-gray-900 shadow-sm placeholder:text-gray-300 focus:bg-gray-50"
                                 />
                             </div>
 
@@ -137,7 +137,7 @@ export default function Add({ docs, setDocs }: { docs: Document[], setDocs?: any
                                             {/* <label htmlFor="tagPicker" className="my-2 mt-4 ml-[.2px] text-base block font-medium text-gray-900">
                                                 当前标签
                                             </label> */}
-                                            <div className="relative overflow-hidden rounded-sm border border-dashed border-gray-400 opacity-75 flex flex-row items-center flex-wrap p-1 pb-0">
+                                            <div className="relative overflow-hidden rounded-sm border border-dashed border-gray-400/40 opacity-75 flex flex-row items-center flex-wrap p-1 pb-0">
                                                 {tags.length > 0 &&
                                                     tags.map((label, index) => (
                                                         <span key={index} onClick={() => handleTagDelete(index)} className="cursor-pointer shadow-sm select-none inline-block bg-slate-600 hover:bg-slate-500 rounded-sm px-1.5 py-1 text-white mr-1 mb-1">
@@ -182,13 +182,13 @@ export default function Add({ docs, setDocs }: { docs: Document[], setDocs?: any
                                         )}
                                     </div>
                                     <div className="mb-4">
-                                        <div onClick={() => addMinutesToSelectedDatetime(30)} className='cursor-pointer shadow-sm select-none inline-block bg-slate-600 hover:bg-slate-500 rounded-sm px-2 py-1 text-white mr-1 mb-1'>30分钟</div>
-                                        <div onClick={() => addMinutesToSelectedDatetime(60)} className='cursor-pointer shadow-sm select-none inline-block bg-slate-600 hover:bg-slate-500 rounded-sm px-2 py-1 text-white mr-1 mb-1'>1小时</div>
-                                        <div onClick={() => addMinutesToSelectedDatetime(360)} className='cursor-pointer shadow-sm select-none inline-block bg-slate-600 hover:bg-slate-500 rounded-sm px-2 py-1 text-white mr-1 mb-1'>6小时</div>
-                                        <div onClick={() => addMinutesToSelectedDatetime(1440)} className='cursor-pointer shadow-sm select-none inline-block bg-slate-600 hover:bg-slate-500 rounded-sm px-2 py-1 text-white mr-1 mb-1'>1天</div>
-                                        <div onClick={() => addMinutesToSelectedDatetime(10080)} className='cursor-pointer shadow-sm select-none inline-block bg-slate-600 hover:bg-slate-500 rounded-sm px-2 py-1 text-white mr-1 mb-1'>7天</div>
-                                        <div onClick={() => addMinutesToSelectedDatetime(43200)} className='cursor-pointer shadow-sm select-none inline-block bg-slate-600 hover:bg-slate-500 rounded-sm px-2 py-1 text-white mr-1 mb-1'>30天</div>
-                                        <div onClick={() => addMinutesToSelectedDatetime(518400)} className='cursor-pointer shadow-sm select-none inline-block bg-slate-600 hover:bg-slate-500 rounded-sm px-2 py-1 text-white mr-1 mb-1'>365天</div>
+                                        <div onClick={() => addMinutesToSelectedDatetime(30)} className='cursor-pointer shadow-sm select-none inline-block bg-slate-600/75 hover:bg-slate-500 rounded-sm px-2 py-1 text-white mr-1 mb-1'>30分钟</div>
+                                        <div onClick={() => addMinutesToSelectedDatetime(60)} className='cursor-pointer shadow-sm select-none inline-block bg-slate-600/75 hover:bg-slate-500 rounded-sm px-2 py-1 text-white mr-1 mb-1'>1小时</div>
+                                        <div onClick={() => addMinutesToSelectedDatetime(360)} className='cursor-pointer shadow-sm select-none inline-block bg-slate-600/75 hover:bg-slate-500 rounded-sm px-2 py-1 text-white mr-1 mb-1'>6小时</div>
+                                        <div onClick={() => addMinutesToSelectedDatetime(1440)} className='cursor-pointer shadow-sm select-none inline-block bg-slate-600/75 hover:bg-slate-500 rounded-sm px-2 py-1 text-white mr-1 mb-1'>1天</div>
+                                        <div onClick={() => addMinutesToSelectedDatetime(10080)} className='cursor-pointer shadow-sm select-none inline-block bg-slate-600/75 hover:bg-slate-500 rounded-sm px-2 py-1 text-white mr-1 mb-1'>7天</div>
+                                        <div onClick={() => addMinutesToSelectedDatetime(43200)} className='cursor-pointer shadow-sm select-none inline-block bg-slate-600/75 hover:bg-slate-500 rounded-sm px-2 py-1 text-white mr-1 mb-1'>30天</div>
+                                        <div onClick={() => addMinutesToSelectedDatetime(518400)} className='cursor-pointer shadow-sm select-none inline-block bg-slate-600/75 hover:bg-slate-500 rounded-sm px-2 py-1 text-white mr-1 mb-1'>365天</div>
                                     </div>
                                 </div>
                             </div>
@@ -196,10 +196,10 @@ export default function Add({ docs, setDocs }: { docs: Document[], setDocs?: any
                     </div>
                 </div>
             </div>
-            <div className="py-3 mt-3 sm:flex sm:flex-row-reverse sm:px-1 select-none   ">
+            <div className="py-3 mt-6 flex justify-end gap-3">
                 <button
                     disabled={tip.status === 'loading'}
-                    className={"cursor-pointer border inline-flex w-full justify-center rounded-sm px-5 py-2 text-white sm:ml-3 sm:w-auto " + (tip.status === 'loading' ? 'opacity-80 cursor-not-allowed bg-black px-6 ' : (tip.status === 'error' ? 'bg-red-500 hover:bg-red-600 border-red-600  ' : tip.status === 'success' ? 'bg-green-500 hover:bg-green-600 border-green-600 ' : 'bg-sky-400 hover:bg-sky-500 border-sky-500 '))}
+                    className={"cursor-pointer border inline-flex w-full justify-center rounded-md px-5 py-2 text-white sm:ml-3 sm:w-auto " + (tip.status === 'loading' ? 'opacity-80 cursor-not-allowed bg-black px-6 ' : (tip.status === 'error' ? 'bg-red-500 hover:bg-red-600 border-red-600  ' : tip.status === 'success' ? 'bg-green-500 hover:bg-green-600 border-green-600 ' : 'bg-sky-400 hover:bg-sky-500 border-sky-500 '))}
                     onClick={() => fetchData()}
                 >
                     {tip.status === 'loading' ? (<svg
@@ -224,7 +224,7 @@ export default function Add({ docs, setDocs }: { docs: Document[], setDocs?: any
                     </svg>) : (tip.status !== null ? tip.msg : '添加')}
                 </button>
                 <button
-                    className="cursor-pointer border border-gray-300 mt-3 inline-flex w-full justify-center rounded-sm px-5 py-2 text-black bg-gray-200 hover:bg-gray-300/90 sm:mt-0 sm:w-auto"
+                    className="cursor-pointer border border-gray-300 mt-3 inline-flex w-full justify-center rounded-md px-5 py-2 text-black bg-gray-200 hover:bg-gray-300/90 sm:mt-0 sm:w-auto"
                     onClick={() => clearFormData()}
                 >
                     重置

@@ -175,7 +175,7 @@ export default function Search({ disabled, searchValue, kValue, tagsValue }: { d
 									className="w-full mb-3 rounded-md py-2 px-3 text-gray-900 ring-1 ring-gray-100 shadow-sm placeholder:text-gray-300 focus:bg-gray-50"
 									placeholder="按下回车添加标签"
 								/>
-								<div className="relative overflow-hidden rounded-sm border border-dashed border-gray-400 opacity-75 flex flex-row items-center flex-wrap p-1 pb-0">
+								<div className="relative overflow-hidden rounded-sm border border-dashed border-gray-400/40 opacity-75 flex flex-row items-center flex-wrap p-1 pb-0">
 									{tags.length > 0 &&
 										tags.map((label, index) => (
 											<span key={index} onClick={() => handleTagDelete(index)} className="cursor-pointer shadow-sm select-none inline-block bg-slate-600 hover:bg-slate-500 rounded-sm px-1.5 py-1 text-white mr-1 mb-1">
@@ -184,7 +184,7 @@ export default function Search({ disabled, searchValue, kValue, tagsValue }: { d
 										))
 										||
 										(<div>
-											<svg className="absolute inset-0 h-full w-full stroke-gray-900/10" fill="none">
+											<svg className="absolute inset-0 h-full w-full stroke-gray-900/10 opacity-0 hover:opacity-100" fill="none">
 												<defs>
 													<pattern id="pattern-d09edaee-fc6a-4f25-aca5-bf9f5f77e14a" x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse">
 														<path d="M-3 13 15-5M-5 5l18-18M-1 21 17 3"></path>
