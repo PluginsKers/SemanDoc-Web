@@ -159,6 +159,7 @@ export default function Search({ disabled, searchValue, kValue, tagsValue }: { d
 									type='number'
 									value={inputKValue}
 									spellCheck={false}
+									autoComplete={"off"}
 									placeholder='最大检索数量'
 									className="w-full rounded-md py-2 px-3 text-gray-900 ring-1 ring-gray-100 shadow-sm placeholder:text-gray-300 focus:bg-gray-50"
 									onBlur={(e) => handleKSet(e.target.value)}

@@ -9,7 +9,7 @@ import Image from 'next/image';
 
 const navigation = [
     { name: '管理面板', href: '/pages/home' },
-    { name: '数据分析', href: '/pages/playground' }
+    { name: '新面板', href: 'https://www.i5res.com/' }
 ];
 
 function classNames(...classes: string[]) {

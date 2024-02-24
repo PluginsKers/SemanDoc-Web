@@ -698,6 +698,11 @@
     utf-8-validate "6.0.3"
     ws "8.14.2"
 
+"@wecom/jssdk@^1.4.5":
+  version "1.4.5"
+  resolved "https://registry.npmmirror.com/@wecom/jssdk/-/jssdk-1.4.5.tgz"
+  integrity sha512-1SSmcDUid7QOQNNFaM4d884NXJQYuoO+oLZtM9TRO5uMXYj2s69hmuAoPUr3D3br6VDgv4H+tbIG5A5A+uB9lA==
+
 acorn-jsx@^5.3.2:
   version "5.3.2"
   resolved "https://registry.npmmirror.com/acorn-jsx/-/acorn-jsx-5.3.2.tgz"
