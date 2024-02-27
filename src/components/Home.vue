@@ -1,23 +1,32 @@
 <template>
-    <div class="home-container">
-        <h1>Document Dashboard</h1>
-        <div class="search-panel">
-            <input v-model="query" placeholder="Enter search query" />
-            <button @click="searchDocuments">Search</button>
+    <div class="mx-auto py-10 pt-20">
+        <h1 class="text-3xl font-bold text-center mb-6">Document Dashboard</h1>
+        <div class="flex justify-center gap-4 mb-6">
+            <input v-model="query" placeholder="Enter search query"
+                class="border-2 border-gray-200 rounded-lg p-2 focus:border-blue-500 focus:outline-none" />
+            <button @click="searchDocuments"
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Search</button>
         </div>
-        <div class="add-document-form">
-            <input v-model="newData" placeholder="Enter new data" />
-            <input v-model="newMetadata" placeholder="Enter new metadata" />
-            <button @click="addDocument">Add Document</button>
+        <div class="flex justify-center gap-4 mb-6">
+            <input v-model="newData" placeholder="Enter new data"
+                class="border-2 border-gray-200 rounded-lg p-2 focus:border-blue-500 focus:outline-none" />
+            <input v-model="newMetadata" placeholder="Enter new metadata"
+                class="border-2 border-gray-200 rounded-lg p-2 focus:border-blue-500 focus:outline-none" />
+            <button @click="addDocument" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Add
+                Document</button>
         </div>
-        <ul class="document-list">
-            <li v-for="(document, index) in documents" :key="index">
-                {{ document.page_content }} - {{ document.metadata }}
-                <button @click="removeDocument(index)">Delete</button>
+        <ul>
+            <li v-for="(document, index) in documents" :key="index"
+                class="border-b border-gray-200 py-2 flex justify-between items-center">
+                <span class="text-gray-700">{{ document.page_content }} - {{ document.metadata }}</span>
+                <button @click="removeDocument(index)"
+                    class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded text-xs">Delete</button>
             </li>
         </ul>
     </div>
 </template>
+  
+  
   
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
@@ -74,25 +83,5 @@ export default defineComponent({
 });
 </script>
   
-<style>
-.home-container {
-    max-width: 800px;
-    margin: auto;
-    padding: 20px;
-}
-
-.search-panel,
-.add-document-form {
-    margin-bottom: 20px;
-}
-
-.document-list {
-    list-style: none;
-    padding: 0;
-}
-
-.document-list li {
-    margin: 10px 0;
-}
-</style>
+<style scoped></style>
   
