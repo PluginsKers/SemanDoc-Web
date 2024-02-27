@@ -1,8 +1,6 @@
-# 数据管理面板开发
+# documents-dashboard-web
 
-### feat
+## feat
 
- - 页面布局
- - 第三方企业微信应用登录状态控制
- - 数据接口开发
- - 模块化界面样式
+- style: 样式
+- front-layout: 前端布局
