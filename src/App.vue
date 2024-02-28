@@ -1,6 +1,6 @@
 <template>
     <Head></Head>
-    <router-view class="min-h-screen bg-gray p-4"></router-view>
+    <router-view class="min-h-screen bg-gray-100/50 p-4 text-sm"></router-view>
 </template>
 
 <script lang="ts">

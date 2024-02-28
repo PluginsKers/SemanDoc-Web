@@ -6,13 +6,6 @@ export default {
     ],
     theme: {
         extend: {
-            colors: {
-                'black': '#171717',
-                'white': '#fff',
-                'gray': '#fafafa',
-                'light-gray': '#eaeaea',
-                'dark-gray': '#666',
-            },
             fontSize: {
                 'sm': '0.875rem', // 14px
                 'base': '1rem', // 16px
