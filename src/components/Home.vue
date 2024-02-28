@@ -1,26 +1,25 @@
 <template>
     <div class="mx-auto py-10 pt-20">
-        <h1 class="text-3xl font-bold text-center mb-6">Document Dashboard</h1>
-        <div class="flex justify-center gap-4 mb-6">
-            <input v-model="query" placeholder="Enter search query"
+        <h1 class="text-3xl font-bold text-center mb-6">文档管理</h1>
+        <div class="flex flex-col justify-center gap-4 mb-6">
+            <input v-model="query" placeholder="相关检索"
                 class="border-2 border-gray-200 rounded-lg p-2 focus:border-blue-500 focus:outline-none" />
             <button @click="searchDocuments"
-                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Search</button>
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">检索</button>
         </div>
-        <div class="flex justify-center gap-4 mb-6">
-            <input v-model="newData" placeholder="Enter new data"
+        <div class="flex flex-col justify-center gap-4 mb-6">
+            <input v-model="newData" placeholder="文档信息"
                 class="border-2 border-gray-200 rounded-lg p-2 focus:border-blue-500 focus:outline-none" />
-            <input v-model="newMetadata" placeholder="Enter new metadata"
+            <input v-model="newMetadata" placeholder="源信息格式"
                 class="border-2 border-gray-200 rounded-lg p-2 focus:border-blue-500 focus:outline-none" />
-            <button @click="addDocument" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Add
-                Document</button>
+            <button @click="addDocument" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">添加文档</button>
         </div>
         <ul>
             <li v-for="(document, index) in documents" :key="index"
                 class="border-b border-gray-200 py-2 flex justify-between items-center">
                 <span class="text-gray-700">{{ document.page_content }} - {{ document.metadata }}</span>
                 <button @click="removeDocument(index)"
-                    class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded text-xs">Delete</button>
+                    class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded text-xs">删除</button>
             </li>
         </ul>
     </div>
