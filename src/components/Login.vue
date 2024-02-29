@@ -45,50 +45,35 @@
         </form>
     </div>
 </template>
-  
-  
-<script lang="ts">
-import { defineComponent, ref } from 'vue';
+
+<script setup lang="ts">
+import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { login } from '../api/auth';
 
-export default defineComponent({
-    setup() {
-        const username = ref('');
-        const password = ref('');
-        const loginStatus = ref(0);
-        const loginErrorMessage = ref('');
-        const router = useRouter();
+const username = ref('');
+const password = ref('');
+const loginStatus = ref(0);
+const loginErrorMessage = ref('');
+const router = useRouter();
 
-        const submitLogin = async () => {
-            if (loginStatus.value == -1 || loginStatus.value == 1) return;
-            loginStatus.value = -1;
-            try {
-                const token = await login(username.value, password.value);
-                localStorage.setItem('token', token);
-                loginStatus.value = 1;
-                loginErrorMessage.value = '';
-                setTimeout(() => {
-                    router.push({ name: 'Home' });
-                }, 3000);
-            } catch (error: any) {
-                console.error('登录错误: ', error);
-                loginStatus.value = -2;
-                loginErrorMessage.value = error.response?.data?.message || '登录失败';
-            }
-        };
-
-        return {
-            username,
-            password,
-            loginStatus,
-            loginErrorMessage,
-            submitLogin
-        };
+const submitLogin = async () => {
+    if (loginStatus.value == -1 || loginStatus.value == 1) return;
+    loginStatus.value = -1;
+    try {
+        const token = await login(username.value, password.value);
+        localStorage.setItem('token', token);
+        loginStatus.value = 1;
+        loginErrorMessage.value = '';
+        setTimeout(() => {
+            router.push({ name: 'Home' });
+        }, 3000);
+    } catch (error) {
+        console.error('登录错误: ', error);
+        loginStatus.value = -2;
+        loginErrorMessage.value = error.response?.data?.message || '登录失败';
     }
-});
+};
 </script>
 
-  
 <style></style>
-  
