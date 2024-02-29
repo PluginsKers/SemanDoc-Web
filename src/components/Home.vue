@@ -3,8 +3,16 @@
         <div class="mx-auto max-w-lg placeholder:text-gray-400">
             <h1 class="text-3xl font-bold text-center mb-6">文档管理</h1>
             <div class="flex flex-col justify-center gap-4 mb-6">
-                <input v-model="query" placeholder="相关检索"
-                    class="mt-1 p-2 w-full h-10 outline-none rounded-md text-gray-900 ring-1 ring-gray-200 focus:ring-2 focus:border-gray-200 sm:text-sm sm:leading-6" />
+                <div class="flex flex-col">
+                    <div class="flex">
+                        <input v-model="query" placeholder="检索内容"
+                            class="relative p-2 w-3/4 focus:outline-none border-[1px] border-gray-200 text-gray-900 sm:text-sm leading-6 rounded-tl-md" />
+                        <input v-model.number="k" type="number" min="1" placeholder="数量"
+                            class="relative p-2 w-1/4 focus:outline-none border-[1px] border-l-0 border-gray-200 text-gray-900 sm:text-sm leading-6 rounded-tr-md" />
+                    </div>
+                    <input v-model="filter" placeholder="条件过滤"
+                        class="p-2 w-full focus:outline-none text-gray-900 border-[1px] border-t-0 border-gray-200 sm:text-sm leading-6 rounded-bl-md rounded-br-md" />
+                </div>
                 <div @click="searchDocuments"
                     :class="{ 'bg-gray-800': queryingStatus == -1, 'bg-red-800': queryingStatus == -2, 'bg-green-700': queryingStatus == 1, 'bg-black hover:bg-gray-900': queryingStatus == 0 }"
                     class="flex justify-center items-center h-10 w-full py-2 px-4 cursor-pointer select-none border border-transparent rounded-md shadow-sm text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black">
@@ -35,8 +43,11 @@
                         检索
                     </template>
                 </div>
+                <div class="flex justify-center items-center h-10 cursor-pointer select-none w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium bg-black hover:bg-gray-900 text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
+                    @click="showModal = true">
+                    添加文档
+                </div>
             </div>
-            <AddPanel @documentAdded="handleDocumentAdded" />
             <ul>
                 <li v-for="(document, index) in documents" :key="index"
                     class="border-b border-gray-200 py-2 flex justify-between items-center">
@@ -47,6 +58,7 @@
                     </div>
                 </li>
             </ul>
+            <AddPanel v-if="showModal" @documentAdded="handleDocumentAdded" @closeModal="closeModal" />
         </div>
     </div>
 </template>
@@ -59,8 +71,15 @@ import { queryDocuments, removeDocuments } from '../api/documents';
 
 const documents = ref<Document[]>([]);
 const query = ref('');
+const k = ref(6);
+const filter = ref('{}');
+const showModal = ref(false);
 const queryingStatus = ref(0);
-let queryingTimer: any = null;
+let timer: any = null;
+
+const closeModal = () => {
+    showModal.value = false;
+}
 
 const handleDocumentAdded = (newDocument: Document) => {
     documents.value.push(newDocument);
@@ -69,14 +88,14 @@ const handleDocumentAdded = (newDocument: Document) => {
 const searchDocuments = async () => {
     if (queryingStatus.value == -1) return;
     queryingStatus.value = -1;
-    clearTimeout(queryingTimer);
+    clearTimeout(timer);
     try {
-        const results = await queryDocuments(query.value, 10);
+        const results = await queryDocuments(query.value, k.value, JSON.parse(filter.value));
         documents.value = results;
         queryingStatus.value = 1;
-        queryingTimer = setTimeout(() => {
+        timer = setTimeout(() => {
             queryingStatus.value = 0;
-        }, 4000);
+        }, 3000);
     } catch (error) {
         queryingStatus.value = -2;
         console.error('检索文档错误:', error);

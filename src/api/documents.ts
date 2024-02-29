@@ -3,8 +3,8 @@ import { Document } from './types';
 
 const API_BASE_URL = 'https://ai.app.nbpt.edu.cn/api';
 
-export const queryDocuments = async (query: string, k: number): Promise<Document[]> => {
-    const response = await axios.post(`${API_BASE_URL}/query`, { query, k });
+export const queryDocuments = async (query: string, k: number, filter: object): Promise<Document[]> => {
+    const response = await axios.post(`${API_BASE_URL}/query`, { query, k, filter });
     return response.data.data;
 };
 
