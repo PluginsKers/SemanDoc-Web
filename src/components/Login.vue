@@ -71,7 +71,7 @@ const submitLogin = async () => {
     } catch (error) {
         console.error('登录错误: ', error);
         loginStatus.value = -2;
-        loginErrorMessage.value = error.response?.data?.message || '登录失败';
+        loginErrorMessage.value = '登录失败';
     }
 };
 </script>
