@@ -13,16 +13,16 @@
                     class="mt-1 p-2 w-full h-10 outline-none rounded-md text-gray-900 ring-1 ring-gray-200 placeholder:text-gray-400 focus:ring-2 focus:border-gray-200 sm:text-sm sm:leading-6">
             </div>
             <div @click="submitLogin"
-                :class="{ 'bg-gray-800': loading && !loginSuccess, 'bg-red-500': loginError, 'bg-green-700': loginSuccess, 'bg-black hover:bg-gray-900': !loading && !loginSuccess }"
+                :class="{ 'bg-gray-800': loginStatus == -1, 'bg-red-800': loginStatus == -2, 'bg-green-700': loginStatus == 1, 'bg-black hover:bg-gray-900': loginStatus == 0 }"
                 class="flex justify-center items-center h-10 cursor-pointer select-none w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black">
-                <template v-if="loginSuccess">
+                <template v-if="loginStatus == 1">
                     <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd"
                             d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
                             clip-rule="evenodd" />
                     </svg>
                 </template>
-                <template v-else-if="loading">
+                <template v-else-if="loginStatus == -1">
                     <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
                         viewBox="0 0 24 24">
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -31,8 +31,12 @@
                         </path>
                     </svg>
                 </template>
-                <template v-else-if="loginError">
-                    {{ loginErrorMessage  }}
+                <template v-else-if="loginStatus == -2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor" stroke-width="4">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                    {{ loginErrorMessage }}
                 </template>
                 <template v-else>
                     登录
@@ -52,29 +56,24 @@ export default defineComponent({
     setup() {
         const username = ref('');
         const password = ref('');
-        const loading = ref(false);
-        const loginSuccess = ref(false);
-        const loginError = ref(false);
+        const loginStatus = ref(0);
         const loginErrorMessage = ref('');
         const router = useRouter();
 
         const submitLogin = async () => {
-            if (loading.value) return;
-            loading.value = true;
+            if (loginStatus.value == -1 || loginStatus.value == 1) return;
+            loginStatus.value = -1;
             try {
                 const token = await login(username.value, password.value);
                 localStorage.setItem('token', token);
-                loginSuccess.value = true;
-                loginError.value = false;
+                loginStatus.value = 1;
                 loginErrorMessage.value = '';
                 setTimeout(() => {
                     router.push({ name: 'Home' });
                 }, 3000);
             } catch (error: any) {
                 console.error('登录错误: ', error);
-                loading.value = false;
-                loginSuccess.value = false;
-                loginError.value = true;
+                loginStatus.value = -2;
                 loginErrorMessage.value = error.response?.data?.message || '登录失败';
             }
         };
@@ -82,9 +81,7 @@ export default defineComponent({
         return {
             username,
             password,
-            loading,
-            loginSuccess,
-            loginError,
+            loginStatus,
             loginErrorMessage,
             submitLogin
         };
