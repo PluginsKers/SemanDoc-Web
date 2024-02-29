@@ -18,7 +18,7 @@ axios.interceptors.request.use(config => {
 axios.interceptors.response.use(response => {
     return response;
 }, error => {
-    if (error.response.status && error.response.status === 401) {
+    if (error.response.status && (error.response.status === 401 || error.response.status === 403)) {
         localStorage.removeItem('token');
         router.push('/login');
         return Promise.reject("验证已过期");
