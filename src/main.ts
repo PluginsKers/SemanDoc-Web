@@ -16,13 +16,13 @@ axios.interceptors.request.use(config => {
 });
 
 axios.interceptors.response.use(response => {
-    if (response.data.code && (response.data.code === 401 || response.data.code === 403)) {
-        localStorage.removeItem('token');
-        router.push('/login');
-        return Promise.reject("Unauthorized: Token is invalid or expired");
-    }
     return response;
 }, error => {
+    if (error.response.status && error.response.status === 401) {
+        localStorage.removeItem('token');
+        router.push('/login');
+        return Promise.reject("验证已过期");
+    }
     return Promise.reject(error);
 });
 

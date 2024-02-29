@@ -106,6 +106,7 @@ export default defineComponent({
                 querying.value = false;
             } catch (error) {
                 console.error('Error fetching documents:', error);
+                querying.value = false;
             }
         };
 
@@ -134,6 +135,7 @@ export default defineComponent({
                 adding.value = false;
             } catch (error) {
                 console.error('Error adding document:', error);
+                adding.value = false;
             }
         };
 
