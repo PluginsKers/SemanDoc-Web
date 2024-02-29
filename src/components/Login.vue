@@ -1,6 +1,6 @@
 <template>
     <div class="flex justify-center py-10 pt-[100px]">
-        <form class="w-full max-w-sm placeholder:text-gray-400">
+        <form class="w-full max-w-lg placeholder:text-gray-400">
             <h1 class="text-2xl font-semibold text-center text-gray-900 mb-6">登录</h1>
             <div class="mb-4">
                 <label for="username" class="block text-sm font-medium text-gray-700">用户名:</label>
