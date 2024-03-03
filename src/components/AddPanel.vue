@@ -1,24 +1,25 @@
 <template>
-    <div class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex justify-center items-center p-4">
+    <div class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex justify-center items-start md:py-4 z-20">
         <!-- 模态窗口内容，小屏幕设备全屏，大屏幕占据屏幕的绝大部分 -->
         <div
-            class="bg-white rounded-md max-w-lg w-full shadow-lg sm:w-full md:max-w-2xl lg:max-w-4xl xl:max-w-5xl overflow-auto">
+            class="bg-white w-screen h-full rounded-none md:rounded-md lg:max-w-lg w-full shadow-lg sm:w-full md:max-w-2xl lg:max-w-3xl xl:max-w-5xl overflow-auto">
             <!-- 模态窗口的子元素，如输入框、按钮等 -->
-            <div class="flex flex-col justify-center gap-4 p-6">
+            <div class="flex flex-col justify-center h-full gap-4 p-6">
                 <textarea v-model="newData" placeholder="文档信息"
-                    class="mt-1 p-2 w-full min-h-40 h-40 focus:outline-none rounded-md text-gray-900 ring-1 ring-gray-200 focus:ring-[3px] focus:border-gray-200 text-sm leading-6">
+                    class="flex-1 mt-1 p-2 w-full min-h-40 h-40 outline-none rounded-md text-gray-900 ring-1 ring-gray-200 focus:ring-[3px] focus:border-gray-100 text-sm leading-6">
                 </textarea>
                 <input v-model="newMetadata" placeholder="源信息格式"
-                    class="mt-1 p-2 w-full h-10 focus:outline-none rounded-md text-gray-900 ring-1 ring-gray-200 focus:ring-[3px] focus:border-gray-200 text-sm leading-6" />
+                    class="shrink-0 mt-1 p-2 w-full h-10 outline-none rounded-md text-gray-900 ring-1 ring-gray-200 focus:ring-[3px] focus:border-gray-100 text-sm leading-6" />
                 <div class="flex flex-wrap">
-                    <div class="cursor-pointer select-none bg-gray-200 rounded-md p-2 mr-1 mb-1" v-for="metadata, name in presets" :key="name" @click="newMetadata = JSON.stringify(metadata)">{{
-                        name
-                    }}</div>
+                    <div class="cursor-pointer select-none bg-gray-200 rounded-md p-2 mr-1 mb-1 outline-none active:ring-[3px] active:ring-gray-100"
+                        v-for="metadata, name in presets" :key="name" @click="newMetadata = JSON.stringify(metadata)">{{
+                            name
+                        }}</div>
                 </div>
-                <div class="flex justify-between items-center">
+                <div class="flex-none flex justify-between items-center">
                     <div @click="addDocument"
                         :class="{ 'bg-gray-800': addingStatus == -1, 'bg-green-700': addingStatus == 1, 'bg-red-800': addingStatus == -2, 'bg-black hover:bg-gray-900': addingStatus == 0 }"
-                        class="cursor-pointer select-none py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white focus:outline-none focus:ring-[3px] focus:ring-offset-2 focus:ring-black">
+                        class="cursor-pointer select-none h-10 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white focus:ring-black outline-none active:ring-[3px] active:ring-gray-200">
                         <template v-if="addingStatus == 1">
                             <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd"
@@ -47,7 +48,7 @@
                         </template>
                     </div>
                     <div @click="closeModal"
-                        class="flex justify-center items-center h-10 cursor-pointer select-none py-2 px-4 bg-gray-200 h-10 hover:bg-gray-300 rounded-md text-sm font-medium text-gray-800 active:outline-none active:ring-[3px] active:ring-gray-100">
+                        class="flex justify-center items-center h-10 cursor-pointer select-none py-2 px-4 bg-gray-200 h-10 hover:bg-gray-300 rounded-md text-sm font-medium text-gray-800 outline-none active:ring-[3px] active:ring-gray-100">
                         取消
                     </div>
                 </div>
@@ -68,6 +69,7 @@ const emit = defineEmits(['documentAdded', 'closeModal']);
 let timer: any = null;
 
 const presets = {
+    "通用": { "tags": ["通用"] },
     "人工智能学院": { "tags": ["人工智能学院"] },
     "机电工程学院": { "tags": ["机电工程学院"] },
     "化学工程学院": { "tags": ["化学工程学院"] },

@@ -23,9 +23,6 @@ export default {
                 '8': '2rem', // 32px
                 '10': '2.5rem', // 40px
             },
-            boxShadow: {
-                'vercel': '0 4px 14px 0 rgba(0,0,0,0.1)',
-            },
             fontFamily: {
                 'sans': ['Inter', 'sans-serif'], // Assuming Vercel uses Inter, replace with the actual font stack
             },
