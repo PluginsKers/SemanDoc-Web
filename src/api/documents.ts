@@ -4,8 +4,7 @@ import router from '../router';
 
 const API_BASE_URL = 'https://ai.app.nbpt.edu.cn/api';
 const http = axios.create({
-    baseURL: API_BASE_URL,
-    timeout: 6000
+    baseURL: API_BASE_URL
 });
 
 http.interceptors.request.use(
