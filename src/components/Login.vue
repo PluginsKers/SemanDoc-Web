@@ -1,5 +1,5 @@
 <template>
-    <div class="flex justify-center py-10 pt-[100px] z-0">
+    <div class="flex justify-center pt-18 pt-[100px] z-0">
         <form class="w-full max-w-md placeholder:text-gray-400">
             <h1 class="text-3xl font-semibold text-center text-gray-900 mb-4">登录</h1>
             <div class="mb-4">
@@ -67,7 +67,7 @@ const submitLogin = async () => {
         loginErrorMessage.value = '';
         setTimeout(() => {
             router.push({ name: 'Home' });
-        }, 3000);
+        }, 1600);
     } catch (error) {
         console.error('登录错误: ', error);
         loginStatus.value = -2;
