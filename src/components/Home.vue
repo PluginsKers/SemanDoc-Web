@@ -75,7 +75,7 @@ import { queryDocuments, removeDocuments } from '../api/documents';
 
 const documents = ref<Document[]>([]);
 const query = ref('');
-const k = ref(6);
+const k = ref(10);
 const filter = ref('{}');
 const showModal = ref(false);
 const queryingStatus = ref(0);
