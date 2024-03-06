@@ -47,7 +47,7 @@
                             添加文档
                         </template>
                     </div>
-                    <div @click="closeModal"
+                    <div @click="closeAddModel"
                         class="flex justify-center items-center h-10 cursor-pointer select-none py-2 px-4 bg-gray-200 h-10 hover:bg-gray-300 rounded-md text-sm font-medium text-gray-800 outline-none active:ring-[3px] active:ring-gray-100">
                         取消
                     </div>
@@ -58,14 +58,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, defineEmits } from 'vue';
 import { addDocument as _addDocument } from '../api/documents';
-import { defineEmits } from 'vue';
 
 const newData = ref('');
 const newMetadata = ref('{"tags":[]}');
 const addingStatus = ref(0);
-const emit = defineEmits(['documentAdded', 'closeModal']);
+const emit = defineEmits(['documentAdded', 'closeAddModel']);
 let timer: any = null;
 
 const presets = {
@@ -83,8 +82,8 @@ const presets = {
     "公共基础学院": { "tags": ["公共基础学院"] }
 }
 
-const closeModal = () => {
-    emit('closeModal');
+const closeAddModel = () => {
+    emit('closeAddModel');
 }
 
 const addDocument = async () => {
