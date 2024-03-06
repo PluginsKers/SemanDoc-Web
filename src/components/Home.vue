@@ -1,10 +1,11 @@
 <template>
     <div class="py-10 pt-[56px]">
         <div
-            class="flex flex-col items-center md:max-w-5xl lg:justify-center lg:flex-row-reverse lg:items-start mx-auto placeholder:text-gray-400 z-0">
-            <div class="relative w-full max-w-2xl bg-white border-[1px] rounded-md md:shadow-sm p-4 pb-2 mb-4">
+            class="flex flex-col items-center lg:justify-center md:max-w-6xl md:min-w-5xl lg:max-w-7xl lg:min-w-6xl lg:flex-row-reverse lg:items-start mx-auto placeholder:text-gray-400 z-0">
+            <div :class="{ 'max-w-[300px]': documents.length > 0 }"
+                class="relative w-full max-w-xl bg-white border-[1px] rounded-md md:shadow-sm p-4 pb-2 mb-4">
                 <h1 class="text-3xl font-bold text-center mb-4">文档管理</h1>
-                <div class="flex flex-col justify-center gap-4 mb-4">
+                <div class="flex-none flex flex-col justify-center gap-4 mb-4">
                     <div class="flex flex-col">
                         <div class="flex">
                             <input v-model="query" placeholder="检索内容"
@@ -56,7 +57,7 @@
                     </div>
                 </div>
             </div>
-            <ul v-show="documents.length > 1"
+            <ul v-show="documents.length > 0"
                 class="grow docs-list bg-white border-[1px] lg:mr-4 max-w-2xl min-w-xl p-4 rounded-md md:shadow-sm">
                 <li v-for="(document, index) in documents" :key="index" @click="openEditModel(index)"
                     class="p-2 flex cursor-pointer justify-between items-center rounded-md hover:ring-1 hover:ring-gray-200 hover:bg-gray-50/50">
