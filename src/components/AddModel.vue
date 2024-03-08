@@ -48,7 +48,7 @@
                         </template>
                     </div>
                     <div @click="closeAddModel"
-                        class="flex justify-center items-center h-10 cursor-pointer select-none py-2 px-4 bg-gray-200 h-10 hover:bg-gray-300 rounded-md text-sm font-medium text-gray-800 outline-none active:ring-[3px] active:ring-gray-100">
+                        class="flex justify-center items-center h-10 cursor-pointer select-none py-2 px-4 bg-gray-200 h-10 rounded-md text-sm font-medium text-gray-800 outline-none hover:ring-[3px] hover:ring-gray-100">
                         取消
                     </div>
                 </div>
