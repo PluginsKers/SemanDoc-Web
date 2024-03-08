@@ -11,7 +11,7 @@
                             <div
                                 class="flex w-full flex-row relative h-10 border-[1px] border-gray-200 sm:text-sm rounded-tl-md">
                                 <div
-                                    class="absolute h-full top-[-1px] w-10 pointer-events-none flex justify-center items-center">
+                                    class="absolute h-full w-10 pointer-events-none flex justify-center items-center">
                                     <svg class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
                                         <path fill-rule="evenodd"
                                             d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
@@ -19,16 +19,16 @@
                                     </svg>
                                 </div>
                                 <input v-model="query" placeholder="检索内容"
-                                    class="block p-2 pl-10 w-full h-full outline-none rounded-tl-md focus:bg-gray-50/50" />
+                                    class="block p-2 pl-10 w-full h-full align-middle outline-none rounded-tl-md focus:bg-gray-50/50" />
                             </div>
                             <input v-model.number="k" type="number" min="1" placeholder="数量"
-                                class="relative p-2 w-1/4 h-10 outline-none border-[1px] border-l-0 border-gray-200 sm:text-sm rounded-tr-md" />
+                                class="relative p-2 w-1/4 h-10 align-middle outline-none border-[1px] border-l-0 border-gray-200 sm:text-sm rounded-tr-md focus:bg-gray-50/50" />
                         </div>
                         <div class="flex h-10">
-                            <input v-model="score_threshold" placeholder="分数阈值"
-                                class="p-2 w-1/6 h-full text-center outline-none border-[1px] border-r-0 border-t-0 border-gray-200 sm:text-sm rounded-bl-md focus:bg-gray-50/50" />
+                            <input v-model.number="score_threshold" type="number" min="0" max="2" placeholder="分数阈值"
+                                class="p-2 w-1/6 h-full text-center align-middle outline-none border-[1px] border-r-0 border-t-0 border-gray-200 sm:text-sm rounded-bl-md focus:bg-gray-50/50" />
                             <input v-model="filter" placeholder="条件过滤"
-                                class="p-2 w-full h-full outline-none  border-[1px] border-t-0 border-gray-200 sm:text-sm rounded-br-md rounded-br-md focus:bg-gray-50/50" />
+                                class="p-2 w-full h-full outline-none align-middle border-[1px] border-t-0 border-gray-200 sm:text-sm rounded-br-md rounded-br-md focus:bg-gray-50/50" />
                         </div>
                     </div>
                     <div @click="searchDocuments"
