@@ -1,23 +1,34 @@
 <template>
-    <div class="py-10 pt-[56px]">
-        <div
-            class="flex flex-col items-center lg:justify-center md:max-w-6xl md:min-w-5xl lg:max-w-7xl lg:min-w-6xl lg:flex-row-reverse lg:items-start mx-auto placeholder:text-gray-400 z-0">
-            <div class="relative w-full max-w-xl bg-white border-[1px] rounded-md md:shadow-sm p-4 pb-2 mb-4"
-                :class="{ 'max-w-[360px]': documents.length > 0 }">
+    <div class="py-10 pt-[48px]" :class="{ 'w-full': documents.length > 0 }">
+        <div class="flex flex-col items-center lg:justify-center mx-auto lg:flex-row-reverse lg:items-start placeholder:text-gray-400 z-0"
+            :class="{ 'md:max-w-2xl md:min-w-1xl lg:max-w-3xl lg:min-w-2xl': documents.length <= 0, 'w-4/5': documents.length > 0 }">
+            <div class="relative bg-white border-[1px] rounded-md md:shadow-sm p-4 pb-2 mb-4"
+                :class="{ 'w-1/3': documents.length > 0, 'w-full': documents.length <= 0 }">
                 <h1 class="text-3xl font-bold text-center mb-4">文档管理</h1>
-                <div class="flex flex-col justify-center gap-4 mb-4">
-                    <div class="flex flex-col mb-3">
-                        <div class="flex">
-                            <input v-model="query" placeholder="检索内容"
-                                class="relative p-2 w-full h-10 outline-none border-[1px] border-gray-200 text-gray-900 sm:text-sm leading-6 rounded-tl-md focus:bg-gray-50/50" />
+                <div class="flex flex-col justify-center gap-4">
+                    <div class="flex flex-col mb-3 text-gray-900">
+                        <div class="flex h-10">
+                            <div
+                                class="flex w-full flex-row relative h-10 border-[1px] border-gray-200 sm:text-sm rounded-tl-md">
+                                <div
+                                    class="absolute h-full top-[-1px] w-10 pointer-events-none flex justify-center items-center">
+                                    <svg class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                                <input v-model="query" placeholder="检索内容"
+                                    class="block p-2 pl-10 w-full h-full outline-none rounded-tl-md focus:bg-gray-50/50" />
+                            </div>
                             <input v-model.number="k" type="number" min="1" placeholder="数量"
-                                class="relative p-2 w-1/4 h-10 outline-none border-[1px] border-l-0 border-gray-200 text-gray-900 sm:text-sm leading-6 rounded-tr-md focus:bg-gray-50/50" />
+                                class="relative p-2 w-1/4 h-10 outline-none border-[1px] border-l-0 border-gray-200 sm:text-sm rounded-tr-md" />
                         </div>
-                        <div class="flex">
+                        <div class="flex h-10">
                             <input v-model="score_threshold" placeholder="分数阈值"
-                                class="p-2 w-1/6 h-10 text-center outline-none text-gray-900 border-[1px] border-r-0 border-t-0 border-gray-200 sm:text-sm leading-6 rounded-bl-md focus:bg-gray-50/50" />
+                                class="p-2 w-1/6 h-full text-center outline-none border-[1px] border-r-0 border-t-0 border-gray-200 sm:text-sm rounded-bl-md focus:bg-gray-50/50" />
                             <input v-model="filter" placeholder="条件过滤"
-                                class="p-2 w-full h-10 outline-none text-gray-900 border-[1px] border-t-0 border-gray-200 sm:text-sm leading-6 rounded-br-md rounded-br-md focus:bg-gray-50/50" />
+                                class="p-2 w-full h-full outline-none  border-[1px] border-t-0 border-gray-200 sm:text-sm rounded-br-md rounded-br-md focus:bg-gray-50/50" />
                         </div>
                     </div>
                     <div @click="searchDocuments"
@@ -59,10 +70,11 @@
                         @click="showAddModal = true">
                         添加文档
                     </div>
+                    <span class="text-center text-gray-300">注意：该系统为语义检索，调节阈值大小精确控制检索精度。</span>
                 </div>
             </div>
             <ul v-show="documents.length > 0"
-                class="grow docs-list bg-white border-[1px] lg:mr-4 max-w-2xl min-w-xl p-4 rounded-md md:shadow-sm">
+                class="w-full docs-list bg-white border-[1px] lg:mr-4 min-w-xl p-4 rounded-md md:shadow-sm">
                 <li v-for="(document, index) in documents" :key="index" @click="openEditModel(index)"
                     class="p-2 flex flex-col cursor-pointer justify-between items-start rounded-md hover:ring-1 hover:ring-gray-200 hover:bg-gray-50/50">
                     <span class="text-gray-700">{{ document.page_content }}</span>
@@ -94,11 +106,13 @@ const index = ref(-1);
 const query = ref('');
 const k = ref(20);
 const filter = ref('{}');
-const score_threshold = ref<number>(1)
+const score_threshold = ref<number>(2.0)
 const showAddModal = ref(false);
 const showEditModal = ref(false);
 const queryingStatus = ref(0);
 let timer: any = null;
+
+
 
 const openEditModel = (t_idx: number) => {
     index.value = t_idx;
