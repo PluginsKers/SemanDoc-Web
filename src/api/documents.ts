@@ -33,8 +33,8 @@ http.interceptors.response.use(
 );
 
 
-export const queryDocuments = async (query: string, k: number, filter: object): Promise<Document[]> => {
-    const response = await http.post(`/query`, { query, k, filter });
+export const queryDocuments = async (query: string, k: number, filter: object, score_threshold: number): Promise<Document[]> => {
+    const response = await http.post(`/query`, { query, k, filter, score_threshold });
     return response.data.data;
 };
 

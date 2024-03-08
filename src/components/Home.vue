@@ -9,12 +9,16 @@
                     <div class="flex flex-col">
                         <div class="flex">
                             <input v-model="query" placeholder="检索内容"
-                                class="relative p-2 w-3/4 outline-none border-[1px] border-gray-200 text-gray-900 sm:text-sm leading-6 rounded-tl-md focus:bg-gray-50/50" />
+                                class="relative p-2 w-full outline-none border-[1px] border-gray-200 text-gray-900 sm:text-sm leading-6 rounded-tl-md focus:bg-gray-50/50" />
                             <input v-model.number="k" type="number" min="1" placeholder="数量"
                                 class="relative p-2 w-1/4 outline-none border-[1px] border-l-0 border-gray-200 text-gray-900 sm:text-sm leading-6 rounded-tr-md focus:bg-gray-50/50" />
                         </div>
-                        <input v-model="filter" placeholder="条件过滤"
-                            class="p-2 w-full outline-none text-gray-900 border-[1px] border-t-0 border-gray-200 sm:text-sm leading-6 rounded-bl-md rounded-br-md focus:bg-gray-50/50" />
+                        <div class="flex">
+                            <input v-model="score_threshold" placeholder="分数阈值"
+                                class="p-2 w-1/6 text-center outline-none text-gray-900 border-[1px] border-r-0 border-t-0 border-gray-200 sm:text-sm leading-6 rounded-bl-md focus:bg-gray-50/50" />
+                            <input v-model="filter" placeholder="条件过滤"
+                                class="p-2 w-full outline-none text-gray-900 border-[1px] border-t-0 border-gray-200 sm:text-sm leading-6 rounded-br-md rounded-br-md focus:bg-gray-50/50" />
+                        </div>
                     </div>
                     <div @click="searchDocuments"
                         :class="{ 'bg-gray-800': queryingStatus == -1, 'bg-red-800': queryingStatus == -2, 'bg-green-700': queryingStatus == 1, 'bg-black hover:bg-gray-900': queryingStatus == 0 }"
@@ -83,6 +87,7 @@ const index = ref(-1);
 const query = ref('');
 const k = ref(20);
 const filter = ref('{}');
+const score_threshold = ref<number>(1)
 const showAddModal = ref(false);
 const showEditModal = ref(false);
 const queryingStatus = ref(0);
@@ -114,7 +119,7 @@ const searchDocuments = async () => {
     queryingStatus.value = -1;
     clearTimeout(timer);
     try {
-        const results = await queryDocuments(query.value, k.value, JSON.parse(filter.value));
+        const results = await queryDocuments(query.value, k.value, JSON.parse(filter.value), Number(score_threshold.value));
         documents.value = results;
         queryingStatus.value = 1;
         timer = setTimeout(() => {
