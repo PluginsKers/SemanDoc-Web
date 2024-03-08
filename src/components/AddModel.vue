@@ -6,10 +6,10 @@
             <!-- 模态窗口的子元素，如输入框、按钮等 -->
             <div class="flex flex-col justify-center h-full gap-4 p-6">
                 <textarea v-model="newData" placeholder="文档信息"
-                    class="flex-1 mt-1 p-2 w-full min-h-40 h-40 outline-none rounded-md text-gray-900 ring-1 ring-gray-200 focus:ring-[3px] focus:border-gray-100 text-sm leading-6">
+                    class="flex-1 mt-1 p-2 w-full min-h-40 h-40 outline-none rounded-md text-gray-900 ring-1 ring-gray-100 focus:ring-[3px] focus:border-gray-100 text-sm leading-6">
                 </textarea>
                 <input v-model="newMetadata" placeholder="源信息格式"
-                    class="shrink-0 mt-1 p-2 w-full h-10 outline-none rounded-md text-gray-900 ring-1 ring-gray-200 focus:ring-[3px] focus:border-gray-100 text-sm leading-6" />
+                    class="shrink-0 mt-1 p-2 w-full h-10 outline-none rounded-md text-gray-900 ring-1 ring-gray-100 focus:ring-[3px] focus:border-gray-100 text-sm leading-6" />
                 <div class="flex flex-wrap">
                     <div class="cursor-pointer select-none bg-gray-200 rounded-md p-2 mr-1 mb-1 outline-none active:ring-[3px] active:ring-gray-100"
                         v-for="metadata, name in presets" :key="name" @click="newMetadata = JSON.stringify(metadata)">{{
@@ -18,8 +18,8 @@
                 </div>
                 <div class="flex-none flex justify-between items-center">
                     <div @click="addDocument"
-                        :class="{ 'bg-gray-800': addingStatus == -1, 'bg-green-700': addingStatus == 1, 'bg-red-800': addingStatus == -2, 'bg-black hover:bg-gray-900': addingStatus == 0 }"
-                        class="cursor-pointer select-none h-10 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white focus:ring-black outline-none active:ring-[3px] active:ring-gray-200">
+                        class="cursor-pointer select-none h-10 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white outline-none active:ring-[3px] active:ring-gray-200"
+                        :class="{ 'bg-gray-800 cursor-not-allowed': addingStatus == -1, 'bg-green-700': addingStatus == 1, 'bg-red-800': addingStatus == -2, 'bg-black hover:bg-gray-900': addingStatus == 0 }">
                         <template v-if="addingStatus == 1">
                             <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd"
