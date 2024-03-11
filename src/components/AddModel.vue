@@ -13,15 +13,16 @@
                 <div class="flex flex-wrap">
                     <div class="cursor-pointer select-none bg-gray-200 rounded-md p-2 mr-1 mb-1 outline-none active:ring-[3px] active:ring-gray-100"
                         v-for="metadata, name in presets" :key="name" @click="newMetadata = JSON.stringify(metadata)">{{
-                            name
-                        }}</div>
+                    name
+                }}</div>
                 </div>
                 <div class="flex-none flex justify-between items-center">
                     <div @click="addDocument"
                         class="cursor-pointer select-none h-10 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white outline-none active:ring-[3px] active:ring-gray-200"
                         :class="{ 'bg-gray-800 cursor-not-allowed': addingStatus == -1, 'bg-green-700': addingStatus == 1, 'bg-red-800': addingStatus == -2, 'bg-black hover:bg-gray-900': addingStatus == 0 }">
                         <template v-if="addingStatus == 1">
-                            <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                            <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                                fill="currentColor">
                                 <path fill-rule="evenodd"
                                     d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
                                     clip-rule="evenodd" />
@@ -30,7 +31,8 @@
                         <template v-else-if="addingStatus == -1">
                             <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
                                 viewBox="0 0 24 24">
-                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                    stroke-width="4">
                                 </circle>
                                 <path class="opacity-75" fill="currentColor"
                                     d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
@@ -94,6 +96,7 @@ const addDocument = async () => {
         const newDoc = await _addDocument(newData.value, JSON.parse(newMetadata.value));
         addingStatus.value = 1;
         emit('documentAdded', newDoc[0]);
+        emit('closeAddModel');
         timer = setTimeout(() => {
             addingStatus.value = 0;
         }, 3000);

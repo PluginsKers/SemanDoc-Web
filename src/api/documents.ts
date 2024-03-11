@@ -46,7 +46,7 @@ export const removeDocuments = async (target: number[]) => {
     return response.data.data;
 };
 
-export const modifyDocuments = async (target: number, data: Document["page_content"], metadata: Document["metadata"]) => {
+export const modifyDocument = async (target: number, data: Document["page_content"], metadata: Document["metadata"]) => {
     const response = await http.post(`/edit/modify`, {
         type: "ids",
         target,

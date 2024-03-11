@@ -75,7 +75,7 @@
             <ul v-show="documents.length > 0"
                 class="w-full docs-list bg-white border-[1px] lg:mr-4 min-w-xl p-4 rounded-md md:shadow-sm">
                 <li v-for="(document, index) in documents" :key="index" @click="openEditModel(index)"
-                    class="p-2 flex flex-col cursor-pointer justify-between items-start rounded-md hover:ring-1 hover:ring-gray-200 hover:bg-gray-50/50">
+                    class="document-item p-2 flex flex-col cursor-pointer justify-between items-start rounded-md hover:ring-1 hover:ring-gray-200 hover:bg-gray-50/50">
                     <span class="text-gray-700">{{ document.page_content }}</span>
                     <div class="flex items-center space-x-2">
                         <span class="text-xs text-gray-500">标签:</span>
@@ -88,7 +88,7 @@
             </ul>
             <AddModel v-show="showAddModal" @documentAdded="handleDocumentAdded" @closeAddModel="closeAddModel" />
             <EditModel v-if="index > -1 && showEditModal" :index="index" :documents="documents"
-                @documentRemoved="handleDocumentRemoved" @documentModify="handleDocumentChanged"
+                @documentRemoved="handleDocumentRemoved" @documentModify="handleDocumentModified"
                 @closeEditModal="closeEditModal" />
         </div>
     </div>
@@ -125,12 +125,20 @@ const closeEditModal = () => {
     showEditModal.value = false;
 }
 
-const handleDocumentChanged = (newDocument: Document) => {
+const handleDocumentModified = (newDocument: Document) => {
     documents.value[index.value] = newDocument;
 }
 
 const handleDocumentAdded = (newDocument: Document) => {
-    documents.value.push(newDocument);
+    documents.value.unshift(newDocument);
+    const liElements = document.querySelectorAll('.document-item');
+    liElements.forEach((liElement) => {
+        liElement.classList.remove('new');
+    });
+    if (liElements.length > 0) {
+        liElements[0].classList.add('new');
+    }
+
 }
 
 const handleDocumentRemoved = (removed_index: number) => {
@@ -176,4 +184,18 @@ const searchDocuments = async () => {
         animation: slideIn .4s cubic-bezier(0.5, 0, 0, 1) forwards;
     }
 }
-</style>./AddModel.vue./EditModel.vue
+
+@keyframes fadeToTransparent {
+    from {
+        background-color: #fffb00;
+    }
+
+    to {
+        background-color: unset;
+    }
+}
+
+.new {
+    animation: fadeToTransparent .4s forwards;
+}
+</style>

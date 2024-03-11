@@ -22,7 +22,7 @@ export const useDocuments = () => {
   };
 
   const modify = async (target: number, data: string, metadata: any) => {
-    return await Api.modifyDocuments(target, data, metadata);
+    return await Api.modifyDocument(target, data, metadata);
   };
 
   return { query, remove, add, modify };
