@@ -3,15 +3,14 @@
         <div class="flex flex-col items-center lg:justify-center mx-auto lg:flex-row-reverse lg:items-start placeholder:text-gray-400 z-0"
             :class="{ 'md:max-w-2xl md:min-w-1xl lg:max-w-3xl lg:min-w-2xl': documents.length <= 0, 'lg:w-4/5': documents.length > 0 }">
             <div class="relative bg-white border-[1px] rounded-md md:shadow-sm p-4 pb-2 mb-4 w-full"
-                :class="{ 'lg:w-1/3': documents.length > 0}">
+                :class="{ 'lg:w-1/3': documents.length > 0 }">
                 <h1 class="text-3xl font-bold text-center mb-4">文档管理</h1>
                 <div class="flex flex-col justify-center gap-4">
                     <div class="flex flex-col mb-3 text-gray-900">
                         <div class="flex h-10">
                             <div
                                 class="flex w-full flex-row relative h-10 border-[1px] border-gray-200 sm:text-sm rounded-tl-md">
-                                <div
-                                    class="absolute h-full w-10 pointer-events-none flex justify-center items-center">
+                                <div class="absolute h-full w-10 pointer-events-none flex justify-center items-center">
                                     <svg class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
                                         <path fill-rule="evenodd"
                                             d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
@@ -89,7 +88,8 @@
             </ul>
             <AddModel v-show="showAddModal" @documentAdded="handleDocumentAdded" @closeAddModel="closeAddModel" />
             <EditModel v-if="index > -1 && showEditModal" :index="index" :documents="documents"
-                @documentRemoved="handleDocumentRemoved" @closeEditModal="closeEditModal" />
+                @documentRemoved="handleDocumentRemoved" @documentModify="handleDocumentChanged"
+                @closeEditModal="closeEditModal" />
         </div>
     </div>
 </template>
@@ -123,6 +123,10 @@ const closeAddModel = () => {
 
 const closeEditModal = () => {
     showEditModal.value = false;
+}
+
+const handleDocumentChanged = (newDocument: Document) => {
+    documents.value[index.value] = newDocument;
 }
 
 const handleDocumentAdded = (newDocument: Document) => {

@@ -46,6 +46,16 @@ export const removeDocuments = async (target: number[]) => {
     return response.data.data;
 };
 
+export const modifyDocuments = async (target: number, data: Document["page_content"], metadata: Document["metadata"]) => {
+    const response = await http.post(`/edit/modify`, {
+        type: "ids",
+        target,
+        data,
+        metadata
+    });
+    return response.data.data;
+};
+
 export const addDocument = async (data: Document["page_content"], metadata: Document["metadata"]): Promise<Document[]> => {
     const response = await http.post(`/edit/add`, {
         data,

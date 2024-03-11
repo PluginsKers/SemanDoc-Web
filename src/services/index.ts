@@ -21,5 +21,9 @@ export const useDocuments = () => {
     return await Api.addDocument(data, metadata);
   };
 
-  return { query, remove, add };
+  const modify = async (target: number, data: string, metadata: any) => {
+    return await Api.modifyDocuments(target, data, metadata);
+  };
+
+  return { query, remove, add, modify };
 };

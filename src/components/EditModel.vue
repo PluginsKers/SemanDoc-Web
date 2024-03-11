@@ -7,15 +7,15 @@
             <div class="flex flex-col justify-center h-full gap-4 p-6">
                 <textarea
                     class="flex-1 mt-1 p-2 w-full min-h-40 h-40 outline-none rounded-md text-gray-900 ring-1 ring-gray-100 focus:ring-[3px] focus:border-gray-100 text-sm leading-6"
-                    :value="documents[index].page_content">
+                    v-model="documents[index].page_content">
                 </textarea>
                 <input
                     class="shrink-0 mt-1 p-2 w-full h-10 outline-none rounded-md text-gray-900 ring-1 ring-gray-100 focus:ring-[3px] focus:border-gray-100 text-sm leading-6"
                     :value="JSON.stringify(documents[index].metadata)" />
-                <div class="flex flex-wrap">
+                <div class="flex bg-gray-100 rounded-md p-2 text-sm grid grid-cols-2 gap-2">
                     <div @click="removeDocument()"
-                        class="flex justify-center items-center h-10 cursor-pointer select-none text-white font-bold py-1 px-4 rounded text-xs outline-none active:ring-[3px] active:ring-gray-200"
-                        :class="{ 'bg-gray-800 cursor-not-allowed': removingStatus == -1, 'bg-red-800': removingStatus == -2, 'bg-orange-500 hover:bg-orange-600': removingStatus == -3, 'bg-green-700': removingStatus == 1, 'bg-red-500 hover:bg-red-700': removingStatus == 0 }">
+                        class="flex justify-center shadow-sm items-center h-10 select-none py-1 px-4 rounded outline-none active:ring-[3px] active:ring-gray-200"
+                        :class="{ 'bg-gray-800 cursor-not-allowed text-white': removingStatus == -1, 'bg-red-800 text-white cursor-pointer': removingStatus == -2, 'bg-orange-600 hover:bg-orange-600/90 text-white cursor-pointer': removingStatus == -3, 'bg-green-700 text-white cursor-pointer': removingStatus == 1, 'bg-black hover:bg-gray-900 text-white cursor-pointer': removingStatus == 0 }">
                         <template v-if="removingStatus == 1">
                             <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
                                 fill="currentColor">
@@ -52,10 +52,47 @@
                             删除
                         </template>
                     </div>
-                </div>
-                <div @click="closeEditModal"
-                    class="flex justify-center items-center h-10 cursor-pointer select-none py-2 px-4 bg-gray-200 h-10 rounded-md text-sm font-medium text-gray-800 outline-none hover:ring-[3px] hover:ring-gray-100">
-                    关闭
+
+                    <div @click="modifyDocument()"
+                        class="flex justify-center shadow-sm items-center h-10 select-none py-1 px-4 rounded outline-none active:ring-[3px] active:ring-gray-200"
+                        :class="{ 'bg-gray-800 cursor-not-allowed text-white': modifyStatus == -1, 'bg-green-700 text-white cursor-pointer': modifyStatus == 1, 'bg-red-800 text-white cursor-pointer': modifyStatus == -2, 'bg-black hover:bg-gray-900 text-white cursor-pointer': modifyStatus == 0 }">
+                        <template v-if="modifyStatus == 1">
+                            <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                                fill="currentColor">
+                                <path fill-rule="evenodd"
+                                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        </template>
+
+                        <template v-else-if="modifyStatus == -1">
+                            <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                    stroke-width="4">
+                                </circle>
+                                <path class="opacity-75" fill="currentColor"
+                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                </path>
+                            </svg>
+                        </template>
+
+                        <template v-else-if="modifyStatus == -2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="4">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </template>
+
+                        <template v-else>
+                            修改
+                        </template>
+                    </div>
+
+                    <div @click="closeEditModal"
+                        class="col-span-2 flex justify-center shadow-sm items-center h-10 cursor-pointer select-none py-2 px-4 h-10 rounded-md bg-black hover:bg-gray-900 text-white outline-none active:ring-[3px] active:ring-gray-200">
+                        关闭
+                    </div>
                 </div>
             </div>
         </div>
@@ -65,11 +102,13 @@
 <script setup lang="ts">
 import { defineProps, defineEmits, ref } from 'vue';
 import { Document } from '../api/types';
-import { removeDocuments } from '../api/documents';
+import { removeDocuments, modifyDocuments } from '../api/documents';
 
 const removingStatus = ref(0);
+const modifyStatus = ref(0);
 const confirmRemoval = ref(false);
-const emit = defineEmits(['documentRemoved', 'closeEditModal']);
+const emit = defineEmits(['documentRemoved', 'documentModify', 'closeEditModal']);
+let timer: any = null;
 
 const closeEditModal = () => {
     confirmRemoval.value = false;
@@ -87,16 +126,38 @@ const { index, documents } = defineProps({
     }
 });
 
+
+const modifyDocument = async () => {
+    if (modifyStatus.value == -1 || removingStatus.value == -1) return;
+    modifyStatus.value = -1
+    const data = documents[index].page_content;
+    const metadata = documents[index].metadata;
+    const docId = metadata['ids'];
+    try {
+        await modifyDocuments(docId, data, metadata);
+        emit('documentModify', documents[index]);
+        modifyStatus.value = 1;
+    } catch (error) {
+        modifyStatus.value = -2;
+        console.error('修改文档错误:', error);
+    }
+};
+
 const removeDocument = async () => {
-    if (removingStatus.value == -1) return;
+    if (removingStatus.value == -1 || modifyStatus.value == -1) return;
     if (confirmRemoval.value === false) {
         removingStatus.value = -3;
+        timer = setTimeout(() => {
+            removingStatus.value = 0;
+            confirmRemoval.value = false
+        }, 5000);
         return;
     }
     if (index < 0) {
         removingStatus.value = -2;
         return;
     }
+    clearTimeout(timer);
     removingStatus.value = -1;
     const docId = documents[index].metadata['ids'];
     try {
