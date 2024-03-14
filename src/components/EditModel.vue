@@ -1,16 +1,20 @@
 <template>
     <div class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex justify-center items-start md:py-4 z-20">
+        <div @click="closeEditModal"
+            class="absolute flex justify-center items-center align-middle font-bold top-2 right-2 ring-1 ring-gray-300 bg-gray-100 p-[2px] text-[9px] rounded-sm shadow-sm cursor-pointer text-gray-700 hidden md:block">
+            ESC
+        </div>
         <!-- 模态窗口内容，小屏幕设备全屏，大屏幕占据屏幕的绝大部分 -->
         <div
             class="bg-white w-screen h-full rounded-none md:rounded-md lg:max-w-lg w-full shadow-lg sm:w-full md:max-w-2xl lg:max-w-3xl xl:max-w-5xl overflow-auto">
             <!-- 模态窗口的子元素，如输入框、按钮等 -->
-            <div class="flex flex-col justify-center h-full gap-4 p-6">
+            <div class="flex flex-col justify-center h-full gap-2 p-6">
                 <textarea
-                    class="flex-1 mt-1 p-2 w-full min-h-40 h-40 outline-none rounded-md text-gray-900 ring-1 ring-gray-100 focus:ring-[3px] focus:border-gray-100 text-sm leading-6"
+                    class="flex-1 mt-1 p-2 w-full min-h-40 h-40 outline-none rounded-md text-gray-900 ring-1 ring-gray-100 focus:ring-[3px] focus:ring-gray-100 text-sm leading-6"
                     v-model="documents[index].page_content">
                 </textarea>
                 <input
-                    class="shrink-0 mt-1 p-2 w-full h-10 outline-none rounded-md text-gray-900 ring-1 ring-gray-100 focus:ring-[3px] focus:border-gray-100 text-sm leading-6"
+                    class="shrink-0 mt-1 p-2 w-full h-10 outline-none rounded-md text-gray-900 ring-1 ring-gray-100 focus:ring-[3px] focus:ring-gray-100 text-sm leading-6"
                     :value="JSON.stringify(documents[index].metadata)" />
                 <div class="flex bg-gray-100 rounded-md p-2 text-sm grid grid-cols-2 gap-2">
                     <div @click="removeDocument()"
@@ -45,7 +49,8 @@
                         </template>
 
                         <template v-else-if="removingStatus == -3">
-                            <div class="absolute top-0 left-0 h-full w-full flex justify-center items-center" @click="confirmRemoval = true">确认删除</div>
+                            <div class="absolute top-0 left-0 h-full w-full flex justify-center items-center"
+                                @click="confirmRemoval = true">确认删除</div>
                         </template>
 
                         <template v-else>
@@ -100,7 +105,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits, ref } from 'vue';
+import { defineProps, defineEmits, onMounted, onUnmounted, ref } from 'vue';
 import { Document } from '../api/types';
 import { removeDocuments, modifyDocument as _modifyDocument } from '../api/documents';
 
@@ -109,6 +114,21 @@ const modifyingStatus = ref(0);
 const confirmRemoval = ref(false);
 const emit = defineEmits(['documentRemoved', 'documentModify', 'closeEditModal']);
 let timer: any = null;
+
+const handleEsc = (event: { key: string; }) => {
+    if (event.key === 'Escape') {
+        closeEditModal()
+    }
+};
+
+onMounted(() => {
+    window.addEventListener('keydown', handleEsc);
+});
+
+onUnmounted(() => {
+    window.removeEventListener('keydown', handleEsc);
+});
+
 
 const closeEditModal = () => {
     confirmRemoval.value = false;

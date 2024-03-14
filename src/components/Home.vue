@@ -5,7 +5,7 @@
             <div class="relative bg-white border-[1px] rounded-md md:shadow-sm p-4 pb-2 mb-4 w-full"
                 :class="{ 'lg:w-1/3': documents.length > 0 }">
                 <h1 class="text-3xl font-bold text-center mb-4">文档管理</h1>
-                <div class="flex flex-col justify-center gap-4">
+                <div class="flex flex-col justify-center gap-2">
                     <div class="flex flex-col mb-3 text-gray-900">
                         <div class="flex h-10">
                             <div
@@ -17,7 +17,7 @@
                                             clip-rule="evenodd" />
                                     </svg>
                                 </div>
-                                <input v-model="query" placeholder="检索内容"
+                                <input @keydown.enter.prevent="searchDocuments" v-model="query" placeholder="检索内容"
                                     class="block p-2 pl-10 w-full h-full align-middle outline-none rounded-tl-md focus:bg-gray-50/50" />
                             </div>
                             <input v-model.number="k" type="number" min="1" placeholder="数量"
@@ -27,12 +27,20 @@
                             <input v-model.number="score_threshold" type="number" min="0" max="2" placeholder="分数阈值"
                                 class="p-2 w-1/6 h-full text-center align-middle outline-none border-[1px] border-r-0 border-t-0 border-gray-200 sm:text-sm rounded-bl-md focus:bg-gray-50/50" />
                             <input v-model="filter" placeholder="条件过滤"
-                                class="p-2 w-full h-full outline-none align-middle border-[1px] border-t-0 border-gray-200 sm:text-sm rounded-br-md rounded-br-md focus:bg-gray-50/50" />
+                                class="p-2 w-full h-full outline-none align-middle border-[1px] border-t-0 text-gray-400 border-gray-200 sm:text-sm rounded-br-md rounded-br-md focus:bg-gray-50/50" />
                         </div>
                     </div>
+                    <h1 class="text-2xl ml-1">更多配置</h1>
+                    <div class="flex flex-wrap">
+                        <input placeholder="添加标签"
+                            class="shrink-0 mb-2 p-2 w-full h-10 outline-none rounded-md text-gray-900 ring-1 ring-gray-100 focus:ring-[3px] focus:ring-gray-50 text-sm leading-6" />
+                        <div class="cursor-pointer select-none bg-gray-200 rounded-md p-2 mr-1 mb-1 outline-none active:ring-[3px] active:ring-gray-50"
+                            v-for="metadata, name in presets" :key="name" @click="filter = JSON.stringify(metadata)">
+                            {{ name }}</div>
+                    </div>
                     <div @click="searchDocuments"
-                        class="flex justify-center items-center h-10 w-full py-2 px-4 cursor-pointer select-none border border-transparent rounded-md shadow-sm text-sm font-medium text-white outline-none active:ring-[3px] active:ring-gray-200"
-                        :class="{ 'bg-gray-800 cursor-not-allowed': queryingStatus == -1, 'bg-red-800': queryingStatus == -2, 'bg-green-700': queryingStatus == 1, 'bg-black hover:bg-gray-900': queryingStatus == 0 }">
+                        class="relative flex justify-center items-center h-10 w-full py-2 px-4 select-none border border-transparent rounded-md shadow-sm text-sm font-medium text-white outline-none active:ring-[3px] active:ring-gray-200"
+                        :class="{ 'bg-gray-800 cursor-not-allowed': queryingStatus == -1, 'bg-red-800 cursor-pointer': queryingStatus == -2, 'bg-green-700 cursor-pointer': queryingStatus == 1, 'bg-black hover:bg-gray-900 cursor-pointer': queryingStatus == 0 }">
                         <template v-if="queryingStatus == 1">
                             <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
                                 fill="currentColor">
@@ -63,6 +71,12 @@
 
                         <template v-else>
                             检索
+                            <svg t="1710430252577" class="w-5 h-5 mb-[-1.5px]" viewBox="0 0 1024 1024" version="1.1"
+                                xmlns="http://www.w3.org/2000/svg" p-id="1921">
+                                <path
+                                    d="M810.666667 256a42.666667 42.666667 0 0 0-42.666667 42.666667v170.666666a42.666667 42.666667 0 0 1-42.666667 42.666667H316.16l55.466667-55.04a42.666667 42.666667 0 0 0-60.586667-60.586667l-128 128a42.666667 42.666667 0 0 0-8.96 14.08 42.666667 42.666667 0 0 0 0 32.426667 42.666667 42.666667 0 0 0 8.96 14.08l128 128a42.666667 42.666667 0 0 0 60.586667 0 42.666667 42.666667 0 0 0 0-60.586667L316.16 597.333333H725.333333a128 128 0 0 0 128-128V298.666667a42.666667 42.666667 0 0 0-42.666666-42.666667z"
+                                    p-id="1922" fill="#ffffff"></path>
+                            </svg>
                         </template>
                     </div>
                     <div class="flex justify-center items-center h-10 cursor-pointer select-none w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium bg-black hover:bg-gray-900 text-white outline-none active:ring-[3px] active:ring-gray-200"
@@ -101,11 +115,27 @@ import AddModel from './AddModel.vue';
 import EditModel from './EditModel.vue';
 import { queryDocuments } from '../api/documents';
 
+const presets = {
+    "通用": { "tags": ["通用"] },
+    "人工智能学院": { "tags": ["人工智能学院"] },
+    "机电工程学院（中德智能制造学院）": { "tags": ["机电工程学院（中德智能制造学院）"] },
+    "化学工程学院": { "tags": ["化学工程学院"] },
+    "建筑与艺术学院": { "tags": ["建筑与艺术学院"] },
+    "国际商旅学院": { "tags": ["国际商旅学院"] },
+    "供应链管理学院": { "tags": ["供应链管理学院"] },
+    "阳明学院": { "tags": ["阳明学院"] },
+    "数字商贸学院": { "tags": ["数字商贸学院"] },
+    "马克思主义学院": { "tags": ["马克思主义学院"] },
+    "继续教育学院": { "tags": ["继续教育学院"] },
+    "公共基础学院": { "tags": ["公共基础学院"] },
+    "中高职一体化": { "tags": ["中高职一体化"] }
+}
+
 const documents = ref<Document[]>([]);
 const index = ref(-1);
 const query = ref('');
 const k = ref(20);
-const filter = ref('{}');
+const filter = ref('{"tags":["通用"]}');
 const score_threshold = ref<number>(2.0)
 const showAddModal = ref(false);
 const showEditModal = ref(false);

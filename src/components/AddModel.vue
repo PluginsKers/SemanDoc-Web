@@ -1,25 +1,28 @@
 <template>
     <div class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex justify-center items-start md:py-4 z-20">
+        <div @click="closeAddModel"
+            class="absolute flex justify-center items-center align-middle font-bold top-2 right-2 ring-1 ring-gray-300 bg-gray-100 p-[2px] text-[9px] rounded-sm shadow-sm cursor-pointer text-gray-700 hidden md:block">
+            ESC
+        </div>
         <!-- 模态窗口内容，小屏幕设备全屏，大屏幕占据屏幕的绝大部分 -->
         <div
             class="bg-white w-screen h-full rounded-none md:rounded-md lg:max-w-lg w-full shadow-lg sm:w-full md:max-w-2xl lg:max-w-3xl xl:max-w-5xl overflow-auto">
             <!-- 模态窗口的子元素，如输入框、按钮等 -->
-            <div class="flex flex-col justify-center h-full gap-4 p-6">
+            <div class="flex flex-col justify-center h-full gap-2 p-6">
                 <textarea v-model="newData" placeholder="文档信息"
-                    class="flex-1 mt-1 p-2 w-full min-h-40 h-40 outline-none rounded-md text-gray-900 ring-1 ring-gray-100 focus:ring-[3px] focus:border-gray-50 text-sm leading-6">
+                    class="flex-1 mt-1 p-2 w-full min-h-40 h-40 outline-none rounded-md text-gray-900 ring-1 ring-gray-100 focus:ring-[3px] focus:ring-gray-50 text-sm leading-6">
                 </textarea>
                 <input v-model="newMetadata" placeholder="源信息格式"
-                    class="shrink-0 mt-1 p-2 w-full h-10 outline-none rounded-md text-gray-900 ring-1 ring-gray-100 focus:ring-[3px] focus:border-gray-50 text-sm leading-6" />
+                    class="shrink-0 mt-1 p-2 w-full h-10 outline-none rounded-md text-gray-900 ring-1 ring-gray-100 focus:ring-[3px] focus:ring-gray-50 text-sm leading-6" />
                 <div class="flex flex-wrap">
                     <div class="cursor-pointer select-none bg-gray-200 rounded-md p-2 mr-1 mb-1 outline-none active:ring-[3px] active:ring-gray-50"
-                        v-for="metadata, name in presets" :key="name" @click="newMetadata = JSON.stringify(metadata)">{{
-                    name
-                }}</div>
+                        v-for="metadata, name in presets" :key="name" @click="newMetadata = JSON.stringify(metadata)">
+                        {{ name }}</div>
                 </div>
                 <div class="flex-none flex justify-between items-center">
                     <div @click="addDocument"
-                        class="cursor-pointer select-none h-10 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white outline-none active:ring-[3px] active:ring-gray-100"
-                        :class="{ 'bg-gray-800 cursor-not-allowed': addingStatus == -1, 'bg-green-700': addingStatus == 1, 'bg-red-800': addingStatus == -2, 'bg-black hover:bg-gray-900': addingStatus == 0 }">
+                        class="select-none h-10 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white outline-none active:ring-[3px] active:ring-gray-100"
+                        :class="{ 'bg-gray-800 cursor-not-allowed': addingStatus == -1, 'bg-green-700 cursor-pointer': addingStatus == 1, 'bg-red-800 cursor-pointer': addingStatus == -2, 'bg-black hover:bg-gray-900 cursor-pointer': addingStatus == 0 }">
                         <template v-if="addingStatus == 1">
                             <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
                                 fill="currentColor">
@@ -60,7 +63,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineEmits } from 'vue';
+import { ref, defineEmits, onMounted, onUnmounted } from 'vue';
 import { addDocument as _addDocument } from '../api/documents';
 
 const newData = ref('');
@@ -72,7 +75,7 @@ let timer: any = null;
 const presets = {
     "通用": { "tags": ["通用"] },
     "人工智能学院": { "tags": ["人工智能学院"] },
-    "机电工程学院": { "tags": ["机电工程学院"] },
+    "机电工程学院（中德智能制造学院）": { "tags": ["机电工程学院（中德智能制造学院）"] },
     "化学工程学院": { "tags": ["化学工程学院"] },
     "建筑与艺术学院": { "tags": ["建筑与艺术学院"] },
     "国际商旅学院": { "tags": ["国际商旅学院"] },
@@ -81,8 +84,24 @@ const presets = {
     "数字商贸学院": { "tags": ["数字商贸学院"] },
     "马克思主义学院": { "tags": ["马克思主义学院"] },
     "继续教育学院": { "tags": ["继续教育学院"] },
-    "公共基础学院": { "tags": ["公共基础学院"] }
+    "公共基础学院": { "tags": ["公共基础学院"] },
+    "中高职一体化": { "tags": ["中高职一体化"] }
 }
+
+
+const handleEsc = (event: { key: string; }) => {
+    if (event.key === 'Escape') {
+        closeAddModel()
+    }
+};
+
+onMounted(() => {
+    window.addEventListener('keydown', handleEsc);
+});
+
+onUnmounted(() => {
+    window.removeEventListener('keydown', handleEsc);
+});
 
 const closeAddModel = () => {
     emit('closeAddModel');
