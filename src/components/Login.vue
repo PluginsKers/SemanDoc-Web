@@ -5,12 +5,12 @@
             <div class="mb-4">
                 <label for="username" class="block text-sm font-medium text-gray-700">用户名:</label>
                 <input v-model="username" type="text" id="username" required
-                    class="mt-1 p-2 w-full h-10 outline-none rounded-md text-gray-900 ring-1 ring-gray-200 placeholder:text-gray-400 focus:ring-[3px] focus:border-gray-200 sm:text-sm sm:leading-6">
+                    class="mt-1 p-2 w-full h-10 outline-none rounded-md text-gray-900 ring-1 ring-gray-200 placeholder:text-gray-400 focus:ring-[3px] focus:ring-gray-100 sm:text-sm sm:leading-6">
             </div>
             <div class="mb-6">
                 <label for="password" class="block text-sm font-medium text-gray-700">密码:</label>
                 <input v-model="password" type="password" id="password" required
-                    class="mt-1 p-2 w-full h-10 outline-none rounded-md text-gray-900 ring-1 ring-gray-200 placeholder:text-gray-400 focus:ring-[3px] focus:border-gray-200 sm:text-sm sm:leading-6">
+                    class="mt-1 p-2 w-full h-10 outline-none rounded-md text-gray-900 ring-1 ring-gray-200 placeholder:text-gray-400 focus:ring-[3px] focus:ring-gray-100 sm:text-sm sm:leading-6">
             </div>
             <div @click="submitLogin"
                 :class="{ 'bg-gray-800': loginStatus == -1, 'bg-red-800': loginStatus == -2, 'bg-green-700': loginStatus == 1, 'bg-black hover:bg-gray-900': loginStatus == 0 }"
