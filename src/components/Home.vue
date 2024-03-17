@@ -109,7 +109,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { nextTick, ref } from 'vue';
 import { Document } from '../api/types';
 import AddModel from './AddModel.vue';
 import EditModel from './EditModel.vue';
@@ -159,17 +159,16 @@ const handleDocumentModified = (newDocument: Document) => {
     documents.value[index.value] = newDocument;
 }
 
-const handleDocumentAdded = (newDocument: Document) => {
+const handleDocumentAdded = async (newDocument: Document) => {
     documents.value.unshift(newDocument);
+    await nextTick();
     const liElements = document.querySelectorAll('.document-item');
-    liElements.forEach((liElement) => {
-        liElement.classList.remove('new');
-    });
-    if (liElements.length > 0) {
+    liElements[0].classList.remove('new');
+    setTimeout(() => {
         liElements[0].classList.add('new');
-    }
+    }, 0);
+};
 
-}
 
 const handleDocumentRemoved = (removed_index: number) => {
     documents.value.splice(removed_index, 1);
