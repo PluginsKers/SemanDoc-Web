@@ -104,7 +104,9 @@ onUnmounted(() => {
 });
 
 const closeAddModel = () => {
-    emit('closeAddModel');
+    if (addingStatus.value != -1) {
+        emit('closeAddModel');
+    }
 }
 
 const addDocument = async () => {

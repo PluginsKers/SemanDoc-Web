@@ -1,12 +1,12 @@
 <template>
     <div class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex justify-center items-start md:py-4 z-20">
         <div @click="closeEditModal"
-            class="absolute flex justify-center items-center align-middle font-bold top-2 right-2 ring-1 ring-gray-300 bg-gray-100 p-[2px] text-[9px] rounded-sm shadow-sm cursor-pointer text-gray-700 hidden md:block">
+            class="absolute flex justify-center items-center align-middle font-bold top-2 right-2 ring-1 ring-gray-300 bg-gray-100 p-[2px] text-[9px] rounded-sm shadow-sm cursor-pointer text-gray-700 md:block">
             ESC
         </div>
         <!-- 模态窗口内容，小屏幕设备全屏，大屏幕占据屏幕的绝大部分 -->
         <div
-            class="bg-white w-screen h-full rounded-none md:rounded-md lg:max-w-lg w-full shadow-lg sm:w-full md:max-w-2xl lg:max-w-3xl xl:max-w-5xl overflow-auto">
+            class="bg-white w-screen h-full rounded-none md:rounded-md lg:max-w-lg shadow-lg sm:w-full md:max-w-2xl xl:max-w-5xl overflow-auto">
             <!-- 模态窗口的子元素，如输入框、按钮等 -->
             <div class="flex flex-col justify-center h-full gap-2 p-6">
                 <textarea
@@ -16,7 +16,7 @@
                 <input
                     class="shrink-0 mt-1 p-2 w-full h-10 outline-none rounded-md text-gray-900 ring-1 ring-gray-100 focus:ring-[3px] focus:ring-gray-100 text-sm leading-6"
                     :value="JSON.stringify(documents[index].metadata)" />
-                <div class="flex bg-gray-100 rounded-md p-2 text-sm grid grid-cols-2 gap-2">
+                <div class="bg-gray-100 rounded-md p-2 text-sm grid grid-cols-2 gap-2">
                     <div @click="removeDocument()"
                         class="flex relative justify-center shadow-sm items-center h-10 select-none py-1 px-4 rounded outline-none active:ring-[3px] active:ring-gray-50"
                         :class="{ 'bg-gray-800 cursor-not-allowed text-white': removingStatus == -1, 'bg-red-800 text-white cursor-pointer': removingStatus == -2, 'bg-orange-600 hover:bg-orange-600/90 text-white cursor-pointer': removingStatus == -3, 'bg-green-700 text-white cursor-pointer': removingStatus == 1, 'bg-black hover:bg-gray-900 text-white cursor-pointer': removingStatus == 0 }">
@@ -95,7 +95,7 @@
                     </div>
 
                     <div @click="closeEditModal"
-                        class="col-span-2 flex justify-center shadow-sm items-center h-10 cursor-pointer select-none py-2 px-4 h-10 rounded-md bg-black hover:bg-gray-900 text-white outline-none active:ring-[3px] active:ring-gray-100">
+                        class="col-span-2 flex justify-center shadow-sm items-center h-10 cursor-pointer select-none py-2 px-4 rounded-md bg-black hover:bg-gray-900 text-white outline-none active:ring-[3px] active:ring-gray-100">
                         关闭
                     </div>
                 </div>
@@ -132,7 +132,9 @@ onUnmounted(() => {
 
 const closeEditModal = () => {
     confirmRemoval.value = false;
-    emit('closeEditModal');
+    if (removingStatus.value != -1 && modifyingStatus.value != -1) {
+        emit('closeEditModal');
+    }
 }
 
 const { index, documents } = defineProps({
