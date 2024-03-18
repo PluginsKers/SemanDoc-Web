@@ -1,12 +1,12 @@
 <template>
     <div class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex justify-center items-start md:py-4 z-20">
         <div @click="closeAddModel"
-            class="absolute flex justify-center items-center align-middle font-bold top-2 right-2 ring-1 ring-gray-300 bg-gray-100 p-[2px] text-[9px] rounded-sm shadow-sm cursor-pointer text-gray-700 hidden md:block">
+            class="absolute justify-center items-center align-middle font-bold top-2 right-2 ring-1 ring-gray-300 bg-gray-100 p-[2px] text-[9px] rounded-sm shadow-sm cursor-pointer text-gray-700 hidden md:block">
             ESC
         </div>
         <!-- 模态窗口内容，小屏幕设备全屏，大屏幕占据屏幕的绝大部分 -->
         <div
-            class="bg-white w-screen h-full rounded-none md:rounded-md lg:max-w-lg w-full shadow-lg sm:w-full md:max-w-2xl lg:max-w-3xl xl:max-w-5xl overflow-auto">
+            class="bg-white w-screen h-full rounded-none md:rounded-md shadow-lg sm:w-full md:max-w-2xl lg:max-w-3xl xl:max-w-5xl overflow-auto">
             <!-- 模态窗口的子元素，如输入框、按钮等 -->
             <div class="flex flex-col justify-center h-full gap-2 p-6">
                 <textarea v-model="newData" placeholder="文档信息"
@@ -53,7 +53,7 @@
                         </template>
                     </div>
                     <div @click="closeAddModel"
-                        class="flex justify-center items-center h-10 cursor-pointer select-none py-2 px-4 bg-gray-200 h-10 rounded-md text-sm font-medium text-gray-800 outline-none hover:ring-[3px] hover:ring-gray-100">
+                        class="flex justify-center items-center cursor-pointer select-none py-2 px-4 bg-gray-200 h-10 rounded-md text-sm font-medium text-gray-800 outline-none hover:ring-[3px] hover:ring-gray-100">
                         取消
                     </div>
                 </div>
