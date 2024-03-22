@@ -66,7 +66,7 @@
                                     d="M5 13l4 4L19 7"></path>
                             </svg>
                         </div>
-                        <label @click="isPowerSet = !isPowerSet" class="cursor-pointer select-none">严格检索模式</label>
+                        <label @click="isPowerSet = !isPowerSet" class="cursor-pointer select-none">非严格检索模式</label>
                     </div>
                     <div @click="searchDocuments"
                         class="relative flex justify-center items-center h-10 w-full py-2 px-4 select-none border border-transparent rounded-md shadow-sm text-sm font-medium text-white outline-none active:ring-[3px] active:ring-gray-200"
@@ -177,7 +177,7 @@ const tags = ref<string[]>(filter.value.tags);
 const tags_input = ref('');
 const duplicate = ref(false); // 用于跟踪重复标签的状态
 
-const isPowerSet = ref<boolean>(false);
+const isPowerSet = ref<boolean>(true);
 
 
 let timer: any = null;
