@@ -9,8 +9,8 @@ export const useAuth = () => {
 };
 
 export const useDocuments = () => {
-  const query = async (query: string, k: number, filter: object, score_threshold: number) => {
-    return await Api.queryDocuments(query, k, filter, score_threshold);
+  const query = async (query: string, k: number, filter: object, score_threshold: number, powerset: boolean) => {
+    return await Api.queryDocuments(query, k, filter, score_threshold, powerset);
   };
 
   const remove = async (target: number[]) => {
