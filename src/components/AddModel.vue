@@ -12,12 +12,31 @@
                 <textarea v-model="newData" placeholder="文档信息"
                     class="flex-1 mt-1 p-2 w-full min-h-40 h-40 outline-none rounded-md text-gray-900 ring-1 ring-gray-100 focus:ring-[3px] focus:ring-gray-50 text-sm leading-6">
                 </textarea>
-                <input v-model="newMetadata" placeholder="源信息格式"
+                <input v-model="newMetadataString" placeholder="源信息格式"
                     class="shrink-0 mt-1 p-2 w-full h-10 outline-none rounded-md text-gray-900 ring-1 ring-gray-100 focus:ring-[3px] focus:ring-gray-50 text-sm leading-6" />
-                <div class="flex flex-wrap">
-                    <div class="cursor-pointer select-none bg-gray-200 rounded-md p-2 mr-1 mb-1 outline-none active:ring-[3px] active:ring-gray-50"
-                        v-for="metadata, name in presets" :key="name" @click="newMetadata = JSON.stringify(metadata)">
-                        {{ name }}</div>
+
+                <div class="relative flex flex-wrap"
+                    :class="{ 'control-disabled before:bg-gray-100/40 before:rounded-md before:cursor-not-allowed': newMetadataManagerDisabled }">
+                    <div
+                        class="shrink-0 flex-col mb-2 p-0 w-full rounded-md text-gray-900 ring-1 ring-gray-100 hover:ring-[3px] hover:ring-gray-50 text-sm leading-6">
+                        <input v-model="tags_input" @keydown.enter.prevent="addTag" @keydown.delete="checkForDelete"
+                            placeholder="添加标签" class="tags-input outline-none rounded-md h-10 px-2 w-full border-b-2"
+                            :class="{ 'border-dashed border-gray-200': tags.length > 0, 'border-white': tags.length <= 0 }" />
+
+                        <div class="flex flex-row flex-wrap ml-1 gap-1" :class="{ 'py-1': tags.length > 0 }">
+                            <div v-for="(tag, index) in tags" :key="index" @click="removeTag(index)"
+                                class="cursor-pointer select-none bg-gray-200 text-black text-xs px-2.5 py-1 rounded-md hover:bg-gray-300">
+                                {{ tag }}
+                            </div>
+                        </div>
+                        <p v-if="duplicate" class="m-1 text-red-500 text-xs italic">标签已存在，不能重复添加。</p>
+                    </div>
+
+                    <!-- 预设选择 -->
+                    <div class="cursor-pointer select-none bg-gray-200 rounded-md px-2.5 py-1 mr-1 mb-1 outline-none active:ring-[3px] active:ring-gray-50"
+                        v-for="metadata, name in JSON.parse(presets)" :key="name" @click="newMetadata = metadata">
+                        {{ name }}
+                    </div>
                 </div>
                 <div class="flex-none flex justify-between items-center">
                     <div @click="addDocument"
@@ -63,31 +82,107 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineEmits, onMounted, onUnmounted } from 'vue';
+import moment from 'moment-timezone';
+import { ref, defineProps, defineEmits, onMounted, onUnmounted, watch } from 'vue';
 import { addDocument as _addDocument } from '../api/documents';
 
+
+const { presets } = defineProps({
+    presets: {
+        type: String,
+        default: '{}',
+    }
+});
+
 const newData = ref('');
-const newMetadata = ref('{"tags":[]}');
+const newMetadata = ref<Record<string, any>>({ "tags": [] });
+const newMetadataString = ref(JSON.stringify(newMetadata.value));
+const newMetadataManagerDisabled = ref(false); // Tags管理器是否被禁用
+const cleanedData = ref('');
 const addingStatus = ref(0);
+const tags = ref<string[]>(newMetadata.value.tags);
+const tags_input = ref('');
+const duplicate = ref(false); // 用于跟踪重复标签的状态
 const emit = defineEmits(['documentAdded', 'closeAddModel']);
 let timer: any = null;
 
-const presets = {
-    "通用": { "tags": ["通用"] },
-    "人工智能学院": { "tags": ["人工智能学院"] },
-    "机电工程学院（中德智能制造学院）": { "tags": ["机电工程学院（中德智能制造学院）"] },
-    "化学工程学院": { "tags": ["化学工程学院"] },
-    "建筑与艺术学院": { "tags": ["建筑与艺术学院"] },
-    "国际商旅学院": { "tags": ["国际商旅学院"] },
-    "供应链管理学院": { "tags": ["供应链管理学院"] },
-    "阳明学院": { "tags": ["阳明学院"] },
-    "数字商贸学院": { "tags": ["数字商贸学院"] },
-    "马克思主义学院": { "tags": ["马克思主义学院"] },
-    "继续教育学院": { "tags": ["继续教育学院"] },
-    "公共基础学院": { "tags": ["公共基础学院"] },
-    "中高职一体化": { "tags": ["中高职一体化"] }
-}
 
+watch(newData, (newValue) => {
+    const regex = /<(\d{4}[-\/年]\d{1,2}[-\/月]\d{1,2}日? \d{1,2}:\d{2});(.*?)(?:;(\d{4}[-\/年]\d{1,2}[-\/月]\d{1,2}日? \d{1,2}:\d{2}))?;>/g;
+    let matches;
+    let lastMatch;
+
+    while ((matches = regex.exec(newValue)) !== null) {
+        lastMatch = matches; // 保留最后一个匹配项
+    }
+
+    if (lastMatch) {
+        newMetadataManagerDisabled.value = true;
+        const endTime = lastMatch[1].replace(/年|月/g, '-').replace(/日/, '').trim();
+        const tags = lastMatch[2].split(',').map(tag => tag.trim());
+        const startTime = lastMatch[3] ? lastMatch[3].replace(/年|月/g, '-').replace(/日/, '').trim() : null;
+
+        // 尝试解析时间，如果失败则清除时间信息
+        const endTimeMoment = moment.tz(endTime, "YYYY-MM-DD HH:mm", "Asia/Shanghai");
+        const startTimeMoment = startTime ? moment.tz(startTime, "YYYY-MM-DD HH:mm", "Asia/Shanghai") : null;
+
+        if (!endTimeMoment.isValid()) {
+            delete newMetadata.value.valid_time;
+        } else {
+            newMetadata.value.valid_time = endTimeMoment.unix();
+            if (startTimeMoment && startTimeMoment.isValid()) {
+                newMetadata.value.start_time = startTimeMoment.unix();
+                // 计算valid_time为结束时间减去开始时间的差值
+                newMetadata.value.valid_time -= newMetadata.value.start_time;
+            } else {
+                delete newMetadata.value.start_time;
+                newMetadata.value.valid_time -= moment.tz("Asia/Shanghai").unix();
+            }
+        }
+
+        newMetadata.value.tags = tags;
+
+        // 更新JSON字符串表示
+        newMetadataString.value = JSON.stringify(newMetadata.value);
+
+        cleanedData.value = newValue.replace(regex, '').trim();
+    } else {
+        newMetadataManagerDisabled.value = false;
+        cleanedData.value = newValue;
+    }
+}, { deep: true });
+
+watch(tags, (newTag) => {
+    newMetadata.value.tags = newTag;
+}, { deep: true });
+
+watch(newMetadata, (newValue) => {
+    newMetadataString.value = JSON.stringify(newValue);
+    tags.value = newValue.tags;
+    duplicate.value = false;
+}, { deep: true });
+
+
+// 标签管理逻辑实现
+const addTag = () => {
+    if (tags_input.value.trim() !== '' && !tags.value.includes(tags_input.value)) {
+        tags.value.push(tags_input.value);
+        tags_input.value = '';
+        duplicate.value = false;
+    } else {
+        duplicate.value = true; // 标记为重复，不添加标签
+    }
+};
+
+const removeTag = (index: number) => {
+    tags.value.splice(index, 1);
+};
+
+const checkForDelete = () => {
+    if (tags_input.value === '') {
+        tags.value.pop();
+    }
+};
 
 const handleEsc = (event: { key: string; }) => {
     if (event.key === 'Escape') {
@@ -114,7 +209,7 @@ const addDocument = async () => {
     addingStatus.value = -1;
     clearTimeout(timer);
     try {
-        const newDoc = await _addDocument(newData.value, JSON.parse(newMetadata.value));
+        const newDoc = await _addDocument(cleanedData.value, newMetadata.value);
         addingStatus.value = 1;
         emit('documentAdded', newDoc[0]);
         emit('closeAddModel');
@@ -127,3 +222,18 @@ const addDocument = async () => {
     }
 };
 </script>
+
+<style scoped>
+.control-disabled:before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: repeating-linear-gradient(45deg,
+            transparent,
+            transparent 10px,
+            rgba(0, 0, 0, 0.1) 10px,
+            rgba(0, 0, 0, 0.1) 20px);
+
+}
+</style>

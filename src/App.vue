@@ -1,5 +1,4 @@
 <template>
-
     <Head v-if="showHead"></Head>
     <router-view class="min-h-screen bg-gray-100/50 p-4 text-sm"></router-view>
 </template>
@@ -8,6 +7,12 @@
 import Head from './components/layouts/Head.vue';
 import { ref, watchEffect } from 'vue';
 import { useRoute } from 'vue-router';
+
+import router from './router';
+
+if (localStorage.getItem('token') === null || localStorage.getItem('token') === '') {
+    router.push("/login");
+}
 
 const route = useRoute();
 const showHead = ref(true);

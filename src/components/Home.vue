@@ -27,7 +27,7 @@
                             <input v-model="score_threshold" placeholder="分数阈值"
                                 @wheel="handleWheelSH($event, 0, 2, 0.02)"
                                 class="p-2 w-1/6 h-full text-center align-middle outline-none border-[1px] border-r-0 border-t-0 border-gray-200 sm:text-sm rounded-bl-md focus:bg-gray-50/50 hover:bg-gray-50/50" />
-                            <input v-model="watchFilter" placeholder="条件过滤"
+                            <input v-model="filterString" placeholder="条件过滤"
                                 class="p-2 w-full h-full outline-none align-middle border-[1px] border-t-0 text-gray-400 border-gray-200 sm:text-sm rounded-br-md focus:bg-gray-50/50 hover:bg-gray-50/50" />
                         </div>
                     </div>
@@ -42,7 +42,7 @@
 
                             <div class="flex flex-row flex-wrap ml-1 gap-1" :class="{ 'py-1': tags.length > 0 }">
                                 <div v-for="(tag, index) in tags" :key="index" @click="removeTag(index)"
-                                    class="cursor-pointer bg-gray-200 text-black text-xs px-2.5 py-1 rounded-sm hover:bg-gray-300">
+                                    class="cursor-pointer select-none bg-gray-200 text-black text-xs px-2.5 py-1 rounded-md hover:bg-gray-300">
                                     {{ tag }}
                                 </div>
                             </div>
@@ -51,14 +51,15 @@
                         </div>
 
                         <!-- 预设选择 -->
-                        <div class="cursor-pointer select-none bg-gray-200 rounded-md p-2 mr-1 mb-1 outline-none active:ring-[3px] active:ring-gray-50"
+                        <div class="cursor-pointer select-none bg-gray-200 rounded-md px-2.5 py-1 mr-1 mb-1 outline-none active:ring-[3px] active:ring-gray-50"
                             v-for="metadata, name in JSON.parse(presets)" :key="name" @click="filter = metadata">
-                            {{ name }}</div>
+                            {{ name }}
+                        </div>
                     </div>
 
                     <div class="flex-1 flex items-center space-x-2">
                         <div @click="isPowerSet = !isPowerSet"
-                            :class="{ 'bg-blue-600': isPowerSet, 'bg-gray-200': !isPowerSet }"
+                            :class="{ 'bg-black': isPowerSet, 'bg-gray-200': !isPowerSet }"
                             class="w-6 h-6 flex justify-center items-center rounded-sm cursor-pointer">
                             <svg v-show="isPowerSet" class="w-4 h-4 text-white" fill="none" stroke="currentColor"
                                 viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -130,7 +131,7 @@
                     </div>
                 </li>
             </ul>
-            <AddModel v-show="showAddModal" @documentAdded="handleDocumentAdded" @closeAddModel="closeAddModel" />
+            <AddModel v-show="showAddModal" @documentAdded="handleDocumentAdded" @closeAddModel="closeAddModel" :presets="presets" />
             <EditModel v-if="index > -1 && showEditModal" :index="index" :documents="documents"
                 @documentRemoved="handleDocumentRemoved" @documentModify="handleDocumentModified"
                 @closeEditModal="closeEditModal" />
@@ -161,14 +162,14 @@ const presets = JSON.stringify({
     "继续教育学院": { "tags": ["继续教育学院"] },
     "公共基础学院": { "tags": ["公共基础学院"] },
     "中高职一体化": { "tags": ["中高职一体化"] }
-})
+});
 
 const documents = ref<Document[]>([]);
 const index = ref(-1);
 const query = ref('');
 const k = ref(20);
 const filter = ref({ "tags": ["通用"] });
-const watchFilter = ref(JSON.stringify(filter.value));
+const filterString = ref(JSON.stringify(filter.value));
 const score_threshold = ref<string>("2.0")
 const showAddModal = ref(false);
 const showEditModal = ref(false);
@@ -281,7 +282,7 @@ watch(tags, (newTag) => {
 }, { deep: true });
 
 watch(filter, (newFilter) => {
-    watchFilter.value = JSON.stringify(newFilter);
+    filterString.value = JSON.stringify(newFilter);
     tags.value = newFilter.tags;
     duplicate.value = false;
 }, { deep: true });
