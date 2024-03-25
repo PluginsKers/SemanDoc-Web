@@ -13,7 +13,7 @@ export const useDocuments = () => {
     return await Api.queryDocuments(query, k, filter, score_threshold, powerset);
   };
 
-  const remove = async (target: number[]) => {
+  const remove = async (target: string[]) => {
     return await Api.removeDocuments(target);
   };
 
@@ -21,8 +21,8 @@ export const useDocuments = () => {
     return await Api.addDocument(data, metadata);
   };
 
-  const modify = async (target: number, data: string, metadata: any) => {
-    return await Api.modifyDocument(target, data, metadata);
+  const modify = async (target: string, data: string, metadata: any) => {
+    return await Api.updateDocument(target, data, metadata);
   };
 
   return { query, remove, add, modify };

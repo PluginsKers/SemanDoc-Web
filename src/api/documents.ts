@@ -34,20 +34,20 @@ http.interceptors.response.use(
 
 
 export const queryDocuments = async (query: string, k: number, filter: object, score_threshold: number, powerset: boolean): Promise<Document[]> => {
-    const response = await http.post(`/query`, { query, k, filter, score_threshold, powerset });
+    const response = await http.post(`/search`, { query, k, filter, score_threshold, powerset });
     return response.data.data;
 };
 
-export const removeDocuments = async (target: number[]) => {
-    const response = await http.post(`/edit/remove`, {
+export const removeDocuments = async (target: string[]) => {
+    const response = await http.post(`/edit/delete`, {
         type: "ids",
         target
     });
     return response.data.data;
 };
 
-export const modifyDocument = async (target: number, data: Document["page_content"], metadata: Document["metadata"]) => {
-    const response = await http.post(`/edit/modify`, {
+export const updateDocument = async (target: string, data: Document["page_content"], metadata: Document["metadata"]) => {
+    const response = await http.post(`/edit/update`, {
         type: "ids",
         target,
         data,

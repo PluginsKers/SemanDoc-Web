@@ -67,7 +67,7 @@ const submitLogin = async () => {
         loginErrorMessage.value = '';
         setTimeout(() => {
             router.push({ name: 'Home' });
-        }, 1600);
+        }, 600);
     } catch (error) {
         console.error('登录错误: ', error);
         loginStatus.value = -2;

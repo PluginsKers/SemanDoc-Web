@@ -58,7 +58,7 @@
                         </template>
                     </div>
 
-                    <div @click="modifyDocument()"
+                    <div @click="updateDocument()"
                         class="flex justify-center shadow-sm items-center h-10 select-none py-1 px-4 rounded outline-none active:ring-[3px] active:ring-gray-50"
                         :class="{ 'bg-gray-800 cursor-not-allowed text-white': modifyingStatus == -1, 'bg-green-700 text-white cursor-pointer': modifyingStatus == 1, 'bg-red-800 text-white cursor-pointer': modifyingStatus == -2, 'bg-black hover:bg-gray-900 text-white cursor-pointer': modifyingStatus == 0 }">
                         <template v-if="modifyingStatus == 1">
@@ -107,7 +107,7 @@
 <script setup lang="ts">
 import { defineProps, defineEmits, onMounted, onUnmounted, ref } from 'vue';
 import { Document } from '../api/types';
-import { removeDocuments, modifyDocument as _modifyDocument } from '../api/documents';
+import { removeDocuments, updateDocument as _updateDocument } from '../api/documents';
 
 const removingStatus = ref(0);
 const modifyingStatus = ref(0);
@@ -149,14 +149,14 @@ const { index, documents } = defineProps({
 });
 
 
-const modifyDocument = async () => {
+const updateDocument = async () => {
     if (modifyingStatus.value == -1 || removingStatus.value == -1) return;
     modifyingStatus.value = -1
     const data = documents[index].page_content;
     const metadata = documents[index].metadata;
     const docId = metadata['ids'];
     try {
-        await _modifyDocument(docId, data, metadata);
+        await _updateDocument(docId, data, metadata);
         emit('documentModify', documents[index]);
         modifyingStatus.value = 1;
     } catch (error) {
