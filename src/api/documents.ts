@@ -2,7 +2,7 @@ import axios from 'axios';
 import { Document } from './types';
 import router from '../router';
 
-const API_BASE_URL = 'https://ai.app.nbpt.edu.cn/api';
+const API_BASE_URL = 'https://ai.app.nbpt.edu.cn/api/v1';
 const http = axios.create({
     baseURL: API_BASE_URL
 });
@@ -34,22 +34,17 @@ http.interceptors.response.use(
 
 
 export const queryDocuments = async (query: string, k: number, filter: object, score_threshold: number, powerset: boolean): Promise<Document[]> => {
-    const response = await http.post(`/search`, { query, k, filter, score_threshold, powerset });
+    const response = await http.get(`/documents`, { params: { query, k, filter, score_threshold, powerset } });
     return response.data.data;
 };
 
 export const removeDocuments = async (target: string[]) => {
-    const response = await http.post(`/edit/delete`, {
-        type: "ids",
-        target
-    });
+    const response = await http.delete(`/documents/${target[0]}`);
     return response.data.data;
 };
 
 export const updateDocument = async (target: string, data: Document["page_content"], metadata: Document["metadata"]) => {
-    const response = await http.post(`/edit/update`, {
-        type: "ids",
-        target,
+    const response = await http.put(`/documents/${target}`, {
         data,
         metadata
     });
@@ -57,7 +52,7 @@ export const updateDocument = async (target: string, data: Document["page_conten
 };
 
 export const addDocument = async (data: Document["page_content"], metadata: Document["metadata"]): Promise<Document[]> => {
-    const response = await http.post(`/edit/add`, {
+    const response = await http.post(`/documents`, {
         data,
         metadata
     });

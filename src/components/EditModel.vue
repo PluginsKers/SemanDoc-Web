@@ -156,8 +156,8 @@ const updateDocument = async () => {
     const metadata = documents[index].metadata;
     const docId = metadata['ids'];
     try {
-        await _updateDocument(docId, data, metadata);
-        emit('documentModify', documents[index]);
+        const n_data = await _updateDocument(docId, data, metadata);
+        emit('documentModify', n_data);
         modifyingStatus.value = 1;
     } catch (error) {
         modifyingStatus.value = -2;
