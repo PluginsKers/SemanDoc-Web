@@ -33,7 +33,7 @@
                     </div>
 
                     <!-- 预设选择 -->
-                    <div class="cursor-pointer select-none bg-gray-200 rounded-md px-2.5 py-1 mr-1 mb-1 outline-none active:ring-[3px] active:ring-gray-50"
+                    <div class="cursor-pointer select-none bg-gray-200 rounded-md px-2.5 text-xs py-1 mr-1 mb-1 outline-none active:ring-[3px] active:ring-gray-50"
                         v-for="metadata, name in JSON.parse(presets)" :key="name" @click="newMetadata = metadata">
                         {{ name }}
                     </div>

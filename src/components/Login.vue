@@ -1,6 +1,6 @@
 <template>
-    <div class="flex justify-center items-center pb-[300px] z-0">
-        <form class="w-full max-w-md placeholder:text-gray-400 px-6">
+    <div @keydown.enter.prevent="submitLogin" class="flex justify-center items-center pb-[300px] z-0">
+        <form @action="submitLogin" class="w-full max-w-md placeholder:text-gray-400 px-6">
             <h1 class="text-3xl font-semibold text-center text-gray-900 mb-4">即刻信息智联</h1>
             <div class="mb-4">
                 <label for="username" class="block text-sm font-medium text-gray-700">用户名:</label>

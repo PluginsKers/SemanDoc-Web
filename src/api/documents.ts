@@ -34,7 +34,7 @@ http.interceptors.response.use(
 
 
 export const queryDocuments = async (query: string, k: number, filter: object, score_threshold: number, powerset: boolean): Promise<Document[]> => {
-    const response = await http.get(`/documents`, { params: { query, k, filter, score_threshold, powerset } });
+    const response = await http.get(`/documents`, { params: { query, k, filter: JSON.stringify(filter), score_threshold, powerset } });
     return response.data.data;
 };
 
