@@ -1,12 +1,18 @@
 <template>
-    <div class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex justify-center items-start md:py-4 z-20">
+    <div class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex justify-center items-start md:py-4 z-40"
+        @dragover.prevent="handleDragOver" @mouseout="handleMouseLeave" @drop.prevent="handleDrop">
         <div @click="closeAddModel"
             class="absolute justify-center items-center align-middle font-bold top-2 right-2 ring-1 ring-gray-300 bg-gray-100 p-[2px] text-[9px] rounded-sm shadow-sm cursor-pointer text-gray-700 hidden md:block">
             ESC
         </div>
         <!-- 模态窗口内容，小屏幕设备全屏，大屏幕占据屏幕的绝大部分 -->
         <div
-            class="bg-white w-screen h-full rounded-none md:rounded-md shadow-lg sm:w-full md:max-w-2xl lg:max-w-3xl xl:max-w-5xl overflow-auto">
+            class="relative bg-white w-screen h-full rounded-none md:rounded-md shadow-lg sm:w-full md:max-w-2xl lg:max-w-3xl xl:max-w-5xl overflow-auto">
+            <!-- 添加遮罩层，当文件被拖拽到组件上时显示 -->
+            <div v-if="showOverlay"
+                class="absolute flex flex-col justify-center items-center inset-0 border-4 border-dashed border-gray-200 bg-gray-800/50 z-10">
+                <p class="text-xl font-semibold text-white">上传文件</p>
+            </div>
             <!-- 模态窗口的子元素，如输入框、按钮等 -->
             <div class="flex flex-col justify-center h-full gap-2 p-6">
                 <textarea v-model="newData" placeholder="文档信息"
@@ -84,7 +90,7 @@
 <script setup lang="ts">
 import moment from 'moment-timezone';
 import { ref, defineProps, defineEmits, onMounted, onUnmounted, watch } from 'vue';
-import { addDocument as _addDocument } from '../api/documents';
+import { addDocument as _addDocument, uploadDocuments } from '../api/documents';
 
 
 const { presets } = defineProps({
@@ -102,6 +108,7 @@ const cleanedData = ref('');
 const addingStatus = ref(0);
 const tags = ref<string[]>(newMetadata.value.tags);
 const tags_input = ref('');
+const showOverlay = ref(false);
 const duplicate = ref(false); // 用于跟踪重复标签的状态
 const emit = defineEmits(['documentAdded', 'closeAddModel']);
 let timer: any = null;
@@ -162,6 +169,31 @@ watch(newMetadata, (newValue) => {
     duplicate.value = false;
 }, { deep: true });
 
+const handleDragOver = () => {
+    showOverlay.value = true;
+}
+
+const handleMouseLeave = () => {
+    showOverlay.value = false;
+}
+
+const handleDrop = async (event: any) => {
+    showOverlay.value = false;
+    const files = event.dataTransfer.files;
+    if (files.length > 0) {
+        try {
+            const result = await uploadDocuments(files[0]);
+            for (let i = 0; i < result.length; i++) {
+                emit('documentAdded', result[i]);
+            }
+            emit('closeAddModel');
+            console.log('Upload successful:', result);
+        } catch (error) {
+            console.error('Error uploading document:', error);
+        }
+    }
+
+}
 
 // 标签管理逻辑实现
 const addTag = () => {
@@ -202,6 +234,7 @@ const closeAddModel = () => {
     if (addingStatus.value != -1) {
         emit('closeAddModel');
     }
+    showOverlay.value = false;
 }
 
 const addDocument = async () => {

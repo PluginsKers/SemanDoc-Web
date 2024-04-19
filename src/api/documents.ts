@@ -38,6 +38,24 @@ export const queryDocuments = async (query: string, k: number, filter: object, s
     return response.data.data;
 };
 
+export const uploadDocuments = async (file: File) => {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+        const response = await http.post(`/upload/documents`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+        return response.data.data;
+    } catch (error) {
+        console.error('Upload failed:', error);
+        throw error;  // 或者根据你的错误处理策略返回错误信息
+    }
+};
+
+
 export const removeDocuments = async (target: string[]) => {
     const response = await http.delete(`/documents/${target[0]}`);
     return response.data.data;
