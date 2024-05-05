@@ -9,7 +9,7 @@
                     <div class="flex flex-col mb-3 text-gray-900">
                         <div class="flex h-10">
                             <div
-                                class="flex w-full flex-row relative h-10 border-[1px] border-gray-200 sm:text-sm rounded-tl-md">
+                                class="flex w-full flex-row relative h-10 border-[1px] border-gray-200 text-sm rounded-tl-md">
                                 <div class="absolute h-full w-10 pointer-events-none flex justify-center items-center">
                                     <svg class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
                                         <path fill-rule="evenodd"
@@ -21,14 +21,14 @@
                                     class="block p-2 pl-10 w-full h-full align-middle outline-none rounded-tl-md focus:bg-gray-50/50 hover:bg-gray-50/50" />
                             </div>
                             <input v-model="k" placeholder="数量" @wheel="handleWheelK($event, 0, 50, 1)"
-                                class="relative p-2 w-1/6 h-10 text-center align-middle outline-none border-[1px] border-l-0 border-gray-200 sm:text-sm rounded-tr-md focus:bg-gray-50/50 hover:bg-gray-50/50" />
+                                class="relative p-2 w-1/6 h-10 text-center align-middle outline-none border-[1px] border-l-0 border-gray-200 text-sm rounded-tr-md focus:bg-gray-50/50 hover:bg-gray-50/50" />
                         </div>
                         <div class="flex h-10">
                             <input v-model="score_threshold" placeholder="分数阈值"
                                 @wheel="handleWheelSH($event, 0, 2, 0.02)"
-                                class="p-2 w-1/6 h-full text-center align-middle outline-none border-[1px] border-r-0 border-t-0 border-gray-200 sm:text-sm rounded-bl-md focus:bg-gray-50/50 hover:bg-gray-50/50" />
+                                class="p-2 w-1/6 h-full text-center align-middle outline-none border-[1px] border-r-0 border-t-0 border-gray-200 text-sm rounded-bl-md focus:bg-gray-50/50 hover:bg-gray-50/50" />
                             <input v-model="filterString" placeholder="条件过滤"
-                                class="p-2 w-full h-full outline-none align-middle border-[1px] border-t-0 text-gray-400 border-gray-200 sm:text-sm rounded-br-md focus:bg-gray-50/50 hover:bg-gray-50/50" />
+                                class="p-2 w-full h-full outline-none align-middle border-[1px] border-t-0 text-gray-400 border-gray-200 text-sm rounded-br-md focus:bg-gray-50/50 hover:bg-gray-50/50" />
                         </div>
                     </div>
                     <h1 class="text-2xl ml-1">更多配置</h1>
@@ -110,7 +110,7 @@
                             </svg>
                         </template>
                     </div>
-                    <div class="flex justify-center items-center h-10 cursor-pointer select-none w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium bg-black hover:bg-gray-900 text-white outline-none active:ring-[3px] active:ring-gray-200"
+                    <div class="flex justify-center items-center h-10 cursor-pointer select-none w-full py-1.5 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium bg-black hover:bg-gray-900 text-white outline-none active:ring-[3px] active:ring-gray-200"
                         @click="showAddModal = true">
                         添加文档
                     </div>
@@ -143,10 +143,10 @@
 
 
 import { nextTick, ref, watch } from 'vue';
-import { Document } from '../api/types';
-import AddModel from './AddModel.vue';
-import EditModel from './EditModel.vue';
-import { queryDocuments } from '../api/documents';
+import { Document } from '@/api/types';
+import AddModel from '@/components/AddModel.vue';
+import EditModel from '@/components/EditModel.vue';
+import { queryDocuments } from '@/api/documents';
 
 const presets = JSON.stringify({
     "通用": { "tags": ["通用"] },

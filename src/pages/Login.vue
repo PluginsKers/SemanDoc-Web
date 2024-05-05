@@ -49,7 +49,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { login } from '../api/auth';
+import { login } from '@/api/auth';
 
 const username = ref('');
 const password = ref('');
@@ -75,5 +75,3 @@ const submitLogin = async () => {
     }
 };
 </script>
-
-<style></style>

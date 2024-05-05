@@ -46,7 +46,7 @@
                 </div>
                 <div class="flex-none flex justify-between items-center">
                     <div @click="addDocument"
-                        class="select-none h-10 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white outline-none active:ring-[3px] active:ring-gray-100"
+                        class="flex justify-center items-center select-none h-10 py-1.5 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white outline-none active:ring-[3px] active:ring-gray-100"
                         :class="{ 'bg-gray-800 cursor-not-allowed': addingStatus == -1, 'bg-green-700 cursor-pointer': addingStatus == 1, 'bg-red-800 cursor-pointer': addingStatus == -2, 'bg-black hover:bg-gray-900 cursor-pointer': addingStatus == 0 }">
                         <template v-if="addingStatus == 1">
                             <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
@@ -78,7 +78,7 @@
                         </template>
                     </div>
                     <div @click="closeAddModel"
-                        class="flex justify-center items-center cursor-pointer select-none py-2 px-4 bg-gray-200 h-10 rounded-md text-sm font-medium text-gray-800 outline-none hover:ring-[3px] hover:ring-gray-100">
+                        class="flex justify-center items-center cursor-pointer select-none py-1.5 px-4 bg-gray-200 h-10 rounded-md text-sm font-medium text-gray-800 outline-none hover:ring-[3px] hover:ring-gray-100">
                         取消
                     </div>
                 </div>
@@ -90,7 +90,7 @@
 <script setup lang="ts">
 import moment from 'moment-timezone';
 import { ref, defineProps, defineEmits, onMounted, onUnmounted, watch } from 'vue';
-import { addDocument as _addDocument, uploadDocuments } from '../api/documents';
+import { addDocument as _addDocument, uploadDocuments } from '@/api/documents';
 
 
 const { presets } = defineProps({

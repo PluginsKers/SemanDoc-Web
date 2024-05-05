@@ -1,6 +1,6 @@
 import axios from 'axios';
-import { Document } from './types';
-import router from '../router';
+import { Document } from '@/api/types';
+import router from '@/router';
 
 const API_BASE_URL = 'https://ai.app.nbpt.edu.cn/api/v1';
 const http = axios.create({
@@ -24,7 +24,7 @@ http.interceptors.response.use(
             const status = error.response.status;
             if (status === 401 || status === 403) {
                 localStorage.removeItem('token');
-                router.push("/login");
+                router.push({ name: 'Login' });
                 return Promise.reject("验证已过期");
             }
         }

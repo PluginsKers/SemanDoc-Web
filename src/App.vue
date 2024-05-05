@@ -8,10 +8,10 @@ import Head from './components/layouts/Head.vue';
 import { ref, watchEffect } from 'vue';
 import { useRoute } from 'vue-router';
 
-import router from './router';
+import router from '@/router';
 
 if (localStorage.getItem('token') === null || localStorage.getItem('token') === '') {
-    router.push("/login");
+    router.push({ name: 'Login' });
 }
 
 const route = useRoute();
