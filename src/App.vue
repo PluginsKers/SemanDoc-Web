@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { ref, watch, watchEffect } from 'vue';
 import { inject } from 'vue';
 import Head from '@/components/layouts/Head.vue';
 import NotificationDrawer from '@/components/NotificationDrawer.vue';
@@ -24,8 +24,16 @@ if (!notificationManager) {
 const { notifications } = notificationManager;
 
 const route = useRoute();
-const showHead = ref(route.name !== 'Login');
+const showHead = ref(false);
 const isDrawerOpen = ref(false);
+
+watchEffect(() => {
+  if (route.name === 'Login') {
+    showHead.value = false;
+  } else {
+    showHead.value = true;
+  }
+});
 
 watch(() => notifications.value, (newVal, _oldVal) => {
   isDrawerOpen.value = newVal.length > 0;
