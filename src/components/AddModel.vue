@@ -18,8 +18,8 @@
                 <textarea v-model="newData" placeholder="文档信息"
                     class="flex-1 mt-1 p-2 w-full min-h-40 h-40 outline-none rounded-md text-gray-900 ring-1 ring-gray-100 focus:ring-[3px] focus:ring-gray-50 text-sm leading-6">
                 </textarea>
-                <input v-model="newMetadataString" placeholder="源信息格式"
-                    class="shrink-0 mt-1 p-2 w-full h-10 outline-none rounded-md text-gray-900 ring-1 ring-gray-100 focus:ring-[3px] focus:ring-gray-50 text-sm leading-6" />
+                <input v-model="newMetadataString" placeholder="源信息"
+                    class="shrink-0 mt-1 p-2 w-full h-10 outline-none rounded-md text-gray-400 ring-1 ring-gray-100 focus:ring-[3px] focus:ring-gray-50 text-sm leading-6" />
 
                 <div class="relative flex flex-wrap"
                     :class="{ 'control-disabled before:bg-gray-100/40 before:rounded-md before:cursor-not-allowed': newMetadataManagerDisabled }">
@@ -31,7 +31,7 @@
 
                         <div class="flex flex-row flex-wrap ml-1 gap-1" :class="{ 'py-1': tags.length > 0 }">
                             <div v-for="(tag, index) in tags" :key="index" @click="removeTag(index)"
-                                class="cursor-pointer select-none bg-gray-200 text-black text-xs px-2.5 py-1 rounded-md hover:bg-gray-300">
+                                class="cursor-pointer select-none bg-gray-200 text-black text-xs px-2.5 py-1 rounded-sm hover:bg-gray-300">
                                 {{ tag }}
                             </div>
                         </div>
@@ -39,7 +39,7 @@
                     </div>
 
                     <!-- 预设选择 -->
-                    <div class="cursor-pointer select-none bg-gray-200 rounded-md px-2.5 text-xs py-1 mr-1 mb-1 outline-none active:ring-[3px] active:ring-gray-50"
+                    <div class="cursor-pointer select-none bg-gray-200 rounded-sm px-2.5 text-xs py-1 mr-1 mb-1 outline-none active:ring-[3px] active:ring-gray-50"
                         v-for="metadata, name in JSON.parse(presets)" :key="name" @click="newMetadata = metadata">
                         {{ name }}
                     </div>
@@ -89,9 +89,12 @@
 
 <script setup lang="ts">
 import moment from 'moment-timezone';
-import { ref, defineProps, defineEmits, onMounted, onUnmounted, watch } from 'vue';
+import { ref, defineProps, defineEmits, onMounted, onUnmounted, watch, inject } from 'vue';
 import { addDocument as _addDocument, uploadDocuments } from '@/api/documents';
+import { NotificationManager } from '@/notificationManager';
 
+const notificationManager = inject<NotificationManager>('notificationManager')!;
+const { addNotification } = notificationManager;
 
 const { presets } = defineProps({
     presets: {
@@ -187,9 +190,17 @@ const handleDrop = async (event: any) => {
                 emit('documentAdded', result[i]);
             }
             emit('closeAddModel');
-            console.log('Upload successful:', result);
+            addNotification({
+                id: new Date().getTime(),
+                message: '上传成功！'
+            });
+            console.log('上传成功:', result);
         } catch (error) {
-            console.error('Error uploading document:', error);
+            addNotification({
+                id: new Date().getTime(),
+                message: `上传失败: ${error}`
+            });
+            console.error('上传失败:', error);
         }
     }
 
@@ -249,9 +260,17 @@ const addDocument = async () => {
         timer = setTimeout(() => {
             addingStatus.value = 0;
         }, 3000);
+        addNotification({
+            id: new Date().getTime(),
+            message: '添加成功！'
+        });
     } catch (error) {
-        console.error('添加文档错误:', error);
+        addNotification({
+            id: new Date().getTime(),
+            message: `添加错误: ${error}`
+        });
         addingStatus.value = -2;
+        console.error('添加错误:', error);
     }
 };
 </script>

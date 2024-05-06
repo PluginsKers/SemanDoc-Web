@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@vue/runtime-core": "^3.4.26",
     "axios": "^1.6.7",
     "jsonwebtoken": "^9.0.2",
     "moment-timezone": "^0.5.45",
@@ -20,11 +21,12 @@
   "devDependencies": {
     "@types/jsonwebtoken": "^9.0.6",
     "@vitejs/plugin-vue": "^5.0.4",
+    "@vue/runtime-dom": "^3.4.26",
     "autoprefixer": "^10.4.17",
     "postcss": "^8.4.35",
     "tailwindcss": "^3.4.1",
     "typescript": "^5.2.2",
-    "vite": "^5.1.4",
+    "vite": "^5.2.11",
     "vue-tsc": "^1.8.27"
   }
 }

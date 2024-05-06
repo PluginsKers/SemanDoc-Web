@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Document } from '@/api/types';
+import { Document } from '@/types';
 import router from '@/router';
 
 const API_BASE_URL = 'https://ai.app.nbpt.edu.cn/api/v1';

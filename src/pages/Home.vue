@@ -2,9 +2,9 @@
     <div class="py-10 pt-[48px]" :class="{ 'w-full': documents.length > 0 }">
         <div class="flex flex-col items-center lg:justify-center mx-auto lg:flex-row-reverse lg:items-start placeholder:text-gray-400 z-0"
             :class="{ 'md:max-w-2xl md:min-w-1xl lg:max-w-3xl lg:min-w-2xl': documents.length <= 0, 'lg:w-4/5': documents.length > 0 }">
-            <div class="relative bg-white border-[1px] rounded-md md:shadow-sm p-4 pb-2 mb-4 w-full"
+            <div class="relative bg-white rounded-md md:shadow-sm p-4 pb-2 mb-4 w-full"
                 :class="{ 'lg:w-1/3': documents.length > 0 }">
-                <h1 class="text-3xl font-bold text-center mb-4">文档管理</h1>
+                <h1 class="text-3xl font-bold text-center mb-4">数据管理</h1>
                 <div class="flex flex-col justify-center gap-2">
                     <div class="flex flex-col mb-3 text-gray-900">
                         <div class="flex h-10">
@@ -17,7 +17,7 @@
                                             clip-rule="evenodd" />
                                     </svg>
                                 </div>
-                                <input @keydown.enter.prevent="searchDocuments" v-model="query" placeholder="检索内容"
+                                <input @keydown.enter.prevent="searchDocuments" v-model="query" placeholder="检索关键词"
                                     class="block p-2 pl-10 w-full h-full align-middle outline-none rounded-tl-md focus:bg-gray-50/50 hover:bg-gray-50/50" />
                             </div>
                             <input v-model="k" placeholder="数量" @wheel="handleWheelK($event, 0, 50, 1)"
@@ -42,7 +42,7 @@
 
                             <div class="flex flex-row flex-wrap ml-1 gap-1" :class="{ 'py-1': tags.length > 0 }">
                                 <div v-for="(tag, index) in tags" :key="index" @click="removeTag(index)"
-                                    class="cursor-pointer select-none bg-gray-200 text-black text-xs px-2.5 py-1 rounded-md hover:bg-gray-300">
+                                    class="cursor-pointer select-none bg-gray-200 text-black text-xs px-2.5 py-1 rounded-sm hover:bg-gray-300">
                                     {{ tag }}
                                 </div>
                             </div>
@@ -51,7 +51,7 @@
                         </div>
 
                         <!-- 预设选择 -->
-                        <div class="cursor-pointer select-none bg-gray-200 rounded-md text-xs px-2.5 py-1 mr-1 mb-1 outline-none active:ring-[3px] active:ring-gray-50"
+                        <div class="cursor-pointer select-none bg-gray-200 rounded-sm text-xs px-2.5 py-1 mr-1 mb-1 outline-none active:ring-[3px] active:ring-gray-50"
                             v-for="metadata, name in JSON.parse(presets)" :key="name" @click="filter = metadata">
                             {{ name }}
                         </div>
@@ -142,11 +142,16 @@
 <script setup lang="ts">
 
 
-import { nextTick, ref, watch } from 'vue';
-import { Document } from '@/api/types';
+import { inject, nextTick, ref, watch } from 'vue';
+import { Document } from '@/types';
 import AddModel from '@/components/AddModel.vue';
 import EditModel from '@/components/EditModel.vue';
 import { queryDocuments } from '@/api/documents';
+import { NotificationManager } from '@/notificationManager';
+
+const notificationManager = inject<NotificationManager>('notificationManager')!;
+const { addNotification } = notificationManager;
+
 
 const presets = JSON.stringify({
     "通用": { "tags": ["通用"] },
@@ -271,9 +276,17 @@ const searchDocuments = async () => {
         timer = setTimeout(() => {
             queryingStatus.value = 0;
         }, 3000);
+        addNotification({
+            id: new Date().getTime(),
+            message: `检索成功！`
+        });
     } catch (error) {
         queryingStatus.value = -2;
-        console.error('检索文档错误:', error);
+        addNotification({
+            id: new Date().getTime(),
+            message: `检索错误: ${error}`
+        });
+        console.error('检索错误:', error);
     }
 };
 
