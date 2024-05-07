@@ -24,9 +24,9 @@
                 <div class="relative flex flex-wrap"
                     :class="{ 'control-disabled before:bg-gray-100/40 before:rounded-md before:cursor-not-allowed': newMetadataManagerDisabled }">
                     <div
-                        class="shrink-0 flex-col mb-2 p-0 w-full rounded-md text-gray-900 ring-1 ring-gray-100 hover:ring-[3px] hover:ring-gray-50 text-sm leading-6">
+                        class="shrink-0 flex-col mb-2 p-0 w-full rounded-md text-gray-900 ring-1 ring-gray-100 hover:ring-[3px] hover:ring-gray-50 text-xs leading-6">
                         <input v-model="tags_input" @keydown.enter.prevent="addTag" @keydown.delete="checkForDelete"
-                            placeholder="添加标签" class="tags-input outline-none rounded-md h-10 px-2 w-full border-b-2"
+                            placeholder="添加标签" class="tags-input outline-none rounded-md h-10 text-sm px-2 w-full border-b-2"
                             :class="{ 'border-dashed border-gray-200': tags.length > 0, 'border-white': tags.length <= 0 }" />
 
                         <div class="flex flex-row flex-wrap ml-1 gap-1" :class="{ 'py-1': tags.length > 0 }">
@@ -89,12 +89,8 @@
 
 <script setup lang="ts">
 import moment from 'moment-timezone';
-import { ref, defineProps, defineEmits, onMounted, onUnmounted, watch, inject } from 'vue';
+import { ref, defineProps, defineEmits, onMounted, onUnmounted, watch } from 'vue';
 import { addDocument as _addDocument, uploadDocuments } from '@/api/documents';
-import { NotificationManager } from '@/notificationManager';
-
-const notificationManager = inject<NotificationManager>('notificationManager')!;
-const { addNotification } = notificationManager;
 
 const { presets } = defineProps({
     presets: {
@@ -190,16 +186,8 @@ const handleDrop = async (event: any) => {
                 emit('documentAdded', result[i]);
             }
             emit('closeAddModel');
-            addNotification({
-                id: new Date().getTime(),
-                message: '上传成功！'
-            });
             console.log('上传成功:', result);
         } catch (error) {
-            addNotification({
-                id: new Date().getTime(),
-                message: `上传失败: ${error}`
-            });
             console.error('上传失败:', error);
         }
     }
@@ -260,15 +248,7 @@ const addDocument = async () => {
         timer = setTimeout(() => {
             addingStatus.value = 0;
         }, 3000);
-        addNotification({
-            id: new Date().getTime(),
-            message: '添加成功！'
-        });
     } catch (error) {
-        addNotification({
-            id: new Date().getTime(),
-            message: `添加错误: ${error}`
-        });
         addingStatus.value = -2;
         console.error('添加错误:', error);
     }

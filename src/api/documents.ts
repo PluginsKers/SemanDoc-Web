@@ -1,6 +1,8 @@
 import axios from 'axios';
 import { Document } from '@/types';
 import router from '@/router';
+import { useNotificationManager } from '@/notificationManager';
+const { addNotification } = useNotificationManager();
 
 const API_BASE_URL = 'https://ai.app.nbpt.edu.cn/api/v1';
 const http = axios.create({
@@ -17,6 +19,10 @@ http.interceptors.request.use(
 
 http.interceptors.response.use(
     function (response) {
+        addNotification({
+            id: new Date().getTime(),
+            message: response.data.message
+        });
         return response;
     },
     function (error) {
@@ -27,6 +33,10 @@ http.interceptors.response.use(
                 router.push({ name: 'Login' });
                 return Promise.reject("验证已过期");
             }
+            addNotification({
+                id: new Date().getTime(),
+                message: error.response.data.message
+            });
         }
         return Promise.reject(error);
     }
@@ -51,7 +61,7 @@ export const uploadDocuments = async (file: File) => {
         return response.data.data;
     } catch (error) {
         console.error('Upload failed:', error);
-        throw error;  // 或者根据你的错误处理策略返回错误信息
+        throw error;
     }
 };
 

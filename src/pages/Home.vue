@@ -1,7 +1,7 @@
 <template>
     <div class="py-10 pt-[48px]" :class="{ 'w-full': documents.length > 0 }">
-        <div class="flex flex-col items-center lg:justify-center mx-auto lg:flex-row-reverse lg:items-start placeholder:text-gray-400 z-0"
-            :class="{ 'md:max-w-2xl md:min-w-1xl lg:max-w-3xl lg:min-w-2xl': documents.length <= 0, 'lg:w-4/5': documents.length > 0 }">
+        <div class="flex flex-col items-center lg:justify-center lg:flex-row-reverse lg:items-start placeholder:text-gray-400 z-0"
+            :class="{ 'md:max-w-2xl md:min-w-1xl lg:max-w-3xl lg:min-w-2xl mx-auto': documents.length <= 0, 'w-full': documents.length > 0}">
             <div class="relative bg-white rounded-md md:shadow-sm p-4 pb-2 mb-4 w-full"
                 :class="{ 'lg:w-1/3': documents.length > 0 }">
                 <h1 class="text-3xl font-bold text-center mb-4">数据管理</h1>
@@ -34,10 +34,10 @@
                     <h1 class="text-2xl ml-1">更多配置</h1>
                     <div class="flex flex-wrap">
                         <div
-                            class="shrink-0 flex-col mb-2 p-0 w-full rounded-md text-gray-900 ring-1 ring-gray-100 hover:ring-[3px] hover:ring-gray-50 text-sm leading-6">
+                            class="shrink-0 flex-col mb-2 p-0 w-full rounded-md text-gray-900 ring-1 ring-gray-100 hover:ring-[3px] hover:ring-gray-50 text-xs leading-6">
                             <input v-model="tags_input" @keydown.enter.prevent="addTag" @keydown.delete="checkForDelete"
                                 placeholder="添加标签"
-                                class="tags-input outline-none rounded-md h-10 px-2 w-full border-b-2"
+                                class="tags-input outline-none rounded-md h-10 px-2 w-full text-sm border-b-2"
                                 :class="{ 'border-dashed border-gray-200': tags.length > 0, 'border-white': tags.length <= 0 }" />
 
                             <div class="flex flex-row flex-wrap ml-1 gap-1" :class="{ 'py-1': tags.length > 0 }">
@@ -118,7 +118,7 @@
                 </div>
             </div>
             <ul v-show="documents.length > 0"
-                class="w-full docs-list bg-white border-[1px] lg:mr-4 min-w-xl p-4 rounded-md md:shadow-sm">
+                class="w-full docs-list bg-white lg:mr-4 min-w-xl p-4 rounded-md shadow-sm">
                 <li v-for="(document, index) in documents" :key="index" @click="openEditModel(index)"
                     class="document-item p-2 flex flex-col cursor-pointer justify-between items-start rounded-md hover:ring-1 hover:ring-gray-200 hover:bg-gray-50/50">
                     <span class="text-gray-700">{{ document.page_content }}</span>
@@ -142,15 +142,11 @@
 <script setup lang="ts">
 
 
-import { inject, nextTick, ref, watch } from 'vue';
+import { nextTick, ref, watch } from 'vue';
 import { Document } from '@/types';
 import AddModel from '@/components/AddModel.vue';
 import EditModel from '@/components/EditModel.vue';
 import { queryDocuments } from '@/api/documents';
-import { NotificationManager } from '@/notificationManager';
-
-const notificationManager = inject<NotificationManager>('notificationManager')!;
-const { addNotification } = notificationManager;
 
 
 const presets = JSON.stringify({
@@ -276,16 +272,8 @@ const searchDocuments = async () => {
         timer = setTimeout(() => {
             queryingStatus.value = 0;
         }, 3000);
-        addNotification({
-            id: new Date().getTime(),
-            message: `检索成功！`
-        });
     } catch (error) {
         queryingStatus.value = -2;
-        addNotification({
-            id: new Date().getTime(),
-            message: `检索错误: ${error}`
-        });
         console.error('检索错误:', error);
     }
 };

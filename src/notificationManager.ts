@@ -11,7 +11,7 @@ const notifications = ref<Notification[]>([]);
 const maxNotifications = 5;  // 最大通知数量
 const timeoutIds = new Map<number, any>(); // 用于存储每个通知的定时器 ID
 
-function addNotification(notification: Notification, duration = 10000000) {
+function addNotification(notification: Notification, duration = 10000) {
     // 确保通知有一个唯一ID
     notification.id = Date.now() + Math.random();
 

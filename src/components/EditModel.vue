@@ -105,13 +105,9 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits, onMounted, onUnmounted, ref, inject } from 'vue';
+import { defineProps, defineEmits, onMounted, onUnmounted, ref } from 'vue';
 import { Document } from '../types';
 import { removeDocuments, updateDocument as _updateDocument } from '../api/documents';
-import { NotificationManager } from '@/notificationManager';
-
-const notificationManager = inject<NotificationManager>('notificationManager')!;
-const { addNotification } = notificationManager;
 
 const removingStatus = ref(0);
 const modifyingStatus = ref(0);
@@ -163,16 +159,8 @@ const updateDocument = async () => {
         const n_data = await _updateDocument(docId, data, metadata);
         emit('documentModify', n_data);
         modifyingStatus.value = 1;
-        addNotification({
-            id: new Date().getTime(),
-            message: `修改成功！`
-        });
     } catch (error) {
         modifyingStatus.value = -2;
-        addNotification({
-            id: new Date().getTime(),
-            message: `修改错误: ${error}`
-        });
         console.error('修改错误:', error);
     }
 };
@@ -199,16 +187,8 @@ const removeDocument = async () => {
         emit('documentRemoved', index);
         removingStatus.value = 1;
         closeEditModal();
-        addNotification({
-            id: new Date().getTime(),
-            message: `删除成功！`
-        });
     } catch (error) {
         removingStatus.value = -2;
-        addNotification({
-            id: new Date().getTime(),
-            message: `删除错误: ${error}`
-        });
         console.error('删除错误:', error);
     }
 };

@@ -1,15 +1,21 @@
 <template>
-  <transition name="slide-up">
-    <div v-if="isOpen" class="fixed right-4 bottom-0 mr-4 w-64 z-50 hidden lg:block">
-      <ul class="relative max-w-50" :style="{ bottom: `${bottoms.length * offset - offset}px` }">
-        <li v-for="(item, index) in notifications" :key="item.id"
-          class="absolute bg-white ring-1 font-sans text-sm ring-gray-200 shadow-md rounded-b-none w-full max-h-14 truncate  rounded p-4 origin-bottom transform select-none cursor-pointer hover:rotate-0 "
-          :style="{bottom: `${bottoms[index]}px`, transform: `scale(${1 - scales[index]})`}">
-          {{ item.message }}
-        </li>
-      </ul>
-    </div>
-  </transition>
+  <div v-if="isOpen" class="fixed right-4 bottom-0 w-64 z-50 hidden lg:block">
+    <div class="absolute flex justify-center items-center top-[-60px] right-[-4px] text-white z-40 bg-black rounded-md w-[20px] h-[20px] text-sm">{{ notifications?.length
+      }}</div>
+    <ul class="relative max-w-64 z-30" :style="{ bottom: `${bottoms.length * offset - offset}px` }">
+      <li v-for="(item, index) in notifications" :key="item.id"
+        class="absolute flex flex-row items-center bg-white ring-1 ring-gray-200 text-sm rounded-b-none w-full max-h-14 rounded p-4 origin-bottom transform cursor-pointer bottom-0"
+        :style="{ transform: `translateY(${bottoms[index]}px) scale(${1 - scales[index]})` }">
+        <svg t="1715015564979" class="icon mr-2 w-[24px] h-[24px]" viewBox="0 0 1024 1024" version="1.1"
+          xmlns="http://www.w3.org/2000/svg" p-id="5109" width="24" height="24">
+          <path
+            d="M512 85.333333c235.637333 0 426.666667 191.029333 426.666667 426.666667 0 78.293333-21.152 153.568-60.586667 219.274667a32 32 0 0 1-54.88-32.938667A360.789333 360.789333 0 0 0 874.666667 512c0-200.298667-162.368-362.666667-362.666667-362.666667S149.333333 311.701333 149.333333 512s162.368 362.666667 362.666667 362.666667a360.789333 360.789333 0 0 0 186.314667-51.445334 32 32 0 0 1 32.928 54.88A424.778667 424.778667 0 0 1 512 938.666667C276.362667 938.666667 85.333333 747.637333 85.333333 512S276.362667 85.333333 512 85.333333z m0 565.333334a42.666667 42.666667 0 1 1 0 85.333333 42.666667 42.666667 0 0 1 0-85.333333z m0-362.666667a42.666667 42.666667 0 0 1 42.666667 42.666667v234.666666a42.666667 42.666667 0 1 1-85.333334 0V330.666667a42.666667 42.666667 0 0 1 42.666667-42.666667z"
+            fill="#000000" p-id="5110"></path>
+        </svg>
+        <p class="truncate select-none font-sans w-full">{{ item.message }}</p>
+      </li>
+    </ul>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -33,7 +39,7 @@ watch(() => props.notifications, (newNotifications) => {
 }, { immediate: true, deep: true });
 
 function updateBottoms(length: number) {
-  bottoms.value = Array.from({ length }, (_, i) => i * -offset.value);
+  bottoms.value = Array.from({ length }, (_, i) => i * offset.value);
 }
 
 function updateScales(length: number) {
@@ -43,17 +49,7 @@ function updateScales(length: number) {
 </script>
 
 <style scoped>
-.slide-up-enter-active,
-.slide-up-leave-active {
-  transition: transform 0.3s ease-in-out;
-}
-
-.slide-up-enter-from,
-.slide-up-leave-to {
-  transform: translateY(100%);
-}
-
 li {
-  backface-visibility: hidden;
+  transition: all 0.1s;
 }
 </style>
