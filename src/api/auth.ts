@@ -1,35 +1,42 @@
-import axios from 'axios';
-import { useNotificationManager } from '@/notificationManager';
-const { addNotification } = useNotificationManager();
-
-const API_BASE_URL = 'http://10.102.20.242:7002/api/v1';
-const http = axios.create({
-    baseURL: API_BASE_URL
-});
-
-http.interceptors.response.use(
-    function (response) {
-        addNotification({
-            id: new Date().getTime(),
-            message: response.data.message
-        });
-        return response;
-    },
-    function (error) {
-        if (error.response) {
-            addNotification({
-                id: new Date().getTime(),
-                message: error.response.data.message
-            });
-        }
-        return Promise.reject(error);
-    }
-);
+import http from '@/api/http';
 
 export const login = async (username: string, password: string) => {
-    const response = await http.post(`${API_BASE_URL}/auth/login`, {
+    const response = await http.post(`/auth/login`, {
         username,
         password
     });
     return response.data.token;
+};
+
+export const updateUserPassword = async (userId: number, newPassword: string) => {
+    try {
+        const response = await http.put(
+            `/users/${userId}`,
+            {
+                password: newPassword
+            }
+        );
+        return response.data;
+    } catch (error) {
+        console.error('Error updating password:', error);
+        throw error;
+    }
+};
+
+export const createUser = async (username: string, password: string, role: number, nickname: string = 'User') => {
+    try {
+        const response = await http.post(
+            `/users`,
+            {
+                username,
+                password,
+                role,
+                nickname
+            }
+        );
+        return response.data;
+    } catch (error) {
+        console.error('Error creating user:', error);
+        throw error;
+    }
 };

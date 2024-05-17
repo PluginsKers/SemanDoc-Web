@@ -26,7 +26,8 @@
                     <div
                         class="shrink-0 flex-col mb-2 p-0 w-full rounded-md text-gray-900 ring-1 ring-gray-100 hover:ring-[3px] hover:ring-gray-50 text-xs leading-6">
                         <input v-model="tags_input" @keydown.enter.prevent="addTag" @keydown.delete="checkForDelete"
-                            placeholder="添加标签" class="tags-input outline-none rounded-md h-10 text-sm px-2 w-full border-b-2"
+                            placeholder="添加标签"
+                            class="tags-input outline-none rounded-md h-10 text-sm px-2 w-full border-b-2"
                             :class="{ 'border-dashed border-gray-200': tags.length > 0, 'border-white': tags.length <= 0 }" />
 
                         <div class="flex flex-row flex-wrap ml-1 gap-1" :class="{ 'py-1': tags.length > 0 }">
@@ -91,6 +92,8 @@
 import moment from 'moment-timezone';
 import { ref, defineProps, defineEmits, onMounted, onUnmounted, watch } from 'vue';
 import { addDocument as _addDocument, uploadDocuments } from '@/api/documents';
+import { useNotificationManager } from '@/notificationManager';
+const { addNotification } = useNotificationManager();
 
 const { presets } = defineProps({
     presets: {
@@ -181,12 +184,20 @@ const handleDrop = async (event: any) => {
     const files = event.dataTransfer.files;
     if (files.length > 0) {
         try {
+            addNotification({
+                id: new Date().getTime(),
+                message: "正在上传文件..."
+            });
             const result = await uploadDocuments(files[0]);
-            for (let i = 0; i < result.length; i++) {
-                emit('documentAdded', result[i]);
+            for (let i = 0; i < result.data.length; i++) {
+                addNotification({
+                    id: new Date().getTime(),
+                    message: `上传成功：${result.statistics.success_count}，失败：${result.statistics.failure_count}`
+                });
+                emit('documentAdded', result.data[i]);
             }
             emit('closeAddModel');
-            console.log('上传成功:', result);
+            console.log('上传成功:', result.data);
         } catch (error) {
             console.error('上传失败:', error);
         }
