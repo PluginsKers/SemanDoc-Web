@@ -3,19 +3,20 @@ import { login } from '@/api/auth';
 
 const store = createStore({
     state: {
-        user: {
+        user: JSON.parse(localStorage.getItem('user')|| "{}") || {
             username: '',
             nickname: '',
             role_id: null,
-            token: localStorage.getItem('token') || '',
+            token: '',
         },
-        isAuthenticated: false,
+        isAuthenticated: !!localStorage.getItem('token'),
     },
     mutations: {
         SET_USER(state: { user: { token: any; }; isAuthenticated: boolean; }, user: { id: any; token: string; }) {
             state.user = user;
             state.isAuthenticated = !!user.id;
             state.user.token = user.token;
+            localStorage.setItem('user', JSON.stringify(state.user));
             localStorage.setItem('token', user.token);
         },
         CLEAR_USER(state: { user: { username: string; nickname: string; role_id: null; token: string; }; isAuthenticated: boolean; }) {
@@ -26,6 +27,7 @@ const store = createStore({
                 token: '',
             };
             state.isAuthenticated = false;
+            localStorage.removeItem('user');
             localStorage.removeItem('token');
         }
     },

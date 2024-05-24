@@ -75,7 +75,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useStore } from 'vuex';
-import { updateUserPassword, createUser as createUserApi } from '@/api/index';
+import { updateUserPassword, createUser as createUser_I } from '@/api/index';
 import { useNotificationManager } from '@/notificationManager';
 const { addNotification } = useNotificationManager();
 const store = useStore();
@@ -111,10 +111,14 @@ const updatePassword = async () => {
 
 const createUser = async () => {
     if (newUser.value.password !== newUser.value.confirmPassword) {
+        addNotification({
+            id: new Date().getTime(),
+            message: "两次输入的密码不一致"
+        });
         return;
     }
     try {
-        await createUserApi(newUser.value.username, newUser.value.password, 2, newUser.value.username);
+        await createUser_I(newUser.value.username, newUser.value.password, 2, newUser.value.username);
     } catch (error) {
         console.error('Error creating user:', error);
     }
