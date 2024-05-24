@@ -1,7 +1,7 @@
 <template>
     <div class="py-10 pt-[48px]" :class="{ 'w-full': documents.length > 0 }">
         <div class="flex flex-col items-center lg:justify-center lg:flex-row-reverse lg:items-start placeholder:text-gray-400 z-0"
-            :class="{ 'md:max-w-2xl md:min-w-1xl lg:max-w-3xl lg:min-w-2xl mx-auto': documents.length <= 0, 'w-full': documents.length > 0}">
+            :class="{ 'md:max-w-2xl md:min-w-1xl lg:max-w-3xl lg:min-w-2xl mx-auto': documents.length <= 0, 'w-full': documents.length > 0 }">
             <div class="relative bg-white rounded-md md:shadow-sm p-4 pb-2 mb-4 w-full"
                 :class="{ 'lg:w-1/3': documents.length > 0 }">
                 <h1 class="text-3xl font-bold text-center mb-4">数据管理</h1>
@@ -70,7 +70,7 @@
                         <label @click="isPowerSet = !isPowerSet" class="cursor-pointer select-none">非严格检索模式</label>
                     </div>
                     <div @click="searchDocuments"
-                        class="relative flex justify-center items-center h-10 w-full py-2 px-4 select-none border border-transparent rounded-md shadow-sm text-sm font-medium text-white outline-none active:ring-[3px] active:ring-gray-200"
+                        class="relative flex justify-center items-center h-10 w-full py-1.5 px-4 select-none border border-transparent rounded-md shadow-sm text-sm font-medium text-white outline-none active:ring-[3px] active:ring-gray-200"
                         :class="{ 'bg-gray-800 cursor-not-allowed': queryingStatus == -1, 'bg-red-800 cursor-pointer': queryingStatus == -2, 'bg-green-700 cursor-pointer': queryingStatus == 1, 'bg-black hover:bg-gray-900 cursor-pointer': queryingStatus == 0 }">
                         <template v-if="queryingStatus == 1">
                             <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
@@ -114,13 +114,19 @@
                         @click="showAddModal = true">
                         添加文档
                     </div>
+                    <div class="flex justify-center items-center h-10 cursor-pointer select-none w-full py-1.5 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium bg-red-700 hover:bg-red-800 text-white outline-none active:ring-[3px] active:ring-gray-200"
+                        @click="deleteSelectedDocuments" v-if="selectedDocuments.length > 0">
+                        删除文档
+                    </div>
                     <span class="text-center text-gray-300">注意：该系统为语义检索，调节阈值大小精确控制检索精度。</span>
                 </div>
             </div>
             <ul v-show="documents.length > 0"
-                class="w-full docs-list bg-white lg:mr-4 min-w-xl p-4 rounded-md shadow-sm">
+                class="w-full docs-list bg-white lg:mr-4 min-w-xl p-4 rounded-md shadow-sm" @mousedown="handleMouseDown"
+                @mousemove="handleMouseMove" @mouseup="handleMouseUp" @mouseleave="handleMouseLeave">
                 <li v-for="(document, index) in documents" :key="index" @click="openEditModel(index)"
-                    class="document-item p-2 flex flex-col cursor-pointer justify-between items-start rounded-md hover:ring-1 hover:ring-gray-200 hover:bg-gray-50/50">
+                    :class="{ 'select-none bg-gray-100 rounded-none hover:bg-gray-200': selectedDocuments.includes(index), 'hover:ring-1 hover:ring-gray-200 hover:bg-gray-50/50': !selectedDocuments.includes(index), 'rounded-t-md': index === selectedDocuments[0] && selectedDocuments.includes(index), 'rounded-b-md': index === selectedDocuments[selectedDocuments.length - 1] && selectedDocuments.includes(index) }"
+                    class="document-item p-2 flex flex-col cursor-pointer justify-between items-start rounded-md">
                     <span class="text-gray-700">{{ document.page_content }}</span>
                     <div class="flex items-center space-x-2">
                         <span class="text-xs text-gray-500">标签:</span>
@@ -131,7 +137,8 @@
                     </div>
                 </li>
             </ul>
-            <AddModel v-show="showAddModal" @documentAdded="handleDocumentAdded" @closeAddModel="closeAddModel" :presets="presets" />
+            <AddModel v-show="showAddModal" @documentAdded="handleDocumentAdded" @closeAddModel="closeAddModel"
+                :presets="presets" />
             <EditModel v-if="index > -1 && showEditModal" :index="index" :documents="documents"
                 @documentRemoved="handleDocumentRemoved" @documentModify="handleDocumentModified"
                 @closeEditModal="closeEditModal" />
@@ -140,14 +147,11 @@
 </template>
 
 <script setup lang="ts">
-
-
 import { nextTick, ref, watch } from 'vue';
 import { Document } from '@/types';
 import AddModel from '@/components/AddModel.vue';
 import EditModel from '@/components/EditModel.vue';
-import { queryDocuments } from '@/api/documents';
-
+import { queryDocuments, removeDocuments } from '@/api/documents';
 
 const presets = JSON.stringify({
     "通用": { "tags": ["通用"] },
@@ -171,7 +175,7 @@ const query = ref('');
 const k = ref(20);
 const filter = ref({ "tags": ["通用"] });
 const filterString = ref(JSON.stringify(filter.value));
-const score_threshold = ref<string>("2.0")
+const score_threshold = ref<string>("2.0");
 const showAddModal = ref(false);
 const showEditModal = ref(false);
 const queryingStatus = ref(0);
@@ -179,10 +183,12 @@ const tags = ref<string[]>(filter.value.tags);
 const tags_input = ref('');
 const duplicate = ref(false); // 用于跟踪重复标签的状态
 
-const isPowerSet = ref<boolean>(true);
-
-
 let timer: any = null;
+
+const isPowerSet = ref<boolean>(true);
+const selectedDocuments = ref<number[]>([]);
+let isSelecting = ref(false);
+let startDocument = ref<number | null>(null);
 
 // 鼠标滚轮逻辑实现
 const handleWheelK = (event: any, min: number, max: number, step: number = 1) => {
@@ -287,6 +293,67 @@ watch(filter, (newFilter) => {
     tags.value = newFilter.tags;
     duplicate.value = false;
 }, { deep: true });
+
+// 处理鼠标选择和多选删除
+const handleMouseDown = (event: MouseEvent) => {
+    if (event.button !== 0) return; // 只处理左键点击
+    isSelecting.value = true;
+    startDocument.value = getDocumentIndexFromEvent(event);
+    if (!event.ctrlKey) {
+        selectedDocuments.value = startDocument.value !== null ? [startDocument.value] : [];
+    } else {
+        if (startDocument.value !== null && !selectedDocuments.value.includes(startDocument.value)) {
+            selectedDocuments.value.push(startDocument.value);
+        }
+    }
+};
+
+const handleMouseMove = (event: MouseEvent) => {
+    if (!isSelecting.value) return;
+    const currentDocument = getDocumentIndexFromEvent(event);
+    if (startDocument.value !== null && currentDocument !== null && currentDocument !== startDocument.value) {
+        const range = [startDocument.value, currentDocument].sort((a, b) => a - b);
+        selectedDocuments.value = Array.from({ length: range[1] - range[0] + 1 }, (_, i) => i + range[0]);
+    }
+};
+
+const handleMouseUp = () => {
+    isSelecting.value = false;
+    startDocument.value = null;
+};
+
+const handleMouseLeave = () => {
+    isSelecting.value = false;
+    startDocument.value = null;
+};
+
+const getDocumentIndexFromEvent = (event: MouseEvent): number | null => {
+    const element = event.target as HTMLElement;
+    const listItem = element.closest('.document-item');
+    if (listItem) {
+        const list = listItem.parentElement;
+        if (list) {
+            return Array.from(list.children).indexOf(listItem);
+        }
+    }
+    return null;
+};
+
+const deleteSelectedDocuments = async () => {
+    const ids = selectedDocuments.value.map((index) => documents.value[index].metadata['ids']);
+    try {
+        await removeDocuments(ids);
+        // 从后往前删除元素
+        selectedDocuments.value.sort((a, b) => b - a).forEach((index) => {
+            documents.value.splice(index, 1);
+        });
+        selectedDocuments.value = [];
+    } catch (error) {
+        console.error('删除错误:', error);
+    }
+};
+
+
 </script>
 
 <style scoped>

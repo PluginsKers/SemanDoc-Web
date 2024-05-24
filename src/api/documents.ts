@@ -25,13 +25,22 @@ export const uploadDocuments = async (file: File) => {
 };
 
 
+export const removeDocument = async (target: string[]) => {
+    const response = await http.delete(`/document/${target[0]}`);
+    return response.data.data;
+};
+
 export const removeDocuments = async (target: string[]) => {
-    const response = await http.delete(`/documents/${target[0]}`);
+    const response = await http.delete(`/documents`, {
+        data: {
+            "ids": target
+        }
+    });
     return response.data.data;
 };
 
 export const updateDocument = async (target: string, data: Document["page_content"], metadata: Document["metadata"]) => {
-    const response = await http.put(`/documents/${target}`, {
+    const response = await http.put(`/document/${target}`, {
         data,
         metadata
     });
@@ -39,7 +48,7 @@ export const updateDocument = async (target: string, data: Document["page_conten
 };
 
 export const addDocument = async (data: Document["page_content"], metadata: Document["metadata"]): Promise<Document[]> => {
-    const response = await http.post(`/documents`, {
+    const response = await http.post(`/document`, {
         data,
         metadata
     });

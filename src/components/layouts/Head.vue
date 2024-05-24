@@ -9,7 +9,10 @@
                     @touchstart="startTouch" @touchend="endTouch" />
                 <transition name="fade">
                     <div v-if="dropdownVisible"
-                        class="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+                        class="absolute text-left right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+                        <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
+                            <p class="block px-4 py-1 text-sm text-gray-400" role="menuitem">{{ username }}</p>
+                        </div>
                         <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
                             <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem"
                                 @click="logout">登出</a>
@@ -22,16 +25,22 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
+import { useStore } from 'vuex';
 import router from '@/router';
 import { useNotificationManager } from '@/notificationManager';
+
 const { addNotification } = useNotificationManager();
+const store = useStore();
 
 const dropdownVisible = ref(false);
 const touchTimeout = ref<any>(null);
 
+const username = computed(() => store.state.user.username);
+
 const logout = () => {
     localStorage.removeItem('token');
+    store.dispatch('logout');
     router.push({ name: 'Login' });
     addNotification({
         id: new Date().getTime(),
@@ -76,10 +85,7 @@ const nav_redirect = () => {
 }
 
 .fade-enter,
-.fade-leave-to
-
-/* .fade-leave-active in <2.1.8 */
-    {
+.fade-leave-to {
     opacity: 0;
 }
 </style>

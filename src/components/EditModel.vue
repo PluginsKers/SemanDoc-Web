@@ -107,7 +107,7 @@
 <script setup lang="ts">
 import { defineProps, defineEmits, onMounted, onUnmounted, ref } from 'vue';
 import { Document } from '../types';
-import { removeDocuments, updateDocument as _updateDocument } from '../api/documents';
+import { removeDocument as removeDocument_I, updateDocument as _updateDocument } from '../api/documents';
 
 const removingStatus = ref(0);
 const modifyingStatus = ref(0);
@@ -183,7 +183,7 @@ const removeDocument = async () => {
     removingStatus.value = -1;
     const docId = documents[index].metadata['ids'];
     try {
-        await removeDocuments([docId]);
+        await removeDocument_I([docId]);
         emit('documentRemoved', index);
         removingStatus.value = 1;
         closeEditModal();

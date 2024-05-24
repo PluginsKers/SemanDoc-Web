@@ -5,13 +5,13 @@ export const login = async (username: string, password: string) => {
         username,
         password
     });
-    return response.data.token;
+    return response.data;
 };
 
 export const updateUserPassword = async (userId: number, newPassword: string) => {
     try {
         const response = await http.put(
-            `/users/${userId}`,
+            `/user/${userId}`,
             {
                 password: newPassword
             }
@@ -26,7 +26,7 @@ export const updateUserPassword = async (userId: number, newPassword: string) =>
 export const createUser = async (username: string, password: string, role: number, nickname: string = 'User') => {
     try {
         const response = await http.post(
-            `/users`,
+            `/user`,
             {
                 username,
                 password,
@@ -40,3 +40,14 @@ export const createUser = async (username: string, password: string, role: numbe
         throw error;
     }
 };
+
+
+export const getUser = async () => {
+    try {
+        const response = await http.get(`/users`);
+        return response.data;
+    } catch (error) {
+        console.error('Error getting user by username:', error);
+        throw error;
+    }
+}
