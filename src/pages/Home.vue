@@ -7,9 +7,9 @@
                 <h1 class="text-3xl font-bold text-center mb-4">数据管理</h1>
                 <div class="flex flex-col justify-center gap-2">
                     <div class="flex flex-col mb-3 text-gray-900">
-                        <div class="flex h-10">
+                        <div class="flex h-9">
                             <div
-                                class="flex w-full flex-row relative h-10 border-[1px] border-gray-200 text-sm rounded-tl-md">
+                                class="flex w-full flex-row relative h-9 border-[1px] border-gray-200 text-sm rounded-tl-md">
                                 <div class="absolute h-full w-10 pointer-events-none flex justify-center items-center">
                                     <svg class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
                                         <path fill-rule="evenodd"
@@ -21,9 +21,9 @@
                                     class="block p-2 pl-10 w-full h-full align-middle outline-none rounded-tl-md focus:bg-gray-50/50 hover:bg-gray-50/50" />
                             </div>
                             <input v-model="k" placeholder="数量" @wheel="handleWheelK($event, 0, 50, 1)"
-                                class="relative p-2 w-1/6 h-10 text-center align-middle outline-none border-[1px] border-l-0 border-gray-200 text-sm rounded-tr-md focus:bg-gray-50/50 hover:bg-gray-50/50" />
+                                class="relative p-2 w-1/6 h-9 text-center align-middle outline-none border-[1px] border-l-0 border-gray-200 text-sm rounded-tr-md focus:bg-gray-50/50 hover:bg-gray-50/50" />
                         </div>
-                        <div class="flex h-10">
+                        <div class="flex h-9">
                             <input v-model="score_threshold" placeholder="分数阈值"
                                 @wheel="handleWheelSH($event, 0, 2, 0.02)"
                                 class="p-2 w-1/6 h-full text-center align-middle outline-none border-[1px] border-r-0 border-t-0 border-gray-200 text-sm rounded-bl-md focus:bg-gray-50/50 hover:bg-gray-50/50" />
@@ -37,7 +37,7 @@
                             class="shrink-0 flex-col mb-2 p-0 w-full rounded-md text-gray-900 ring-1 ring-gray-100 hover:ring-[3px] hover:ring-gray-50 text-xs leading-6">
                             <input v-model="tags_input" @keydown.enter.prevent="addTag" @keydown.delete="checkForDelete"
                                 placeholder="添加标签"
-                                class="tags-input outline-none rounded-md h-10 px-2 w-full text-sm border-b-2"
+                                class="tags-input outline-none rounded-md h-9 px-2 w-full text-sm border-b-2"
                                 :class="{ 'border-dashed border-gray-200': tags.length > 0, 'border-white': tags.length <= 0 }" />
 
                             <div class="flex flex-row flex-wrap ml-1 gap-1" :class="{ 'py-1': tags.length > 0 }">
@@ -70,7 +70,7 @@
                         <label @click="isPowerSet = !isPowerSet" class="cursor-pointer select-none">非严格检索模式</label>
                     </div>
                     <div @click="searchDocuments"
-                        class="relative flex justify-center items-center h-10 w-full py-1.5 px-4 select-none border border-transparent rounded-md shadow-sm text-sm font-medium text-white outline-none active:ring-[3px] active:ring-gray-200"
+                        class="relative flex justify-center items-center h-9 w-full py-1.5 px-4 select-none border border-transparent rounded-md shadow-sm text-sm font-medium text-white outline-none active:ring-[3px] active:ring-gray-200"
                         :class="{ 'bg-gray-800 cursor-not-allowed': queryingStatus == -1, 'bg-red-800 cursor-pointer': queryingStatus == -2, 'bg-green-700 cursor-pointer': queryingStatus == 1, 'bg-black hover:bg-gray-900 cursor-pointer': queryingStatus == 0 }">
                         <template v-if="queryingStatus == 1">
                             <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
@@ -110,13 +110,14 @@
                             </svg>
                         </template>
                     </div>
-                    <div class="flex justify-center items-center h-10 cursor-pointer select-none w-full py-1.5 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium bg-black hover:bg-gray-900 text-white outline-none active:ring-[3px] active:ring-gray-200"
+                    <div class="flex justify-center items-center h-9 cursor-pointer select-none w-full py-1.5 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium bg-black hover:bg-gray-900 text-white outline-none active:ring-[3px] active:ring-gray-200"
                         @click="showAddModal = true">
                         添加文档
                     </div>
-                    <div class="flex justify-center items-center h-10 cursor-pointer select-none w-full py-1.5 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium bg-red-700 hover:bg-red-800 text-white outline-none active:ring-[3px] active:ring-gray-200"
-                        @click="deleteSelectedDocuments" v-if="selectedDocuments.length > 0">
-                        删除文档
+                    <div class="flex justify-center items-center h-9 cursor-pointer select-none w-full py-1.5 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium"
+                        :class="confirmDelete ? 'bg-red-900 hover:bg-red-800 text-white' : 'bg-red-700 hover:bg-red-800 text-white'"
+                        @click="handleDeleteClick" v-if="selectedDocuments.length > 0">
+                        {{ confirmDelete ? '确认删除?' : '删除文档' }}
                     </div>
                     <span class="text-center text-gray-300">注意：该系统为语义检索，调节阈值大小精确控制检索精度。</span>
                 </div>
@@ -182,6 +183,7 @@ const queryingStatus = ref(0);
 const tags = ref<string[]>(filter.value.tags);
 const tags_input = ref('');
 const duplicate = ref(false); // 用于跟踪重复标签的状态
+const confirmDelete = ref(false); // 用于确认删除状态
 
 let timer: any = null;
 
@@ -264,6 +266,7 @@ const handleDocumentAdded = async (newDocument: Document) => {
 
 
 const handleDocumentRemoved = (removed_index: number) => {
+    selectedDocuments.value = [];
     documents.value.splice(removed_index, 1);
 }
 
@@ -297,6 +300,7 @@ watch(filter, (newFilter) => {
 // 处理鼠标选择和多选删除
 const handleMouseDown = (event: MouseEvent) => {
     if (event.button !== 0) return; // 只处理左键点击
+    confirmDelete.value = false;
     isSelecting.value = true;
     startDocument.value = getDocumentIndexFromEvent(event);
     if (!event.ctrlKey) {
@@ -339,6 +343,16 @@ const getDocumentIndexFromEvent = (event: MouseEvent): number | null => {
     return null;
 };
 
+
+const handleDeleteClick = async () => {
+    if (confirmDelete.value) {
+        await deleteSelectedDocuments();
+        confirmDelete.value = false;
+    } else {
+        confirmDelete.value = true;
+    }
+};
+
 const deleteSelectedDocuments = async () => {
     const ids = selectedDocuments.value.map((index) => documents.value[index].metadata['ids']);
     try {
@@ -352,7 +366,6 @@ const deleteSelectedDocuments = async () => {
         console.error('删除错误:', error);
     }
 };
-
 
 </script>
 

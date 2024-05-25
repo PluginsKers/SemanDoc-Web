@@ -54,3 +54,9 @@ export const addDocument = async (data: Document["page_content"], metadata: Docu
     });
     return response.data.data;
 };
+
+
+export const getDocumentsRecords = async (): Promise<Document[]> => {
+    const response = await http.get(`/documents/records`);
+    return response.data.data;
+};

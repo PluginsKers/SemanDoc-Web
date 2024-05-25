@@ -5,16 +5,16 @@
             <div class="mb-4">
                 <label for="username" class="block text-sm font-medium text-gray-700">用户名:</label>
                 <input v-model="username" type="text" id="username" required
-                    class="mt-1 p-2 w-full h-10 outline-none rounded-md text-gray-900 ring-1 ring-gray-200 placeholder:text-gray-400 focus:ring-[3px] focus:ring-gray-100 sm:text-sm sm:leading-6">
+                    class="mt-1 p-2 w-full h-9 outline-none rounded-md text-gray-900 ring-1 ring-gray-200 placeholder:text-gray-400 focus:ring-[3px] focus:ring-gray-100 sm:text-sm sm:leading-6">
             </div>
             <div class="mb-6">
                 <label for="password" class="block text-sm font-medium text-gray-700">密码:</label>
                 <input v-model="password" type="password" id="password" required
-                    class="mt-1 p-2 w-full h-10 outline-none rounded-md text-gray-900 ring-1 ring-gray-200 placeholder:text-gray-400 focus:ring-[3px] focus:ring-gray-100 sm:text-sm sm:leading-6">
+                    class="mt-1 p-2 w-full h-9 outline-none rounded-md text-gray-900 ring-1 ring-gray-200 placeholder:text-gray-400 focus:ring-[3px] focus:ring-gray-100 sm:text-sm sm:leading-6">
             </div>
             <div @click="submitLogin"
                 :class="{ 'bg-gray-800 cursor-not-allowed': loginStatus == -1, 'bg-red-800 cursor-pointer': loginStatus == -2, 'bg-green-700 cursor-pointer': loginStatus == 1, 'bg-black hover:bg-gray-900 cursor-pointer': loginStatus == 0 }"
-                class="flex justify-center items-center h-10 select-none w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white outline-none active:ring-[3px] active:ring-gray-200">
+                class="flex justify-center items-center h-9 select-none w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white outline-none active:ring-[3px] active:ring-gray-200">
                 <template v-if="loginStatus == 1">
                     <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd"

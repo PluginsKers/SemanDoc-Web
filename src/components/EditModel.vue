@@ -14,11 +14,11 @@
                     v-model="documents[index].page_content">
                 </textarea>
                 <input
-                    class="shrink-0 mt-1 p-2 w-full h-10 outline-none rounded-md text-gray-900 ring-1 ring-gray-100 focus:ring-[3px] focus:ring-gray-100 text-sm leading-6"
+                    class="shrink-0 mt-1 p-2 w-full h-9 outline-none rounded-md text-gray-900 ring-1 ring-gray-100 focus:ring-[3px] focus:ring-gray-100 text-sm leading-6"
                     :value="JSON.stringify(documents[index].metadata)" />
                 <div class="bg-gray-100 rounded-md p-2 text-sm grid grid-cols-2 gap-2">
                     <div @click="removeDocument()"
-                        class="flex relative justify-center shadow-sm items-center h-10 select-none py-1.5 px-4 rounded outline-none active:ring-[3px] active:ring-gray-50"
+                        class="flex relative justify-center shadow-sm items-center h-9 select-none py-1.5 px-4 rounded outline-none active:ring-[3px] active:ring-gray-50"
                         :class="{ 'bg-gray-800 cursor-not-allowed text-white': removingStatus == -1, 'bg-red-800 text-white cursor-pointer': removingStatus == -2, 'bg-orange-600 hover:bg-orange-600/90 text-white cursor-pointer': removingStatus == -3, 'bg-green-700 text-white cursor-pointer': removingStatus == 1, 'bg-black hover:bg-gray-900 text-white cursor-pointer': removingStatus == 0 }">
                         <template v-if="removingStatus == 1">
                             <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
@@ -59,7 +59,7 @@
                     </div>
 
                     <div @click="updateDocument()"
-                        class="flex justify-center shadow-sm items-center h-10 select-none py-1.5 px-4 rounded outline-none active:ring-[3px] active:ring-gray-50"
+                        class="flex justify-center shadow-sm items-center h-9 select-none py-1.5 px-4 rounded outline-none active:ring-[3px] active:ring-gray-50"
                         :class="{ 'bg-gray-800 cursor-not-allowed text-white': modifyingStatus == -1, 'bg-green-700 text-white cursor-pointer': modifyingStatus == 1, 'bg-red-800 text-white cursor-pointer': modifyingStatus == -2, 'bg-black hover:bg-gray-900 text-white cursor-pointer': modifyingStatus == 0 }">
                         <template v-if="modifyingStatus == 1">
                             <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
@@ -95,7 +95,7 @@
                     </div>
 
                     <div @click="closeEditModal"
-                        class="col-span-2 flex justify-center shadow-sm items-center h-10 cursor-pointer select-none py-2 px-4 rounded-md bg-black hover:bg-gray-900 text-white outline-none active:ring-[3px] active:ring-gray-100">
+                        class="col-span-2 flex justify-center shadow-sm items-center h-9 cursor-pointer select-none py-2 px-4 rounded-md bg-black hover:bg-gray-900 text-white outline-none active:ring-[3px] active:ring-gray-100">
                         关闭
                     </div>
                 </div>

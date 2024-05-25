@@ -19,7 +19,7 @@
                     class="flex-1 mt-1 p-2 w-full min-h-40 h-40 outline-none rounded-md text-gray-900 ring-1 ring-gray-100 focus:ring-[3px] focus:ring-gray-50 text-sm leading-6">
                 </textarea>
                 <input v-model="newMetadataString" placeholder="源信息"
-                    class="shrink-0 mt-1 p-2 w-full h-10 outline-none rounded-md text-gray-400 ring-1 ring-gray-100 focus:ring-[3px] focus:ring-gray-50 text-sm leading-6" />
+                    class="shrink-0 mt-1 p-2 w-full h-9 outline-none rounded-md text-gray-400 ring-1 ring-gray-100 focus:ring-[3px] focus:ring-gray-50 text-sm leading-6" />
 
                 <div class="relative flex flex-wrap"
                     :class="{ 'control-disabled before:bg-gray-100/40 before:rounded-md before:cursor-not-allowed': newMetadataManagerDisabled }">
@@ -27,7 +27,7 @@
                         class="shrink-0 flex-col mb-2 p-0 w-full rounded-md text-gray-900 ring-1 ring-gray-100 hover:ring-[3px] hover:ring-gray-50 text-xs leading-6">
                         <input v-model="tags_input" @keydown.enter.prevent="addTag" @keydown.delete="checkForDelete"
                             placeholder="添加标签"
-                            class="tags-input outline-none rounded-md h-10 text-sm px-2 w-full border-b-2"
+                            class="tags-input outline-none rounded-md h-9 text-sm px-2 w-full border-b-2"
                             :class="{ 'border-dashed border-gray-200': tags.length > 0, 'border-white': tags.length <= 0 }" />
 
                         <div class="flex flex-row flex-wrap ml-1 gap-1" :class="{ 'py-1': tags.length > 0 }">
@@ -47,7 +47,7 @@
                 </div>
                 <div class="flex-none flex justify-between items-center">
                     <div @click="addDocument"
-                        class="flex justify-center items-center select-none h-10 py-1.5 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white outline-none active:ring-[3px] active:ring-gray-100"
+                        class="flex justify-center items-center select-none h-9 py-1.5 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white outline-none active:ring-[3px] active:ring-gray-100"
                         :class="{ 'bg-gray-800 cursor-not-allowed': addingStatus == -1, 'bg-green-700 cursor-pointer': addingStatus == 1, 'bg-red-800 cursor-pointer': addingStatus == -2, 'bg-black hover:bg-gray-900 cursor-pointer': addingStatus == 0 }">
                         <template v-if="addingStatus == 1">
                             <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
@@ -79,7 +79,7 @@
                         </template>
                     </div>
                     <div @click="closeAddModel"
-                        class="flex justify-center items-center cursor-pointer select-none py-1.5 px-4 bg-gray-200 h-10 rounded-md text-sm font-medium text-gray-800 outline-none hover:ring-[3px] hover:ring-gray-100">
+                        class="flex justify-center items-center cursor-pointer select-none py-1.5 px-4 bg-gray-200 h-9 rounded-md text-sm font-medium text-gray-800 outline-none hover:ring-[3px] hover:ring-gray-100">
                         取消
                     </div>
                 </div>
