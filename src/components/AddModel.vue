@@ -28,7 +28,7 @@
                         <input v-model="tags_input" @keydown.enter.prevent="addTag" @keydown.delete="checkForDelete"
                             placeholder="添加标签"
                             class="tags-input outline-none rounded-md h-9 text-sm px-2 w-full border-b-2"
-                            :class="{ 'border-dashed border-gray-200': tags.length > 0, 'border-white': tags.length <= 0 }" />
+                            :class="{ 'border-dashed border-gray-200 rounded-b-none': tags.length > 0, 'border-white': tags.length <= 0 }" />
 
                         <div class="flex flex-row flex-wrap ml-1 gap-1" :class="{ 'py-1': tags.length > 0 }">
                             <div v-for="(tag, index) in tags" :key="index" @click="removeTag(index)"

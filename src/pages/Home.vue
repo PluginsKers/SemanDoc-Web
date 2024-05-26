@@ -2,7 +2,7 @@
     <div class="py-10 pt-[48px]" :class="{ 'w-full': documents.length > 0 }">
         <div class="flex flex-col items-center lg:justify-center lg:flex-row-reverse lg:items-start placeholder:text-gray-400 z-0"
             :class="{ 'md:max-w-2xl md:min-w-1xl lg:max-w-3xl lg:min-w-2xl mx-auto': documents.length <= 0, 'w-full': documents.length > 0 }">
-            <div class="relative bg-white rounded-md md:shadow-sm p-4 pb-2 mb-4 w-full"
+            <div id="ctlpanel" class="relative bg-white rounded-md md:shadow-sm p-4 pb-2 mb-4 w-full"
                 :class="{ 'lg:w-1/3': documents.length > 0 }">
                 <h1 class="text-3xl font-bold text-center mb-4">数据管理</h1>
                 <div class="flex flex-col justify-center gap-2">
@@ -17,28 +17,30 @@
                                             clip-rule="evenodd" />
                                     </svg>
                                 </div>
-                                <input @keydown.enter.prevent="searchDocuments" v-model="query" placeholder="检索关键词"
+                                <input id="input-search" @keydown.enter.prevent="searchDocuments" v-model="query"
+                                    placeholder="检索关键词"
                                     class="block p-2 pl-10 w-full h-full align-middle outline-none rounded-tl-md focus:bg-gray-50/50 hover:bg-gray-50/50" />
                             </div>
-                            <input v-model="k" placeholder="数量" @wheel="handleWheelK($event, 0, 50, 1)"
+                            <input id="input-max-documents" v-model="k" placeholder="数量"
+                                @wheel="handleWheelK($event, 0, 50, 1)"
                                 class="relative p-2 w-1/6 h-9 text-center align-middle outline-none border-[1px] border-l-0 border-gray-200 text-sm rounded-tr-md focus:bg-gray-50/50 hover:bg-gray-50/50" />
                         </div>
                         <div class="flex h-9">
-                            <input v-model="score_threshold" placeholder="分数阈值"
+                            <input id="input-score-threshold" v-model="score_threshold" placeholder="分数阈值"
                                 @wheel="handleWheelSH($event, 0, 2, 0.02)"
                                 class="p-2 w-1/6 h-full text-center align-middle outline-none border-[1px] border-r-0 border-t-0 border-gray-200 text-sm rounded-bl-md focus:bg-gray-50/50 hover:bg-gray-50/50" />
-                            <input v-model="filterString" placeholder="条件过滤"
+                            <input id="input-filter-string" v-model="filterString" placeholder="条件过滤"
                                 class="p-2 w-full h-full outline-none align-middle border-[1px] border-t-0 text-gray-400 border-gray-200 text-sm rounded-br-md focus:bg-gray-50/50 hover:bg-gray-50/50" />
                         </div>
                     </div>
                     <h1 class="text-2xl ml-1">更多配置</h1>
-                    <div class="flex flex-wrap">
+                    <div id="btn-presets" class="flex flex-wrap">
                         <div
                             class="shrink-0 flex-col mb-2 p-0 w-full rounded-md text-gray-900 ring-1 ring-gray-100 hover:ring-[3px] hover:ring-gray-50 text-xs leading-6">
                             <input v-model="tags_input" @keydown.enter.prevent="addTag" @keydown.delete="checkForDelete"
                                 placeholder="添加标签"
                                 class="tags-input outline-none rounded-md h-9 px-2 w-full text-sm border-b-2"
-                                :class="{ 'border-dashed border-gray-200': tags.length > 0, 'border-white': tags.length <= 0 }" />
+                                :class="{ 'border-dashed rounded-b-none border-gray-200': tags.length > 0, 'border-white': tags.length <= 0 }" />
 
                             <div class="flex flex-row flex-wrap ml-1 gap-1" :class="{ 'py-1': tags.length > 0 }">
                                 <div v-for="(tag, index) in tags" :key="index" @click="removeTag(index)"
@@ -57,7 +59,7 @@
                         </div>
                     </div>
 
-                    <div class="flex-1 flex items-center space-x-2">
+                    <div id="btn-strict" class="flex-1 flex items-center space-x-2">
                         <div @click="isPowerSet = !isPowerSet"
                             :class="{ 'bg-black': isPowerSet, 'bg-gray-200': !isPowerSet }"
                             class="w-6 h-6 flex justify-center items-center rounded-sm cursor-pointer">
@@ -69,7 +71,7 @@
                         </div>
                         <label @click="isPowerSet = !isPowerSet" class="cursor-pointer select-none">非严格检索模式</label>
                     </div>
-                    <div @click="searchDocuments"
+                    <div id="btn-query" @click="searchDocuments"
                         class="relative flex justify-center items-center h-9 w-full py-1.5 px-4 select-none border border-transparent rounded-md shadow-sm text-sm font-medium text-white outline-none active:ring-[3px] active:ring-gray-200"
                         :class="{ 'bg-gray-800 cursor-not-allowed': queryingStatus == -1, 'bg-red-800 cursor-pointer': queryingStatus == -2, 'bg-green-700 cursor-pointer': queryingStatus == 1, 'bg-black hover:bg-gray-900 cursor-pointer': queryingStatus == 0 }">
                         <template v-if="queryingStatus == 1">
@@ -110,7 +112,8 @@
                             </svg>
                         </template>
                     </div>
-                    <div class="flex justify-center items-center h-9 cursor-pointer select-none w-full py-1.5 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium bg-black hover:bg-gray-900 text-white outline-none active:ring-[3px] active:ring-gray-200"
+                    <div id="btn-adddoc"
+                        class="flex justify-center items-center h-9 cursor-pointer select-none w-full py-1.5 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium bg-black hover:bg-gray-900 text-white outline-none active:ring-[3px] active:ring-gray-200"
                         @click="showAddModal = true">
                         添加文档
                     </div>
@@ -148,11 +151,83 @@
 </template>
 
 <script setup lang="ts">
-import { nextTick, ref, watch } from 'vue';
+import { nextTick, ref, watch, onMounted } from 'vue';
 import { Document } from '@/types';
 import AddModel from '@/components/AddModel.vue';
 import EditModel from '@/components/EditModel.vue';
 import { queryDocuments, removeDocuments } from '@/api/documents';
+
+import introJs from "intro.js";
+import "intro.js/introjs.css";
+
+const intro = introJs();
+const INTRO_VERSION = '1.0.0';
+const INTRO_COMPLETED_KEY = 'intro_completed_version';
+
+onMounted(() => {
+    const storedIntroVersion = localStorage.getItem(INTRO_COMPLETED_KEY);
+    if (storedIntroVersion !== INTRO_VERSION) {
+        intro.setOptions({
+            nextLabel: "下一步",
+            prevLabel: "上一步",
+            doneLabel: "完成",
+            hidePrev: false,
+            hideNext: false,
+            exitOnEsc: true,
+            exitOnOverlayClick: true,
+            showStepNumbers: false,
+            disableInteraction: true,
+            showBullets: true,
+            overlayOpacity: 0.8,
+            steps: [
+                {
+                    element: '#ctlpanel',
+                    intro: '这是用于管理数据的控制面板。 您可以在这里搜索、过滤和管理文档。',
+                    position: 'right'
+                },
+                {
+                    element: '#input-search',
+                    intro: '检索使用的关键词，留空可以进行泛检索。',
+                    position: 'right'
+                },
+                {
+                    element: '#input-max-documents',
+                    intro: '最大检索数，如果检索结果过少，可以调高该参数。',
+                    position: 'right'
+                },
+                {
+                    element: '#input-score-threshold',
+                    intro: '语义相关的阈值，越低相关性越高。',
+                    position: 'right'
+                },
+                {
+                    element: '#input-filter-string',
+                    intro: '检索条件参数可视化，无需更改。',
+                    position: 'right'
+                },
+                {
+                    element: '#btn-presets',
+                    intro: '检索使用的标签，点击预设可以快速切换标签。',
+                    position: 'right'
+                },
+                {
+                    element: '#btn-strict',
+                    intro: '严格模式下只能检索到与标签完全匹配的文档，非严格模式下会匹配包含关系的所有标签的文档。',
+                    position: 'right'
+                },
+                {
+                    element: '#btn-query',
+                    intro: '点击根据进行知识库检索，按下回车键可以快捷检索。',
+                    position: 'right'
+                }
+            ]
+        });
+        intro.start();
+        intro.oncomplete(() => {
+            localStorage.setItem(INTRO_COMPLETED_KEY, INTRO_VERSION);
+        });
+    }
+});
 
 const presets = JSON.stringify({
     "通用": { "tags": ["通用"] },

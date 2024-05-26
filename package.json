@@ -13,6 +13,7 @@
   "dependencies": {
     "@vue/runtime-core": "^3.4.26",
     "axios": "^1.6.7",
+    "intro.js": "^7.2.0",
     "jsonwebtoken": "^9.0.2",
     "moment-timezone": "^0.5.45",
     "vue": "^3.4.19",
