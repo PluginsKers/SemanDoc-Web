@@ -151,11 +151,12 @@
 </template>
 
 <script setup lang="ts">
-import { nextTick, ref, watch, onMounted } from 'vue';
+import { nextTick, ref, watch, onMounted, computed } from 'vue';
+import { useStore } from 'vuex';
 import { Document } from '@/types';
 import AddModel from '@/components/AddModel.vue';
 import EditModel from '@/components/EditModel.vue';
-import { queryDocuments, removeDocuments } from '@/api/documents';
+import { removeDocuments } from '@/api/documents';
 
 import introJs from "intro.js";
 import "intro.js/introjs.css";
@@ -163,6 +164,9 @@ import "intro.js/introjs.css";
 const intro = introJs();
 const INTRO_VERSION = '1.0.0';
 const INTRO_COMPLETED_KEY = 'intro_completed_version';
+
+const store = useStore();
+const searchResults = computed(() => store.getters.getSearchResults);
 
 onMounted(() => {
     const storedIntroVersion = localStorage.getItem(INTRO_COMPLETED_KEY);
@@ -245,7 +249,7 @@ const presets = JSON.stringify({
     "中高职一体化": { "tags": ["中高职一体化"] }
 });
 
-const documents = ref<Document[]>([]);
+const documents = ref<any>(searchResults);
 const index = ref(-1);
 const query = ref('');
 const k = ref(20);
@@ -350,17 +354,23 @@ const searchDocuments = async () => {
     queryingStatus.value = -1;
     clearTimeout(timer);
     try {
-        const results = await queryDocuments(query.value, k.value, filter.value, Number(score_threshold.value), isPowerSet.value);
-        documents.value = results;
+        await store.dispatch('searchDocuments', {
+            query: query.value,
+            k: k.value,
+            filter: filter.value,
+            score_threshold: score_threshold.value,
+            isPowerSet: isPowerSet.value
+        });
         queryingStatus.value = 1;
         timer = setTimeout(() => {
             queryingStatus.value = 0;
         }, 3000);
     } catch (error) {
         queryingStatus.value = -2;
-        console.error('检索错误:', error);
+        console.error('搜索错误:', error);
     }
 };
+
 
 watch(tags, (newTag) => {
     filter.value.tags = newTag;

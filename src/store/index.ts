@@ -1,25 +1,28 @@
 import { createStore } from 'vuex';
 import { login } from '@/api/auth';
+import { getDocumentsRecords, queryDocuments } from '@/api/index';
 
 const store = createStore({
     state: {
-        user: JSON.parse(localStorage.getItem('user')|| "{}") || {
+        user: JSON.parse(localStorage.getItem('user') || "{}") || {
             username: '',
             nickname: '',
             role_id: null,
             token: '',
         },
         isAuthenticated: !!localStorage.getItem('token'),
+        records: [],
+        searchResults: [],
     },
     mutations: {
-        SET_USER(state: { user: { token: any; }; isAuthenticated: boolean; }, user: { id: any; token: string; }) {
+        SET_USER(state, user) {
             state.user = user;
             state.isAuthenticated = !!user.id;
             state.user.token = user.token;
             localStorage.setItem('user', JSON.stringify(state.user));
             localStorage.setItem('token', user.token);
         },
-        CLEAR_USER(state: { user: { username: string; nickname: string; role_id: null; token: string; }; isAuthenticated: boolean; }) {
+        CLEAR_USER(state) {
             state.user = {
                 username: '',
                 nickname: '',
@@ -29,7 +32,13 @@ const store = createStore({
             state.isAuthenticated = false;
             localStorage.removeItem('user');
             localStorage.removeItem('token');
-        }
+        },
+        SET_RECORDS(state, records) {
+            state.records = records;
+        },
+        SET_SEARCH_RESULTS(state, results) {
+            state.searchResults = results;
+        },
     },
     actions: {
         async login({ commit }, { username, password }) {
@@ -50,17 +59,41 @@ const store = createStore({
         },
         logout({ commit }) {
             commit('CLEAR_USER');
+        },
+        async fetchRecords({ commit }) {
+            try {
+                commit('SET_RECORDS', []);
+                const data = await getDocumentsRecords();
+                commit('SET_RECORDS', data);
+            } catch (error) {
+                console.error('Failed to fetch records:', error);
+            }
+        },
+        async searchDocuments({ commit }, { query, k, filter, score_threshold, isPowerSet }) {
+            try {
+                const results = await queryDocuments(query, k, filter, Number(score_threshold), isPowerSet);
+                commit('SET_SEARCH_RESULTS', results);
+            } catch (error) {
+                console.error('Failed to search documents:', error);
+                throw error;
+            }
         }
     },
     getters: {
-        getUser(state: { user: any; }) {
+        getUser(state) {
             return state.user;
         },
-        getToken(state: { user: { token: any; }; }) {
+        getToken(state) {
             return state.user.token;
         },
-        isAuthenticated(state: { isAuthenticated: any; }) {
+        isAuthenticated(state) {
             return state.isAuthenticated;
+        },
+        getRecords(state) {
+            return state.records;
+        },
+        getSearchResults(state) {
+            return state.searchResults;
         }
     }
 });

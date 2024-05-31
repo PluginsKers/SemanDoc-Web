@@ -71,27 +71,35 @@
         <div class="flex flex-col w-full rounded-lg shadow-sm bg-white p-4 mt-4">
             <h1 class="text-xl font-semibold cursor-pointer select-none" @click="getRecords">操作记录</h1>
             <div class="mt-2">
-                <ul class="flex flex-col gap-4 max-h-[500px] overflow-y-auto py-2">
-                    <li v-if="records.length > 0" v-for="(j, index) in records" :key="index" class="text-sm leading-6 break-all flex flex-row flex-nowrap gap-2">
-                        <span>{{ j.edit_time }}</span>
-                        <span class="ring-1 ring-gray-200 px-1 py-0 rounded-sm bg-gray-50">{{ j.editor.username }}</span>
-                        <span>操作了</span> 
-                        <span class="text-gray-500 select-all">{{ j.document.page_content }}</span>
-                        <span>{{ j.edit_description }}</span>
+                <ul
+                    class="flex flex-col gap-4 max-h-[500px] overflow-y-auto py-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+                    <li v-if="records.length > 0" v-for="(j, index) in records" :key="index"
+                        class="text-sm leading-6 break-all flex flex-row items-center gap-2 pl-1">
+                        <span class="ring-1 ring-gray-300 px-1 py-0 rounded-md bg-gray-100 whitespace-nowrap">{{
+                            j.edit_time }}</span>
+                        <span class="ring-1 ring-gray-300 px-1 py-0 rounded-md bg-gray-100 whitespace-nowrap">{{
+                            j.editor.username }}</span>
+                        <span class="whitespace-nowrap">操作了</span>
+                        <span class="text-gray-600 select-all whitespace-nowrap overflow-hidden overflow-ellipsis">{{
+                            j.document.page_content }}</span>
+                        <span class="ring-1 ring-gray-300 px-1 py-0 rounded-md bg-gray-100 whitespace-nowrap">{{
+                            j.edit_description }}</span>
                     </li>
                     <li v-else class="text-sm leading-6 break-all">加载中......</li>
                 </ul>
             </div>
         </div>
+
+
     </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted  } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useStore } from 'vuex';
 import { updateUserPassword, createUser as createUser_I } from '@/api/index';
 import { useNotificationManager } from '@/notificationManager';
-import { getDocumentsRecords } from '@/api/index';
+
 const { addNotification } = useNotificationManager();
 const store = useStore();
 
@@ -141,16 +149,16 @@ const createUser = async () => {
     }
 };
 
-const records = ref<any>([]);
+const records = computed(() => store.getters.getRecords);
 
 const getRecords = async () => {
-    records.value = [];
-    const data = await getDocumentsRecords();
-    records.value = data;
+    await store.dispatch('fetchRecords');
 }
 
 onMounted(() => {
-    getRecords();
+    if (records.value.length === 0) {
+        getRecords();
+    }
 });
 </script>
 
