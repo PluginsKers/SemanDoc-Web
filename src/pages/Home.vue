@@ -117,7 +117,8 @@
                         @click="showAddModal = true">
                         添加文档
                     </div>
-                    <div class="flex justify-center items-center h-9 cursor-pointer select-none w-full py-1.5 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium"
+                    <div ref="excludeRef"
+                        class="flex justify-center items-center h-9 cursor-pointer select-none w-full py-1.5 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium"
                         :class="confirmDelete ? 'bg-red-900 hover:bg-red-800 text-white' : 'bg-red-700 hover:bg-red-800 text-white'"
                         @click="handleDeleteClick" v-if="selectedDocuments.length > 0">
                         {{ confirmDelete ? '确认删除?' : '删除文档' }}
@@ -125,7 +126,7 @@
                     <span class="text-center text-gray-300">注意：该系统为语义检索，调节阈值大小精确控制检索精度。</span>
                 </div>
             </div>
-            <ul v-show="documents.length > 0"
+            <ul ref="docsList" v-show="documents.length > 0"
                 class="w-full docs-list bg-white lg:mr-4 min-w-xl p-4 rounded-md shadow-sm" @mousedown="handleMouseDown"
                 @mousemove="handleMouseMove" @mouseup="handleMouseUp" @mouseleave="handleMouseLeave">
                 <li v-for="(document, index) in documents" :key="index" @click="openEditModel(index)"
@@ -151,7 +152,7 @@
 </template>
 
 <script setup lang="ts">
-import { nextTick, ref, watch, onMounted, computed } from 'vue';
+import { nextTick, ref, watch, onMounted, onBeforeUnmount, computed } from 'vue';
 import { useStore } from 'vuex';
 import { Document } from '@/types';
 import AddModel from '@/components/AddModel.vue';
@@ -231,6 +232,11 @@ onMounted(() => {
             localStorage.setItem(INTRO_COMPLETED_KEY, INTRO_VERSION);
         });
     }
+    document.addEventListener('click', handleClickOutside);
+});
+
+onBeforeUnmount(() => {
+    document.removeEventListener('click', handleClickOutside);
 });
 
 const presets = JSON.stringify({
@@ -253,6 +259,8 @@ const documents = ref<any>(searchResults);
 const index = ref(-1);
 const query = ref('');
 const k = ref(20);
+const docsList = ref<any>(null);
+const excludeRef = ref<any>(null);
 const filter = ref({ "tags": ["通用"] });
 const filterString = ref(JSON.stringify(filter.value));
 const score_threshold = ref<string>("2.0");
@@ -317,8 +325,10 @@ const checkForDelete = () => {
 
 // 编辑模态框实现
 const openEditModel = (t_idx: number) => {
+    confirmDelete.value = false;
     index.value = t_idx;
     showEditModal.value = true;
+    selectedDocuments.value = [];
 }
 
 const closeEditModal = () => {
@@ -415,6 +425,18 @@ const handleMouseLeave = () => {
     isSelecting.value = false;
     startDocument.value = null;
 };
+
+const handleClickOutside = (event) => {
+    if (docsList.value && !docsList.value.contains(event.target) && excludeRef.value && !excludeRef.value.contains(event.target)) {
+        clearSelected();
+    }
+};
+
+const clearSelected = () => {
+    isSelecting.value = false;
+    startDocument.value = null;
+    selectedDocuments.value = [];
+}
 
 const getDocumentIndexFromEvent = (event: MouseEvent): number | null => {
     const element = event.target as HTMLElement;

@@ -4,10 +4,7 @@
             <div class="flex flex-col w-full lg:w-2/4 gap-4">
                 <div class="rounded-lg shadow-sm bg-white w-full p-4">
                     <h1 class="text-xl font-semibold">公告</h1>
-                    <p>该页面内容正在测试中，如有问题请联系<b>张哲屹</b>，邮箱：<a href="mailto:ikers@foxmail.com">ikers@foxmail.com</a></p>
-                    <p>当前数据库正在<b>测试中</b>，你可以打开添加文档尝试将 <b>xlsx</b> 表格拖入进行批量上传。</p>
-                    <p><b>USER权限</b>的用户无法创建新用户，仅仅操作数据库。</p>
-                    <p><b>2024/5/24</b> 多选内容可以进行批量删除。</p>
+                    <p>该页面内容正在测试中，开发版本不代表最终质量。</p>
                 </div>
                 <div class="rounded-lg shadow-sm bg-white w-full p-4">
                     <h1 class="text-lg">{{ nickname }}</h1>
