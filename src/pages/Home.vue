@@ -2,7 +2,7 @@
     <div class="py-10 pt-[48px]" :class="{ 'w-full': documents.length > 0 }">
         <div class="flex flex-col items-center lg:justify-center lg:flex-row-reverse lg:items-start placeholder:text-gray-400 z-0"
             :class="{ 'md:max-w-2xl md:min-w-1xl lg:max-w-3xl lg:min-w-2xl mx-auto': documents.length <= 0, 'w-full': documents.length > 0 }">
-            <div id="ctlpanel" class="sticky top-[48px] bg-white rounded-md md:shadow-sm p-4 pb-2 mb-4 w-full"
+            <div id="ctlpanel" class="relative lg:sticky lg:top-[48px] bg-white rounded-md md:shadow-sm p-4 pb-2 mb-4 w-full"
                 :class="{ 'lg:w-1/3': documents.length > 0 }">
                 <h1 class="text-3xl font-bold text-center mb-4">数据管理</h1>
                 <div class="flex flex-col justify-center gap-2">
