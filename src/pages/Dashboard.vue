@@ -69,18 +69,25 @@
             <h1 class="text-xl font-semibold cursor-pointer select-none" @click="getRecords">操作记录</h1>
             <div class="mt-2">
                 <ul
-                    class="flex flex-col gap-4 max-h-[500px] overflow-y-auto py-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+                    class="flex flex-col max-h-[500px] overflow-y-auto p-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
                     <li v-if="records.length > 0" v-for="(j, index) in records" :key="index"
-                        class="text-sm leading-6 break-all flex flex-row items-center gap-2 pl-1">
-                        <span class="ring-1 ring-gray-300 px-1 py-0 rounded-md bg-gray-100 whitespace-nowrap">{{
-                            j.edit_time }}</span>
-                        <span class="ring-1 ring-gray-300 px-1 py-0 rounded-md bg-gray-100 whitespace-nowrap">{{
-                            j.editor.username }}</span>
-                        <span class="whitespace-nowrap">操作了</span>
-                        <span class="text-gray-600 select-all whitespace-nowrap overflow-hidden overflow-ellipsis">{{
-                            j.document.page_content }}</span>
-                        <span class="ring-1 ring-gray-300 px-1 py-0 rounded-md bg-gray-100 whitespace-nowrap">{{
-                            j.edit_description }}</span>
+                        class="text-sm leading-6 break-all p-2 flex flex-col items-start justify-center border-white border-2 hover:border-dashed rounded hover:bg-gray-50 hover:border-gray-200 cursor-pointer select-all">
+                        <div>
+                            <span class="">{{
+                                j.document.page_content }}</span>
+                        </div>
+                        <div class="flex flex-row w-full justify-between font-light text-zinc-400 gap-2">
+                            <div class="flex flex-row gap-2">
+                                <span class="whitespace-nowrap">{{
+                                    j.edit_time }}</span>
+                                <span class="whitespace-nowrap">{{
+                                    j.edit_description }}</span>
+                            </div>
+                            <div class="" >
+                                <span class="whitespace-nowrap">{{
+                                    j.editor.username }}</span>
+                            </div>
+                        </div>
                     </li>
                     <li v-else class="text-sm leading-6 break-all">加载中......</li>
                 </ul>
