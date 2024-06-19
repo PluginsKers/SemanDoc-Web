@@ -9,6 +9,11 @@
                 <div class="rounded-lg shadow-sm bg-white w-full p-4">
                     <h1 class="text-lg">{{ nickname }}</h1>
                     <p>你的权限编号：{{ role_id }}</p>
+                    <div class="mt-6">
+                        <div @click="downloadDocumentsList"
+                            class="select-none h-9 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white outline-none active:ring-[3px] active:ring-gray-100 bg-black hover:bg-gray-900 cursor-pointer">
+                            导出知识库</div>
+                    </div>
                 </div>
             </div>
             <div class="flex flex-col w-full lg:w-1/4 rounded-lg shadow-sm bg-white p-4">
@@ -83,7 +88,7 @@
                                 <span class="whitespace-nowrap">{{
                                     j.edit_description }}</span>
                             </div>
-                            <div class="" >
+                            <div class="">
                                 <span class="whitespace-nowrap">{{
                                     j.editor.username }}</span>
                             </div>
@@ -103,6 +108,7 @@ import { ref, computed, onMounted } from 'vue';
 import { useStore } from 'vuex';
 import { updateUserPassword, createUser as createUser_I } from '@/api/index';
 import { useNotificationManager } from '@/notificationManager';
+import { downloadDocumentsList } from '@/api/documents'
 
 const { addNotification } = useNotificationManager();
 const store = useStore();

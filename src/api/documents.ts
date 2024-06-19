@@ -60,3 +60,24 @@ export const getDocumentsRecords = async (): Promise<Document[]> => {
     const response = await http.get(`/documents/records`);
     return response.data.data;
 };
+
+export const downloadDocumentsList = async () => {
+    try {
+        const response = await http.get(`/documents/list`, {
+            responseType: 'blob'
+        });
+
+        const url = window.URL.createObjectURL(new Blob([response.data], { type: 'text/csv;charset=utf-8;' }));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'output.xlsx');
+
+        document.body.appendChild(link);
+        link.click();
+
+        document.body.removeChild(link);
+    } catch (error) {
+        console.error('Download failed:', error);
+        throw error;
+    }
+};
