@@ -2,7 +2,8 @@
     <div class="py-10 pt-[48px]" :class="{ 'w-full': documents.length > 0 }">
         <div class="flex flex-col items-center lg:justify-center lg:flex-row-reverse lg:items-start placeholder:text-gray-400 z-0"
             :class="{ 'md:max-w-2xl md:min-w-1xl lg:max-w-3xl lg:min-w-2xl mx-auto': documents.length <= 0, 'w-full': documents.length > 0 }">
-            <div id="ctlpanel" class="relative lg:sticky lg:top-[48px] bg-white rounded-md md:shadow-sm p-4 pb-2 mb-4 w-full"
+            <div id="ctlpanel"
+                class="relative lg:sticky lg:top-[48px] bg-white rounded-md md:shadow-sm p-4 pb-2 mb-4 w-full"
                 :class="{ 'lg:w-1/3': documents.length > 0 }">
                 <h1 class="text-3xl font-bold text-center mb-4">数据管理</h1>
                 <div class="flex flex-col justify-center gap-2">
@@ -161,6 +162,7 @@ import { removeDocuments } from '@/api/documents';
 
 import introJs from "intro.js";
 import "intro.js/introjs.css";
+import router from '@/router';
 
 const intro = introJs();
 const INTRO_VERSION = '1.0.0';
@@ -233,27 +235,26 @@ onMounted(() => {
         });
     }
     document.addEventListener('click', handleClickOutside);
+
+    const presetsKey = 'presets';
+    if (!localStorage.getItem(presetsKey)) {
+        router.push({ name: 'Presets' })
+    }
+
+    const storedPresets = localStorage.getItem(presetsKey);
+    if (storedPresets) {
+        presets.value = storedPresets;
+    } else {
+        router.push({ name: 'Presets' })
+    }
+
 });
 
 onBeforeUnmount(() => {
     document.removeEventListener('click', handleClickOutside);
 });
 
-const presets = JSON.stringify({
-    "通用": { "tags": ["通用"] },
-    "人工智能学院": { "tags": ["人工智能学院"] },
-    "机电工程学院（中德智能制造学院）": { "tags": ["机电工程学院（中德智能制造学院）"] },
-    "化学工程学院": { "tags": ["化学工程学院"] },
-    "建筑与艺术学院": { "tags": ["建筑与艺术学院"] },
-    "国际商旅学院": { "tags": ["国际商旅学院"] },
-    "供应链管理学院": { "tags": ["供应链管理学院"] },
-    "阳明学院": { "tags": ["阳明学院"] },
-    "数字商贸学院": { "tags": ["数字商贸学院"] },
-    "马克思主义学院": { "tags": ["马克思主义学院"] },
-    "继续教育学院": { "tags": ["继续教育学院"] },
-    "公共基础学院": { "tags": ["公共基础学院"] },
-    "中高职一体化": { "tags": ["中高职一体化"] }
-});
+const presets = ref("{}");
 
 const documents = ref<any>(searchResults);
 const index = ref(-1);
@@ -261,7 +262,7 @@ const query = ref('');
 const k = ref(20);
 const docsList = ref<any>(null);
 const excludeRef = ref<any>(null);
-const filter = ref({ "tags": ["通用"] });
+const filter = ref<any>({ "tags": [] });
 const filterString = ref(JSON.stringify(filter.value));
 const score_threshold = ref<string>("2.0");
 const showAddModal = ref(false);
@@ -382,7 +383,7 @@ const searchDocuments = async () => {
 };
 
 
-watch(tags, (newTag) => {
+watch(tags, (newTag: string[]) => {
     filter.value.tags = newTag;
 }, { deep: true });
 

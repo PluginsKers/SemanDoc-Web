@@ -63,7 +63,7 @@ export const getDocumentsRecords = async (): Promise<Document[]> => {
 
 export const downloadDocumentsList = async () => {
     try {
-        const response = await http.get(`/documents/list`, {
+        const response = await http.get(`/documents/download`, {
             responseType: 'blob'
         });
 
