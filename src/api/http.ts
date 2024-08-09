@@ -4,8 +4,8 @@ import router from '@/router';
 import { useNotificationManager } from '@/notificationManager';
 
 const { addNotification } = useNotificationManager();
-const API_BASE_URL = 'http://127.0.0.1:7002/api/v1';
-// const API_BASE_URL = 'https://ai.app.nbpt.edu.cn/api/v1';
+// const API_BASE_URL = 'http://127.0.0.1:7002/api/v1';
+const API_BASE_URL = 'https://ai.app.nbpt.edu.cn/api/v1';
 const http = axios.create({
     baseURL: API_BASE_URL
 });
