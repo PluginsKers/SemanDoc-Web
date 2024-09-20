@@ -1,83 +1,103 @@
-import { Document } from '@/types';
-import http from '@/api/http';
+import { Document } from "@/types";
+import http from "@/api/http";
 
-
-export const queryDocuments = async (query: string, k: number, filter: object, score_threshold: number, powerset: boolean): Promise<Document[]> => {
-    const response = await http.get(`/documents`, { params: { query, k, filter: JSON.stringify(filter), score_threshold, powerset } });
-    return response.data.data;
+export const queryDocuments = async (
+	query: string,
+	k: number,
+	filter: object,
+	score_threshold: number,
+	powerset: boolean,
+): Promise<Document[]> => {
+	const response = await http.get(`/documents`, {
+		params: {
+			query,
+			k,
+			filter: JSON.stringify(filter),
+			score_threshold,
+			powerset,
+		},
+	});
+	return response.data.data;
 };
 
 export const uploadDocuments = async (file: File) => {
-    const formData = new FormData();
-    formData.append("file", file);
+	const formData = new FormData();
+	formData.append("file", file);
 
-    try {
-        const response = await http.post(`/upload/documents`, formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
-        });
-        return response.data;
-    } catch (error) {
-        console.error('Upload failed:', error);
-        throw error;
-    }
+	try {
+		const response = await http.post(`/upload/documents`, formData, {
+			headers: {
+				"Content-Type": "multipart/form-data",
+			},
+		});
+		return response.data;
+	} catch (error) {
+		console.error("Upload failed:", error);
+		throw error;
+	}
 };
 
-
 export const removeDocument = async (target: string[]) => {
-    const response = await http.delete(`/document/${target[0]}`);
-    return response.data.data;
+	const response = await http.delete(`/document/${target[0]}`);
+	return response.data.data;
 };
 
 export const removeDocuments = async (target: string[]) => {
-    const response = await http.delete(`/documents`, {
-        data: {
-            "ids": target
-        }
-    });
-    return response.data.data;
+	const response = await http.delete(`/documents`, {
+		data: {
+			ids: target,
+		},
+	});
+	return response.data.data;
 };
 
-export const updateDocument = async (target: string, data: Document["page_content"], metadata: Document["metadata"]) => {
-    const response = await http.put(`/document/${target}`, {
-        data,
-        metadata
-    });
-    return response.data.data;
+export const updateDocument = async (
+	target: string,
+	data: Document["page_content"],
+	metadata: Document["metadata"],
+) => {
+	const response = await http.put(`/document/${target}`, {
+		data,
+		metadata,
+	});
+	return response.data.data;
 };
 
-export const addDocument = async (data: Document["page_content"], metadata: Document["metadata"]): Promise<Document[]> => {
-    const response = await http.post(`/document`, {
-        data,
-        metadata
-    });
-    return response.data.data;
+export const addDocument = async (
+	data: Document["page_content"],
+	metadata: Document["metadata"],
+): Promise<Document[]> => {
+	const response = await http.post(`/document`, {
+		data,
+		metadata,
+	});
+	return response.data.data;
 };
-
 
 export const getDocumentsRecords = async (): Promise<Document[]> => {
-    const response = await http.get(`/documents/records`);
-    return response.data.data;
+	const response = await http.get(`/documents/records`);
+	return response.data.data;
 };
 
 export const downloadDocumentsList = async () => {
-    try {
-        const response = await http.get(`/documents/download`, {
-            responseType: 'blob'
-        });
+	try {
+		const response = await http.get(`/documents/download`, {
+			responseType: "blob",
+		});
 
-        const url = window.URL.createObjectURL(new Blob([response.data], { type: 'text/csv;charset=utf-8;' }));
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', 'output.xlsx');
+		const url = window.URL.createObjectURL(
+			new Blob([response.data], { type: "text/csv;charset=utf-8;" }),
+		);
+		const link = document.createElement("a");
+		link.href = url;
+		link.setAttribute("download", "output.xlsx");
 
-        document.body.appendChild(link);
-        link.click();
+		document.body.appendChild(link);
+		link.click();
 
-        document.body.removeChild(link);
-    } catch (error) {
-        console.error('Download failed:', error);
-        throw error;
-    }
+		document.body.removeChild(link);
+	} catch (error) {
+		console.error("Download failed:", error);
+		throw error;
+	}
 };

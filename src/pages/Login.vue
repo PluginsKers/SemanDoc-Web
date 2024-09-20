@@ -1,77 +1,135 @@
 <template>
-    <div @keydown.enter.prevent="submitLogin" class="flex justify-center items-center pb-[300px] z-0">
-        <form @submit.prevent="submitLogin" class="w-full max-w-md placeholder:text-gray-400 px-6">
-            <h1 class="text-3xl font-semibold text-center text-gray-900 mb-4">即刻信息智联</h1>
-            <div class="mb-4">
-                <label for="username" class="block text-sm font-medium text-gray-700">用户名:</label>
-                <input v-model="username" type="text" id="username" required
-                    class="mt-1 p-2 w-full h-9 outline-none rounded-md text-gray-900 ring-1 ring-gray-200 placeholder:text-gray-400 focus:ring-[3px] focus:ring-gray-100 sm:text-sm sm:leading-6">
-            </div>
-            <div class="mb-6">
-                <label for="password" class="block text-sm font-medium text-gray-700">密码:</label>
-                <input v-model="password" type="password" id="password" required
-                    class="mt-1 p-2 w-full h-9 outline-none rounded-md text-gray-900 ring-1 ring-gray-200 placeholder:text-gray-400 focus:ring-[3px] focus:ring-gray-100 sm:text-sm sm:leading-6">
-            </div>
-            <div @click="submitLogin"
-                :class="{ 'bg-gray-800 cursor-not-allowed': loginStatus == -1, 'bg-red-800 cursor-pointer': loginStatus == -2, 'bg-green-700 cursor-pointer': loginStatus == 1, 'bg-black hover:bg-gray-900 cursor-pointer': loginStatus == 0 }"
-                class="flex justify-center items-center h-9 select-none w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white outline-none active:ring-[3px] active:ring-gray-200">
-                <template v-if="loginStatus == 1">
-                    <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd"
-                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                            clip-rule="evenodd" />
-                    </svg>
-                </template>
-                <template v-else-if="loginStatus == -1">
-                    <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
-                        viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
-                        </circle>
-                        <path class="opacity-75" fill="currentColor"
-                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                        </path>
-                    </svg>
-                </template>
-                <template v-else-if="loginStatus == -2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor" stroke-width="4">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </template>
-                <template v-else>
-                    登录
-                </template>
-            </div>
-        </form>
-    </div>
+	<div
+		@keydown.enter.prevent="submitLogin"
+		class="flex justify-center items-center pb-[300px] z-0">
+		<form
+			@submit.prevent="submitLogin"
+			class="w-full max-w-md placeholder:text-gray-400 px-6">
+			<h1 class="text-3xl font-semibold text-center text-gray-900 mb-4">
+				即刻信息智联
+			</h1>
+			<div class="mb-4">
+				<label
+					for="username"
+					class="block text-sm font-medium text-gray-700"
+					>用户名:</label
+				>
+				<input
+					v-model="username"
+					type="text"
+					id="username"
+					required
+					class="mt-1 p-2 w-full h-9 outline-none rounded-md text-gray-900 ring-1 ring-gray-200 placeholder:text-gray-400 focus:ring-[3px] focus:ring-gray-100 sm:text-sm sm:leading-6" />
+			</div>
+			<div class="mb-6">
+				<label
+					for="password"
+					class="block text-sm font-medium text-gray-700"
+					>密码:</label
+				>
+				<input
+					v-model="password"
+					type="password"
+					id="password"
+					required
+					class="mt-1 p-2 w-full h-9 outline-none rounded-md text-gray-900 ring-1 ring-gray-200 placeholder:text-gray-400 focus:ring-[3px] focus:ring-gray-100 sm:text-sm sm:leading-6" />
+			</div>
+			<div class="mb-4">
+				<label class="flex items-center">
+					<input
+						v-model="rememberMe"
+						type="checkbox"
+						class="form-checkbox h-4 w-4 text-gray-600" />
+					<span class="ml-2 text-sm text-gray-700">记住账号</span>
+				</label>
+			</div>
+			<div
+				@click="submitLogin"
+				:class="{
+					'bg-gray-800 cursor-not-allowed': loginStatus == -1,
+					'bg-red-800 cursor-pointer': loginStatus == -2,
+					'bg-green-700 cursor-pointer': loginStatus == 1,
+					'bg-black hover:bg-gray-900 cursor-pointer':
+						loginStatus == 0,
+				}"
+				class="flex justify-center items-center h-9 select-none w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white outline-none active:ring-[3px] active:ring-gray-200">
+				<template v-if="loginStatus == 1">
+					<svg
+						class="w-5 h-5"
+						xmlns="http://www.w3.org/2000/svg"
+						viewBox="0 0 20 20"
+						fill="currentColor">
+						<path
+							fill-rule="evenodd"
+							d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+							clip-rule="evenodd" />
+					</svg>
+				</template>
+				<template v-else-if="loginStatus == -1">
+					<svg
+						class="animate-spin h-5 w-5 text-white"
+						xmlns="http://www.w3.org/2000/svg"
+						fill="none"
+						viewBox="0 0 24 24">
+						<circle
+							class="opacity-25"
+							cx="12"
+							cy="12"
+							r="10"
+							stroke="currentColor"
+							stroke-width="4"></circle>
+						<path
+							class="opacity-75"
+							fill="currentColor"
+							d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+					</svg>
+				</template>
+				<template v-else-if="loginStatus == -2">
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						class="h-5 w-5 text-white"
+						fill="none"
+						viewBox="0 0 24 24"
+						stroke="currentColor"
+						stroke-width="4">
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							d="M6 18L18 6M6 6l12 12" />
+					</svg>
+				</template>
+				<template v-else> 登录 </template>
+			</div>
+		</form>
+	</div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-import { useStore } from 'vuex';
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+import { useStore } from "vuex";
 
-const username = ref('');
-const password = ref('');
-const loginStatus = ref(0);
-const loginErrorMessage = ref('');
-const router = useRouter();
 const store = useStore();
+const router = useRouter();
+
+const username = ref("");
+const password = ref("");
+const rememberMe = ref(false);
+const loginStatus = ref(0);
 
 const submitLogin = async () => {
-    if (loginStatus.value == -1 || loginStatus.value == 1) return;
-    loginStatus.value = -1;
-    try {
-        await store.dispatch('login', { username: username.value, password: password.value });
-        loginStatus.value = 1;
-        loginErrorMessage.value = '';
-        setTimeout(() => {
-            router.push({ name: 'Home' });
-        }, 600);
-    } catch (error) {
-        console.error('登录错误: ', error);
-        loginStatus.value = -2;
-        loginErrorMessage.value = '登录失败';
-    }
+	loginStatus.value = -1;
+	try {
+		await store.dispatch("login", {
+			username: username.value,
+			password: password.value,
+			rememberMe: rememberMe.value,
+		});
+		loginStatus.value = 1;
+		router.push({ name: "Home" });
+	} catch (error) {
+		console.error("Login error:", error);
+		loginStatus.value = -2;
+	}
 };
 </script>

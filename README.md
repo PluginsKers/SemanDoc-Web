@@ -2,5 +2,5 @@
 
 ## feat
 
-- style: 样式
-- front-layout: 前端布局
+-   style: 样式
+-   front-layout: 前端布局

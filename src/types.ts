@@ -1,10 +1,10 @@
 export interface Document {
-    id: number;
-    page_content: string;
-    metadata: Record<string, any>;
+	id: number;
+	page_content: string;
+	metadata: Record<string, any>;
 }
 
 export interface Notification {
-    id: number;
-    message: string;
+	id: number;
+	message: string;
 }
