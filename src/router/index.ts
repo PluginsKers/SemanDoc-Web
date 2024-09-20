@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router';
+import { createRouter, createWebHashHistory } from 'vue-router';
 import Home from '@/pages/Home.vue';
 import Login from '@/pages/Login.vue';
 import Presets from '@/pages/Presets.vue';
@@ -12,7 +12,7 @@ const routes = [
 ];
 
 const router = createRouter({
-    history: createWebHistory('/app/documents/'),
+    history: createWebHashHistory('/app/documents/'),
     routes,
 });
 
