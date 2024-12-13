@@ -1,35 +1,37 @@
 {
-  "name": "ts",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "vue-tsc && vite build",
-    "wbuild": "vue-tsc && vite build && npm run move-assets",
-    "move-assets": "scp -r ./dist/* kers@10.212.8.79:/home/kers/documents-dashboard-web/dist/",
-    "preview": "vite preview"
-  },
-  "dependencies": {
-    "@vue/runtime-core": "^3.4.26",
-    "axios": "^1.6.7",
-    "intro.js": "^7.2.0",
-    "jsonwebtoken": "^9.0.2",
-    "moment-timezone": "^0.5.45",
-    "vue": "^3.4.19",
-    "vue-router": "^4.3.0",
-    "vuex": "^4.0.2",
-    "vuex-persistedstate": "^4.1.0"
-  },
-  "devDependencies": {
-    "@types/jsonwebtoken": "^9.0.6",
-    "@vitejs/plugin-vue": "^5.0.4",
-    "@vue/runtime-dom": "^3.4.26",
-    "autoprefixer": "^10.4.17",
-    "postcss": "^8.4.35",
-    "tailwindcss": "^3.4.1",
-    "typescript": "^5.2.2",
-    "vite": "^5.2.11",
-    "vue-tsc": "^1.8.27"
-  }
+	"name": "ts",
+	"private": true,
+	"version": "0.0.0",
+	"type": "module",
+	"scripts": {
+		"dev": "vite",
+		"build": "vue-tsc && vite build",
+		"wbuild": "vue-tsc && vite build && npm run move-assets",
+		"move-assets": "scp -r ./dist/* kers@10.212.8.79:/home/kers/documents-dashboard-web/dist/app/documents/",
+		"preview": "vite preview"
+	},
+	"dependencies": {
+		"@vue/runtime-core": "^3.4.26",
+		"axios": "^1.6.7",
+		"intro.js": "^7.2.0",
+		"jsonwebtoken": "^9.0.2",
+		"moment-timezone": "^0.5.45",
+		"typescript": "latest",
+		"vue": "^3.4.19",
+		"vue-router": "^4.3.0",
+		"vuex": "^4.0.2",
+		"vuex-persistedstate": "^4.1.0"
+	},
+	"devDependencies": {
+		"@types/jsonwebtoken": "^9.0.6",
+		"@vitejs/plugin-vue": "^5.0.4",
+		"@vue/runtime-dom": "^3.4.26",
+		"autoprefixer": "^10.4.17",
+		"postcss": "^8.4.35",
+		"prettier": "^3.3.3",
+		"tailwindcss": "^3.4.1",
+		"typescript": "^5.2.2",
+		"vite": "^5.2.11",
+		"vue-tsc": "^1.8.27"
+	}
 }
