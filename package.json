@@ -6,8 +6,7 @@
 	"scripts": {
 		"dev": "vite",
 		"build": "vue-tsc && vite build",
-		"wbuild": "vue-tsc && vite build && npm run move-assets",
-		"move-assets": "scp -r ./dist/* kers@10.212.8.79:/home/kers/documents-dashboard-web/dist/app/documents/",
+		"wbuild": "vue-tsc && vite build",
 		"preview": "vite preview"
 	},
 	"dependencies": {
