@@ -2,7 +2,7 @@
 	<header
 		class="fixed w-full h-[55px] bg-white shadow-sm text-black px-4 border-b border-slate-200 bg-opacity-95 backdrop-blur-sm z-10">
 		<nav
-			class="mx-auto flex h-full items-center justify-between select-none">
+			class="mx-auto flex h-full items-center cursor-pointer justify-between select-none">
 			<a class="font-bold text-xl" @click="router.push({ name: 'Home' })"
 				>数据管理系统</a
 			>

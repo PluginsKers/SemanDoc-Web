@@ -421,6 +421,10 @@ const addDocument = async () => {
 		}, 3000);
 	} catch (error) {
 		addingStatus.value = -2;
+		addNotification({
+			id: new Date().getTime(),
+			message: "文档添加失败",
+		});
 		console.error("添加错误:", error);
 	}
 };

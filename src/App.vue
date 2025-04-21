@@ -10,7 +10,7 @@
 <script setup lang="ts">
 import { ref, watch, watchEffect, onMounted } from "vue";
 import { inject } from "vue";
-import Head from "@/components/layouts/Head.vue";
+import Head from "@/components/layouts/Header.vue";
 import NotificationDrawer from "@/components/NotificationDrawer.vue";
 import { NotificationManager } from "@/notificationManager";
 import { useRoute } from "vue-router";

@@ -16,7 +16,7 @@
 					v-model="documents[index].content">
 				</textarea>
 				<input
-					class="shrink-0 mt-1 p-2 w-full h-9 outline-none rounded-md text-gray-900 ring-1 ring-gray-100 focus:ring-[3px] focus:ring-gray-100 text-sm leading-6"
+					class="shrink-0 mt-1 p-2 w-full h-9 outline-none rounded-md text-gray-400 ring-1 ring-gray-100 focus:ring-[3px] focus:ring-gray-100 text-sm leading-6"
 					:value="JSON.stringify(documents[index].metadata)" />
 				<div
 					class="bg-gray-100 rounded-md p-2 text-sm grid grid-cols-2 gap-2">
@@ -230,6 +230,9 @@ import {
 	deleteDocument,
 	updateDocument as updateDocumentApi,
 } from "@/api/documents";
+import { useNotificationManager } from "@/notificationManager";
+
+const { addNotification } = useNotificationManager();
 
 const removingStatus = ref(0);
 const modifyingStatus = ref(0);
@@ -333,6 +336,10 @@ const updateDocument = async () => {
 	const docId = metadata["ids"];
 	if (!docId) {
 		modifyingStatus.value = -2;
+		addNotification({
+			id: new Date().getTime(),
+			message: "更新失败：文档ID不存在",
+		});
 		return;
 	}
 	try {
@@ -341,6 +348,10 @@ const updateDocument = async () => {
 		modifyingStatus.value = 1;
 	} catch (error) {
 		modifyingStatus.value = -2;
+		addNotification({
+			id: new Date().getTime(),
+			message: "文档更新失败",
+		});
 		console.error("Update failed:", error);
 	}
 };
@@ -358,12 +369,20 @@ const removeDocument = async () => {
 	}
 	if (index < 0) {
 		removingStatus.value = -2;
+		addNotification({
+			id: new Date().getTime(),
+			message: "删除失败：文档索引无效",
+		});
 		return;
 	}
 	removingStatus.value = -1;
 	const docId = documents[index].metadata["ids"];
 	if (!docId) {
 		removingStatus.value = -2;
+		addNotification({
+			id: new Date().getTime(),
+			message: "删除失败：文档ID不存在",
+		});
 		return;
 	}
 	try {
@@ -373,6 +392,10 @@ const removeDocument = async () => {
 		closeEditModal();
 	} catch (error) {
 		removingStatus.value = -2;
+		addNotification({
+			id: new Date().getTime(),
+			message: "文档删除失败",
+		});
 		console.error("Delete failed:", error);
 	}
 };

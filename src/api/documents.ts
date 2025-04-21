@@ -13,12 +13,14 @@ export const searchDocuments = async (
 	k: number = 5,
 	tags?: string[],
 	categories?: string[],
+	score_threshold?: number,
 ): Promise<Document[]> => {
 	const response = await http.post(`/documents/search/`, {
 		query,
 		k,
 		tags: tags || [],
 		categories: categories || [],
+		score_threshold: score_threshold || 2.0,
 	});
 	return response.data;
 };
@@ -123,4 +125,10 @@ export const downloadDocumentsList = async () => {
 		console.error("Download failed:", error);
 		throw error;
 	}
+};
+
+// 获取文档统计概览信息
+export const getDocumentStats = async () => {
+	const response = await http.get(`/documents/stats/overview`);
+	return response.data;
 };

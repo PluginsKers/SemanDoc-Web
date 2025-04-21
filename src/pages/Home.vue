@@ -9,7 +9,7 @@
 			}">
 			<div
 				id="ctlpanel"
-				class="relative lg:sticky lg:top-[48px] bg-white rounded-md md:shadow-sm p-4 pb-2 mb-4 w-full"
+				class="relative lg:sticky lg:top-[48px] bg-white rounded-md md:shadow-sm p-4 mb-4 w-full"
 				:class="{ 'lg:w-1/3': documents.length > 0 }">
 				<h1 class="text-3xl font-bold text-center mb-4">数据管理</h1>
 				<div class="flex flex-col justify-center gap-2">
@@ -41,7 +41,8 @@
 								v-model="k"
 								placeholder="数量"
 								@wheel="handleWheelK($event, 0, 50, 1)"
-								class="relative p-2 w-1/6 h-9 text-center align-middle outline-none border-[1px] border-l-0 border-gray-200 text-sm rounded-tr-md focus:bg-gray-50/50 hover:bg-gray-50/50" />
+								class="relative p-2 w-1/6 h-9 text-center align-middle outline-none border-[1px] border-l-0 border-gray-200 text-sm rounded-tr-md focus:bg-gray-50/50 hover:bg-gray-50/50"
+								title="设置要返回的最大文档数量（1-50）" />
 						</div>
 						<div class="flex h-9">
 							<input
@@ -49,7 +50,8 @@
 								v-model="score_threshold"
 								placeholder="分数阈值"
 								@wheel="handleWheelSH($event, 0, 2, 0.02)"
-								class="p-2 w-1/6 h-full text-center align-middle outline-none border-[1px] border-r-0 border-t-0 border-gray-200 text-sm rounded-bl-md focus:bg-gray-50/50 hover:bg-gray-50/50" />
+								class="p-2 w-1/6 h-full text-center align-middle outline-none border-[1px] border-r-0 border-t-0 border-gray-200 text-sm rounded-bl-md focus:bg-gray-50/50 hover:bg-gray-50/50"
+								title="设置文档相似度的最低阈值（0-2），值越低匹配越严格" />
 							<input
 								id="input-filter-string"
 								v-model="filterString"
@@ -63,38 +65,64 @@
 						<div
 							class="shrink-0 flex-col mb-2 p-0 w-full rounded-md text-gray-900 ring-1 ring-gray-200 text-xs leading-6">
 							<div class="flex flex-row gap-2">
-								<input
-									v-model="tags_input"
-									@keydown.enter.prevent="addTag"
-									@keydown.delete="checkForDelete"
-									placeholder="添加标签"
-									class="tags-input outline-none rounded-md h-9 px-2 w-1/2 text-sm border-b-2"
-									:class="{
-										'border-dashed rounded-b-none border-gray-200':
-											tags.length > 0,
-										'border-white': tags.length <= 0,
-									}" />
+								<div class="w-1/2 relative">
+									<input
+										v-model="tags_input"
+										@keydown.enter.prevent="addTag"
+										@keydown.delete="checkForDelete"
+										placeholder="添加标签"
+										class="tags-input outline-none rounded-md h-9 px-2 w-full text-sm pl-8 border-b-2 mt-[2px]"
+										:class="{
+											'border-dashed rounded-b-none border-gray-200':
+												tags.length > 0 ||
+												categories.length > 0,
+											'border-transparent':
+												tags.length <= 0 &&
+												categories.length <= 0,
+										}" />
+									<svg
+										class="absolute left-2 top-2.5 h-4 w-4 text-gray-400"
+										viewBox="0 0 20 20"
+										fill="currentColor">
+										<path
+											fill-rule="evenodd"
+											d="M17.707 9.293a1 1 0 010 1.414l-7 7a1 1 0 01-1.414 0l-7-7A.997.997 0 012 10V5a3 3 0 013-3h5c.256 0 .512.098.707.293l7 7zM5 6a1 1 0 100-2 1 1 0 000 2z"
+											clip-rule="evenodd" />
+									</svg>
+								</div>
 								<div class="h-9 flex items-center">
 									<div
 										class="h-full w-px bg-gray-200 border-l border-dashed"></div>
 								</div>
-								<input
-									v-model="categories_input"
-									@keydown.enter.prevent="addCategory"
-									@keydown.delete="checkForDeleteCategory"
-									placeholder="添加分类"
-									class="categories-input outline-none rounded-md h-9 px-2 w-1/2 text-sm border-b-2"
-									:class="{
-										'border-dashed rounded-b-none border-gray-200':
-											categories.length > 0,
-										'border-white': categories.length <= 0,
-									}" />
+								<div class="w-1/2 relative">
+									<input
+										v-model="categories_input"
+										@keydown.enter.prevent="addCategory"
+										@keydown.delete="checkForDeleteCategory"
+										placeholder="添加分类"
+										class="categories-input outline-none rounded-md h-9 px-2 w-full text-sm pl-8 border-b-2 mt-[2px]"
+										:class="{
+											'border-dashed rounded-b-none border-gray-200':
+												categories.length > 0 ||
+												tags.length > 0,
+											'border-transparent':
+												categories.length <= 0 &&
+												tags.length <= 0,
+										}" />
+									<svg
+										class="absolute left-2 top-2.5 h-4 w-4 text-gray-400"
+										viewBox="0 0 20 20"
+										fill="currentColor">
+										<path
+											d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z" />
+									</svg>
+								</div>
 							</div>
 
 							<div
-								class="flex flex-row flex-wrap ml-1 gap-1"
+								class="flex flex-row flex-wrap"
 								:class="{
-									'py-1':
+									'py-1.5 ml-1 gap-1.5 mt-1':
 										tags.length > 0 ||
 										categories.length > 0,
 								}">
@@ -102,26 +130,39 @@
 									v-for="(tag, index) in tags"
 									:key="'tag-' + index"
 									@click="removeTag(index)"
-									class="cursor-pointer select-none bg-gray-200 text-black text-xs px-2.5 py-1 rounded-sm hover:bg-gray-300">
-									{{ tag }}
+									class="tag-item cursor-pointer select-none bg-gray-100 text-black text-xs px-2.5 py-1 rounded-full hover:bg-gray-200 hover:scale-105 flex items-center gap-1 border border-gray-200 shadow-sm">
+									<span>{{ tag }}</span>
+									<svg
+										class="w-3 h-3 text-gray-500"
+										viewBox="0 0 20 20"
+										fill="currentColor">
+										<path
+											fill-rule="evenodd"
+											d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+											clip-rule="evenodd" />
+									</svg>
 								</div>
 								<div
 									v-for="(category, index) in categories"
 									:key="'category-' + index"
 									@click="removeCategory(index)"
-									class="cursor-pointer select-none bg-gray-300 text-black text-xs px-2.5 py-1 rounded-sm hover:bg-gray-400">
-									{{ category }}
+									class="category-item cursor-pointer select-none bg-black text-white text-xs px-2.5 py-1 rounded-full hover:bg-gray-800 hover:scale-105 flex items-center gap-1 shadow-sm">
+									<span>{{ category }}</span>
+									<svg
+										class="w-3 h-3 text-gray-300"
+										viewBox="0 0 20 20"
+										fill="currentColor">
+										<path
+											fill-rule="evenodd"
+											d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+											clip-rule="evenodd" />
+									</svg>
 								</div>
 							</div>
 							<p
-								v-if="duplicate"
+								v-if="duplicateTag || duplicateCategory"
 								class="m-1 text-red-500 text-xs italic">
 								标签已存在，不能重复添加。
-							</p>
-							<p
-								v-if="duplicateCategory"
-								class="m-1 text-red-500 text-xs italic">
-								分类已存在，不能重复添加。
 							</p>
 						</div>
 
@@ -228,9 +269,6 @@
 						v-if="selectedDocuments.length > 0">
 						{{ confirmDelete ? "确认删除?" : "删除文档" }}
 					</div>
-					<span class="text-center text-gray-300"
-						>注意：该系统为语义检索，调节阈值大小精确控制检索精度。</span
-					>
 				</div>
 			</div>
 			<ul
@@ -269,12 +307,12 @@
 							document.metadata?.tags &&
 							document.metadata.tags.length > 0
 						"
-						class="flex items-center space-x-2">
+						class="flex flex-wrap items-center gap-1.5 mt-1.5">
 						<span class="text-xs text-gray-500">标签:</span>
 						<span
 							v-for="tag in document.metadata.tags"
 							:key="tag"
-							class="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-200 text-gray-700">
+							class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700 border border-gray-200">
 							{{ tag }}
 						</span>
 					</div>
@@ -310,88 +348,21 @@ import { Document } from "@/types";
 import AddModel from "@/components/AddModel.vue";
 import EditModel from "@/components/EditModel.vue";
 import { deleteDocument } from "@/api/documents";
-
-import introJs from "intro.js";
-import "intro.js/introjs.css";
-
-const intro = introJs();
-const INTRO_VERSION = "1.0.0";
-const INTRO_COMPLETED_KEY = "intro_completed_version";
+import { useNotificationManager } from "@/notificationManager";
 
 const store = useDocumentsStore();
 const searchResults = computed(() => store.getSearchResults);
 
-onMounted(() => {
-	const storedIntroVersion = localStorage.getItem(INTRO_COMPLETED_KEY);
-	if (storedIntroVersion !== INTRO_VERSION) {
-		intro.setOptions({
-			nextLabel: "下一步",
-			prevLabel: "上一步",
-			doneLabel: "完成",
-			hidePrev: false,
-			hideNext: false,
-			exitOnEsc: true,
-			exitOnOverlayClick: true,
-			showStepNumbers: false,
-			disableInteraction: true,
-			showBullets: true,
-			overlayOpacity: 0.8,
-			steps: [
-				{
-					element: "#ctlpanel",
-					intro: "这是用于管理数据的控制面板。 您可以在这里搜索、过滤和管理文档。",
-					position: "right",
-				},
-				{
-					element: "#input-search",
-					intro: "检索使用的关键词，留空可以进行泛检索。",
-					position: "right",
-				},
-				{
-					element: "#input-max-documents",
-					intro: "最大检索数，如果检索结果过少，可以调高该参数。",
-					position: "right",
-				},
-				{
-					element: "#input-score-threshold",
-					intro: "语义相关的阈值，越低相关性越高。",
-					position: "right",
-				},
-				{
-					element: "#input-filter-string",
-					intro: "检索条件参数可视化，无需更改。",
-					position: "right",
-				},
-				{
-					element: "#btn-presets",
-					intro: "检索使用的标签，点击预设可以快速切换标签。",
-					position: "right",
-				},
-				{
-					element: "#btn-strict",
-					intro: "严格模式下只能检索到与标签完全匹配的文档，非严格模式下会匹配包含关系的所有标签的文档。",
-					position: "right",
-				},
-				{
-					element: "#btn-query",
-					intro: "点击根据进行知识库检索，按下回车键可以快捷检索。",
-					position: "right",
-				},
-			],
-		});
-		intro.start();
-		intro.oncomplete(() => {
-			localStorage.setItem(INTRO_COMPLETED_KEY, INTRO_VERSION);
-		});
-	}
-	document.addEventListener("click", handleClickOutside);
+const { addNotification } = useNotificationManager();
 
+onMounted(() => {
+	document.addEventListener("click", handleClickOutside);
 	const presetsKey = "presets";
 	const storedPresets = localStorage.getItem(presetsKey);
 	if (!storedPresets) {
 		const defaultPresets = JSON.stringify({
-			通用: { tags: ["通用"] },
-			人工智能学院: { tags: ["人工智能学院"] },
+			通用: { categories: ["通用"] },
+			人工智能学院: { categories: ["人工智能学院"] },
 		});
 		localStorage.setItem(presetsKey, defaultPresets);
 		presets.value = defaultPresets;
@@ -420,7 +391,7 @@ const showEditModal = ref(false);
 const queryingStatus = ref(0);
 const tags = ref<string[]>(filter.value.tags);
 const tags_input = ref("");
-const duplicate = ref(false);
+const duplicateTag = ref(false);
 const confirmDelete = ref(false);
 const categories = ref<string[]>(filter.value.categories);
 const categories_input = ref("");
@@ -473,9 +444,9 @@ const addTag = () => {
 	) {
 		tags.value.push(tags_input.value);
 		tags_input.value = "";
-		duplicate.value = false;
+		duplicateTag.value = false;
 	} else {
-		duplicate.value = true;
+		duplicateTag.value = true;
 	}
 };
 
@@ -531,10 +502,18 @@ const closeAddModel = () => {
 
 const handleDocumentModified = (newDocument: Document) => {
 	documents.value[index.value] = newDocument;
+	addNotification({
+		id: new Date().getTime(),
+		message: "文档更新成功",
+	});
 };
 
 const handleDocumentAdded = async (newDocument: Document) => {
 	documents.value.unshift(newDocument);
+	addNotification({
+		id: new Date().getTime(),
+		message: "文档添加成功",
+	});
 	await nextTick();
 	const liElements = document.querySelectorAll(".document-item");
 	liElements[0].classList.remove("new");
@@ -546,6 +525,10 @@ const handleDocumentAdded = async (newDocument: Document) => {
 const handleDocumentRemoved = (removed_index: number) => {
 	selectedDocuments.value = [];
 	documents.value.splice(removed_index, 1);
+	addNotification({
+		id: new Date().getTime(),
+		message: "文档删除成功",
+	});
 };
 
 const searchDocuments = async () => {
@@ -558,13 +541,22 @@ const searchDocuments = async () => {
 			k.value,
 			tags.value,
 			filter.value.categories,
+			Number(score_threshold.value),
 		);
 		queryingStatus.value = 1;
+		addNotification({
+			id: new Date().getTime(),
+			message: "搜索成功",
+		});
 		timer = setTimeout(() => {
 			queryingStatus.value = 0;
 		}, 3000);
 	} catch (error) {
 		queryingStatus.value = -2;
+		addNotification({
+			id: new Date().getTime(),
+			message: "搜索失败",
+		});
 		console.error("Search failed:", error);
 	}
 };
@@ -591,7 +583,7 @@ watch(
 		filterString.value = JSON.stringify(newFilter);
 		tags.value = newFilter.tags;
 		categories.value = newFilter.categories;
-		duplicate.value = false;
+		duplicateTag.value = false;
 		duplicateCategory.value = false;
 	},
 	{ deep: true },
@@ -699,7 +691,15 @@ const deleteSelectedDocuments = async () => {
 				documents.value.splice(index, 1);
 			});
 		selectedDocuments.value = [];
+		addNotification({
+			id: new Date().getTime(),
+			message: `成功删除 ${ids.length} 个文档`,
+		});
 	} catch (error) {
+		addNotification({
+			id: new Date().getTime(),
+			message: "删除文档失败",
+		});
 		console.error("Delete failed:", error);
 	}
 };
@@ -714,7 +714,8 @@ watch(searchResults, (newResults) => {
 	transition: all 0.2s !important;
 }
 
-.tags-input {
+.tags-input,
+.categories-input {
 	transition: border 0s !important;
 }
 
@@ -746,5 +747,32 @@ watch(searchResults, (newResults) => {
 
 .new {
 	animation: fadeToTransparent 0.4s forwards;
+}
+
+.tag-item {
+	transition: all 0.15s ease-in-out !important;
+}
+
+.category-item {
+	transition: all 0.15s ease-in-out !important;
+}
+
+@keyframes pop-in {
+	0% {
+		opacity: 0;
+		transform: scale(0.8);
+	}
+	70% {
+		transform: scale(1.1);
+	}
+	100% {
+		opacity: 1;
+		transform: scale(1);
+	}
+}
+
+.tag-item,
+.category-item {
+	animation: pop-in 0.3s forwards;
 }
 </style>
