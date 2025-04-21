@@ -10,7 +10,7 @@ const routes = [
 ];
 
 const router = createRouter({
-	history: createWebHashHistory("/app/documents/"),
+	history: createWebHashHistory("/"),
 	routes,
 });
 
