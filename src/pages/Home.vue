@@ -59,35 +59,69 @@
 					</div>
 					<h1 class="text-2xl ml-1">更多配置</h1>
 					<div id="btn-presets" class="flex flex-wrap">
+						<!-- 标签和分类管理 -->
 						<div
-							class="shrink-0 flex-col mb-2 p-0 w-full rounded-md text-gray-900 ring-1 ring-gray-100 hover:ring-[3px] hover:ring-gray-50 text-xs leading-6">
-							<input
-								v-model="tags_input"
-								@keydown.enter.prevent="addTag"
-								@keydown.delete="checkForDelete"
-								placeholder="添加标签"
-								class="tags-input outline-none rounded-md h-9 px-2 w-full text-sm border-b-2"
-								:class="{
-									'border-dashed rounded-b-none border-gray-200':
-										tags.length > 0,
-									'border-white': tags.length <= 0,
-								}" />
+							class="shrink-0 flex-col mb-2 p-0 w-full rounded-md text-gray-900 ring-1 ring-gray-200 text-xs leading-6">
+							<div class="flex flex-row gap-2">
+								<input
+									v-model="tags_input"
+									@keydown.enter.prevent="addTag"
+									@keydown.delete="checkForDelete"
+									placeholder="添加标签"
+									class="tags-input outline-none rounded-md h-9 px-2 w-1/2 text-sm border-b-2"
+									:class="{
+										'border-dashed rounded-b-none border-gray-200':
+											tags.length > 0,
+										'border-white': tags.length <= 0,
+									}" />
+								<div class="h-9 flex items-center">
+									<div
+										class="h-full w-px bg-gray-200 border-l border-dashed"></div>
+								</div>
+								<input
+									v-model="categories_input"
+									@keydown.enter.prevent="addCategory"
+									@keydown.delete="checkForDeleteCategory"
+									placeholder="添加分类"
+									class="categories-input outline-none rounded-md h-9 px-2 w-1/2 text-sm border-b-2"
+									:class="{
+										'border-dashed rounded-b-none border-gray-200':
+											categories.length > 0,
+										'border-white': categories.length <= 0,
+									}" />
+							</div>
 
 							<div
 								class="flex flex-row flex-wrap ml-1 gap-1"
-								:class="{ 'py-1': tags.length > 0 }">
+								:class="{
+									'py-1':
+										tags.length > 0 ||
+										categories.length > 0,
+								}">
 								<div
 									v-for="(tag, index) in tags"
-									:key="index"
+									:key="'tag-' + index"
 									@click="removeTag(index)"
 									class="cursor-pointer select-none bg-gray-200 text-black text-xs px-2.5 py-1 rounded-sm hover:bg-gray-300">
 									{{ tag }}
+								</div>
+								<div
+									v-for="(category, index) in categories"
+									:key="'category-' + index"
+									@click="removeCategory(index)"
+									class="cursor-pointer select-none bg-gray-300 text-black text-xs px-2.5 py-1 rounded-sm hover:bg-gray-400">
+									{{ category }}
 								</div>
 							</div>
 							<p
 								v-if="duplicate"
 								class="m-1 text-red-500 text-xs italic">
 								标签已存在，不能重复添加。
+							</p>
+							<p
+								v-if="duplicateCategory"
+								class="m-1 text-red-500 text-xs italic">
+								分类已存在，不能重复添加。
 							</p>
 						</div>
 
@@ -99,37 +133,6 @@
 							@click="filter = metadata">
 							{{ name }}
 						</div>
-					</div>
-
-					<div
-						id="btn-strict"
-						class="flex-1 flex items-center space-x-2">
-						<div
-							@click="isPowerSet = !isPowerSet"
-							:class="{
-								'bg-black': isPowerSet,
-								'bg-gray-200': !isPowerSet,
-							}"
-							class="w-6 h-6 flex justify-center items-center rounded-sm cursor-pointer">
-							<svg
-								v-show="isPowerSet"
-								class="w-4 h-4 text-white"
-								fill="none"
-								stroke="currentColor"
-								viewBox="0 0 24 24"
-								xmlns="http://www.w3.org/2000/svg">
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									stroke-width="2"
-									d="M5 13l4 4L19 7"></path>
-							</svg>
-						</div>
-						<label
-							@click="isPowerSet = !isPowerSet"
-							class="cursor-pointer select-none"
-							>非严格检索模式</label
-						>
 					</div>
 					<div
 						id="btn-query"
@@ -233,7 +236,7 @@
 			<ul
 				ref="docsList"
 				v-show="documents.length > 0"
-				class="w-full docs-list bg-white lg:mr-4 min-w-xl p-4 rounded-md shadow-sm"
+				class="w-full docs-list bg-white lg:mr-4 min-w-xl p-4 rounded-md shadow-sm overflow-hidden"
 				@mousedown="handleMouseDown"
 				@mousemove="handleMouseMove"
 				@mouseup="handleMouseUp"
@@ -256,11 +259,17 @@
 									selectedDocuments.length - 1
 								] && selectedDocuments.includes(index),
 					}"
-					class="document-item p-2 flex flex-col cursor-pointer justify-between items-start rounded-md">
-					<span class="text-gray-700">{{
-						document.page_content
-					}}</span>
-					<div class="flex items-center space-x-2">
+					class="document-item p-2 flex flex-col cursor-pointer justify-between items-start rounded-md w-full">
+					<span
+						class="text-gray-700 break-all whitespace-pre-wrap w-full overflow-hidden"
+						>{{ document.content || document }}</span
+					>
+					<div
+						v-if="
+							document.metadata?.tags &&
+							document.metadata.tags.length > 0
+						"
+						class="flex items-center space-x-2">
 						<span class="text-xs text-gray-500">标签:</span>
 						<span
 							v-for="tag in document.metadata.tags"
@@ -296,11 +305,11 @@ import {
 	onBeforeUnmount,
 	computed,
 } from "vue";
-import { useStore } from "vuex";
+import { useDocumentsStore } from "@/store/documents";
 import { Document } from "@/types";
 import AddModel from "@/components/AddModel.vue";
 import EditModel from "@/components/EditModel.vue";
-import { removeDocuments } from "@/api/documents";
+import { deleteDocument } from "@/api/documents";
 
 import introJs from "intro.js";
 import "intro.js/introjs.css";
@@ -309,8 +318,8 @@ const intro = introJs();
 const INTRO_VERSION = "1.0.0";
 const INTRO_COMPLETED_KEY = "intro_completed_version";
 
-const store = useStore();
-const searchResults = computed(() => store.getters.getSearchResults);
+const store = useDocumentsStore();
+const searchResults = computed(() => store.getSearchResults);
 
 onMounted(() => {
 	const storedIntroVersion = localStorage.getItem(INTRO_COMPLETED_KEY);
@@ -397,13 +406,13 @@ onBeforeUnmount(() => {
 
 const presets = ref("{}");
 
-const documents = ref<any>(searchResults);
+const documents = ref<Document[]>(searchResults.value);
 const index = ref(-1);
 const query = ref("");
 const k = ref(20);
 const docsList = ref<any>(null);
 const excludeRef = ref<any>(null);
-const filter = ref<any>({ tags: [] });
+const filter = ref<any>({ tags: [], categories: [] });
 const filterString = ref(JSON.stringify(filter.value));
 const score_threshold = ref<string>("2.0");
 const showAddModal = ref(false);
@@ -411,12 +420,14 @@ const showEditModal = ref(false);
 const queryingStatus = ref(0);
 const tags = ref<string[]>(filter.value.tags);
 const tags_input = ref("");
-const duplicate = ref(false); // 用于跟踪重复标签的状态
-const confirmDelete = ref(false); // 用于确认删除状态
+const duplicate = ref(false);
+const confirmDelete = ref(false);
+const categories = ref<string[]>(filter.value.categories);
+const categories_input = ref("");
+const duplicateCategory = ref(false);
 
 let timer: any = null;
 
-const isPowerSet = ref<boolean>(true);
 const selectedDocuments = ref<number[]>([]);
 let isSelecting = ref(false);
 let startDocument = ref<number | null>(null);
@@ -464,7 +475,7 @@ const addTag = () => {
 		tags_input.value = "";
 		duplicate.value = false;
 	} else {
-		duplicate.value = true; // 标记为重复，不添加标签
+		duplicate.value = true;
 	}
 };
 
@@ -475,6 +486,30 @@ const removeTag = (index: number) => {
 const checkForDelete = () => {
 	if (tags_input.value === "") {
 		tags.value.pop();
+	}
+};
+
+// 分类管理逻辑实现
+const addCategory = () => {
+	if (
+		categories_input.value.trim() !== "" &&
+		!categories.value.includes(categories_input.value)
+	) {
+		categories.value.push(categories_input.value);
+		categories_input.value = "";
+		duplicateCategory.value = false;
+	} else {
+		duplicateCategory.value = true;
+	}
+};
+
+const removeCategory = (index: number) => {
+	categories.value.splice(index, 1);
+};
+
+const checkForDeleteCategory = () => {
+	if (categories_input.value === "") {
+		categories.value.pop();
 	}
 };
 
@@ -518,20 +553,19 @@ const searchDocuments = async () => {
 	queryingStatus.value = -1;
 	clearTimeout(timer);
 	try {
-		await store.dispatch("searchDocuments", {
-			query: query.value,
-			k: k.value,
-			filter: filter.value,
-			score_threshold: score_threshold.value,
-			isPowerSet: isPowerSet.value,
-		});
+		await store.searchDocuments(
+			query.value,
+			k.value,
+			tags.value,
+			filter.value.categories,
+		);
 		queryingStatus.value = 1;
 		timer = setTimeout(() => {
 			queryingStatus.value = 0;
 		}, 3000);
 	} catch (error) {
 		queryingStatus.value = -2;
-		console.error("搜索错误:", error);
+		console.error("Search failed:", error);
 	}
 };
 
@@ -544,11 +578,21 @@ watch(
 );
 
 watch(
+	categories,
+	(newCategories: string[]) => {
+		filter.value.categories = newCategories;
+	},
+	{ deep: true },
+);
+
+watch(
 	filter,
 	(newFilter) => {
 		filterString.value = JSON.stringify(newFilter);
 		tags.value = newFilter.tags;
+		categories.value = newFilter.categories;
 		duplicate.value = false;
+		duplicateCategory.value = false;
 	},
 	{ deep: true },
 );
@@ -640,10 +684,14 @@ const handleDeleteClick = async () => {
 
 const deleteSelectedDocuments = async () => {
 	const ids = selectedDocuments.value.map(
-		(index) => documents.value[index].metadata["ids"],
+		(index) => documents.value[index].metadata.ids,
 	);
 	try {
-		await removeDocuments(ids);
+		for (const id of ids) {
+			if (id) {
+				await deleteDocument(id);
+			}
+		}
 		// 从后往前删除元素
 		selectedDocuments.value
 			.sort((a, b) => b - a)
@@ -652,9 +700,13 @@ const deleteSelectedDocuments = async () => {
 			});
 		selectedDocuments.value = [];
 	} catch (error) {
-		console.error("删除错误:", error);
+		console.error("Delete failed:", error);
 	}
 };
+
+watch(searchResults, (newResults) => {
+	documents.value = newResults;
+});
 </script>
 
 <style scoped>

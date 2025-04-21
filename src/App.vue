@@ -13,7 +13,6 @@ import { inject } from "vue";
 import Head from "@/components/layouts/Head.vue";
 import NotificationDrawer from "@/components/NotificationDrawer.vue";
 import { NotificationManager } from "@/notificationManager";
-import router from "@/router";
 import { useRoute } from "vue-router";
 
 const notificationManager = inject<NotificationManager>("notificationManager");
@@ -43,14 +42,9 @@ watch(
 );
 
 onMounted(() => {
-	const token = localStorage.getItem("token");
 	const hasVisitedBefore = localStorage.getItem("hasVisitedBefore");
-
-	if (!token) {
-		router.push({ name: "Login" });
-	} else if (!hasVisitedBefore && route.name !== "Login") {
+	if (!hasVisitedBefore) {
 		localStorage.setItem("hasVisitedBefore", "true");
-		router.push({ name: "Home" });
 	}
 });
 </script>

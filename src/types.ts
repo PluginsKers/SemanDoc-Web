@@ -1,7 +1,12 @@
 export interface Document {
-	id: number;
-	page_content: string;
-	metadata: Record<string, any>;
+	content: string;
+	metadata: DocumentMetadata;
+}
+
+export interface DocumentMetadata {
+	ids?: string;
+	tags?: string[];
+	categories?: string[];
 }
 
 export interface Notification {

@@ -42,21 +42,8 @@
 								<p
 									class="block px-4 py-1 text-sm text-gray-400"
 									role="menuitem">
-									{{ username }}
+									管理员
 								</p>
-							</div>
-							<div
-								class="py-1"
-								role="menu"
-								aria-orientation="vertical"
-								aria-labelledby="options-menu">
-								<a
-									href="#"
-									class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-									role="menuitem"
-									@click="logout"
-									>登出</a
-								>
 							</div>
 						</div>
 					</transition>
@@ -67,28 +54,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
-import { useStore } from "vuex";
+import { ref } from "vue";
 import router from "@/router";
-import { useNotificationManager } from "@/notificationManager";
-
-const { addNotification } = useNotificationManager();
-const store = useStore();
 
 const dropdownVisible = ref(false);
 const touchTimeout = ref<any>(null);
-
-const username = computed(() => store.state.user.username);
-
-const logout = () => {
-	localStorage.removeItem("token");
-	store.dispatch("logout");
-	router.push({ name: "Login" });
-	addNotification({
-		id: new Date().getTime(),
-		message: "登出成功",
-	});
-};
 
 const showDropdown = () => {
 	dropdownVisible.value = true;

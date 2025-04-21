@@ -29,7 +29,7 @@
 		"paths": {
 			"@/*": ["src/*"]
 		},
-		"types": ["@vue/runtime-dom"]
+		"types": ["@vue/runtime-dom", "pinia"]
 	},
 	"include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"],
 	"references": [{ "path": "./tsconfig.node.json" }]
