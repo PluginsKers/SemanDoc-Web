@@ -59,8 +59,17 @@
 									v-for="(tag, index) in tags"
 									:key="index"
 									@click="removeTag(index)"
-									class="cursor-pointer select-none bg-gray-200 text-black text-xs px-2.5 py-1 rounded-sm hover:bg-gray-300">
-									{{ tag }}
+									class="tag-item cursor-pointer select-none bg-gray-100 text-black text-xs px-2.5 py-1 rounded-md hover:bg-gray-200 hover:scale-105 flex items-center gap-1 border border-gray-200 shadow-sm">
+									<span>{{ tag }}</span>
+									<svg
+										class="w-3 h-3 text-gray-500"
+										viewBox="0 0 20 20"
+										fill="currentColor">
+										<path
+											fill-rule="evenodd"
+											d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+											clip-rule="evenodd" />
+									</svg>
 								</div>
 							</div>
 							<p
@@ -91,8 +100,17 @@
 									v-for="(category, index) in categories"
 									:key="index"
 									@click="removeCategory(index)"
-									class="cursor-pointer select-none bg-gray-200 text-black text-xs px-2.5 py-1 rounded-sm hover:bg-gray-300">
-									{{ category }}
+									class="category-item cursor-pointer select-none bg-black text-white text-xs px-2.5 py-1 rounded-md hover:bg-gray-800 hover:scale-105 flex items-center gap-1 shadow-sm">
+									<span>{{ category }}</span>
+									<svg
+										class="w-3 h-3 text-gray-300"
+										viewBox="0 0 20 20"
+										fill="currentColor">
+										<path
+											fill-rule="evenodd"
+											d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+											clip-rule="evenodd" />
+									</svg>
 								</div>
 							</div>
 							<p
@@ -216,7 +234,7 @@ watch(
 	newData,
 	(newValue) => {
 		const regex =
-			/<(\d{4}[-\/年]\d{1,2}[-\/月]\d{1,2}日? \d{1,2}:\d{2});(.*?)(?:;(\d{4}[-\/年]\d{1,2}[-\/月]\d{1,2}日? \d{1,2}:\d{2}))?;>/g;
+			/<(\d{4}[-\/年]\d{1,2}[-\/月]\d{1,2}日? \d{1,2}:\d{2});(.*?);(.*?)(?:;(\d{4}[-\/年]\d{1,2}[-\/月]\d{1,2}日? \d{1,2}:\d{2}))?;>/g;
 		let matches;
 		let lastMatch;
 
@@ -230,9 +248,12 @@ watch(
 				.replace(/年|月/g, "-")
 				.replace(/日/, "")
 				.trim();
-			const tags = lastMatch[2].split(",").map((tag) => tag.trim());
-			const startTime = lastMatch[3]
-				? lastMatch[3].replace(/年|月/g, "-").replace(/日/, "").trim()
+			const categories = lastMatch[2]
+				.split(",")
+				.map((category) => category.trim());
+			const tags = lastMatch[3].split(",").map((tag) => tag.trim());
+			const startTime = lastMatch[4]
+				? lastMatch[4].replace(/年|月/g, "-").replace(/日/, "").trim()
 				: null;
 
 			// 尝试解析时间，如果失败则清除时间信息
@@ -262,6 +283,7 @@ watch(
 				}
 			}
 
+			newMetadata.value.categories = categories;
 			newMetadata.value.tags = tags;
 
 			// 更新JSON字符串表示
@@ -443,5 +465,32 @@ const addDocument = async () => {
 		rgba(0, 0, 0, 0.1) 10px,
 		rgba(0, 0, 0, 0.1) 20px
 	);
+}
+
+.tag-item {
+	transition: all 0.15s ease-in-out !important;
+}
+
+.category-item {
+	transition: all 0.15s ease-in-out !important;
+}
+
+@keyframes pop-in {
+	0% {
+		opacity: 0;
+		transform: scale(0.8);
+	}
+	70% {
+		transform: scale(1.1);
+	}
+	100% {
+		opacity: 1;
+		transform: scale(1);
+	}
+}
+
+.tag-item,
+.category-item {
+	animation: pop-in 0.3s forwards;
 }
 </style>

@@ -29,7 +29,7 @@
 								@keydown.enter.prevent="addTag"
 								@keydown.delete="checkForDelete"
 								placeholder="添加标签"
-								class="outline-none rounded-md h-9 px-2 w-full text-sm border-b-2"
+								class="outline-none rounded-sm h-9 px-2 w-full text-sm border-b-2"
 								:class="{
 									'border-dashed rounded-b-none border-gray-200':
 										tags.length > 0,
@@ -42,8 +42,17 @@
 									v-for="(tag, index) in tags"
 									:key="index"
 									@click="removeTag(index)"
-									class="cursor-pointer select-none bg-gray-200 text-black text-xs px-2.5 py-1 rounded-sm hover:bg-gray-300">
-									{{ tag }}
+									class="tag-item cursor-pointer select-none bg-gray-100 text-black text-xs px-2.5 py-1 rounded-md hover:bg-gray-200 hover:scale-105 flex items-center gap-1 border border-gray-200 shadow-sm">
+									<span>{{ tag }}</span>
+									<svg
+										class="w-3 h-3 text-gray-500"
+										viewBox="0 0 20 20"
+										fill="currentColor">
+										<path
+											fill-rule="evenodd"
+											d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+											clip-rule="evenodd" />
+									</svg>
 								</div>
 							</div>
 						</div>
@@ -54,7 +63,7 @@
 								@keydown.enter.prevent="addCategory"
 								@keydown.delete="checkForDeleteCategory"
 								placeholder="添加分类"
-								class="outline-none rounded-md h-9 px-2 w-full text-sm border-b-2"
+								class="outline-none rounded-sm h-9 px-2 w-full text-sm border-b-2"
 								:class="{
 									'border-dashed rounded-b-none border-gray-200':
 										categories.length > 0,
@@ -67,8 +76,17 @@
 									v-for="(category, index) in categories"
 									:key="index"
 									@click="removeCategory(index)"
-									class="cursor-pointer select-none bg-gray-200 text-black text-xs px-2.5 py-1 rounded-sm hover:bg-gray-300">
-									{{ category }}
+									class="category-item cursor-pointer select-none bg-black text-white text-xs px-2.5 py-1 rounded-md hover:bg-gray-800 hover:scale-105 flex items-center gap-1 shadow-sm">
+									<span>{{ category }}</span>
+									<svg
+										class="w-3 h-3 text-gray-300"
+										viewBox="0 0 20 20"
+										fill="currentColor">
+										<path
+											fill-rule="evenodd"
+											d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+											clip-rule="evenodd" />
+									</svg>
 								</div>
 							</div>
 						</div>
@@ -400,3 +418,32 @@ const removeDocument = async () => {
 	}
 };
 </script>
+
+<style scoped>
+.tag-item {
+	transition: all 0.15s ease-in-out !important;
+}
+
+.category-item {
+	transition: all 0.15s ease-in-out !important;
+}
+
+@keyframes pop-in {
+	0% {
+		opacity: 0;
+		transform: scale(0.8);
+	}
+	70% {
+		transform: scale(1.1);
+	}
+	100% {
+		opacity: 1;
+		transform: scale(1);
+	}
+}
+
+.tag-item,
+.category-item {
+	animation: pop-in 0.3s forwards;
+}
+</style>

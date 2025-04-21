@@ -130,7 +130,7 @@
 									v-for="(tag, index) in tags"
 									:key="'tag-' + index"
 									@click="removeTag(index)"
-									class="tag-item cursor-pointer select-none bg-gray-100 text-black text-xs px-2.5 py-1 rounded-full hover:bg-gray-200 hover:scale-105 flex items-center gap-1 border border-gray-200 shadow-sm">
+									class="tag-item cursor-pointer select-none bg-gray-100 text-black text-xs px-2.5 py-1 rounded-md hover:bg-gray-200 hover:scale-105 flex items-center gap-1 border border-gray-200 shadow-sm">
 									<span>{{ tag }}</span>
 									<svg
 										class="w-3 h-3 text-gray-500"
@@ -146,7 +146,7 @@
 									v-for="(category, index) in categories"
 									:key="'category-' + index"
 									@click="removeCategory(index)"
-									class="category-item cursor-pointer select-none bg-black text-white text-xs px-2.5 py-1 rounded-full hover:bg-gray-800 hover:scale-105 flex items-center gap-1 shadow-sm">
+									class="category-item cursor-pointer select-none bg-black text-white text-xs px-2.5 py-1 rounded-md hover:bg-gray-800 hover:scale-105 flex items-center gap-1 shadow-sm">
 									<span>{{ category }}</span>
 									<svg
 										class="w-3 h-3 text-gray-300"
@@ -362,7 +362,6 @@ onMounted(() => {
 	if (!storedPresets) {
 		const defaultPresets = JSON.stringify({
 			通用: { categories: ["通用"] },
-			人工智能学院: { categories: ["人工智能学院"] },
 		});
 		localStorage.setItem(presetsKey, defaultPresets);
 		presets.value = defaultPresets;
