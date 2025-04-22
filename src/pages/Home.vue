@@ -30,6 +30,7 @@
 									</svg>
 								</div>
 								<input
+									ref="searchInput"
 									id="input-search"
 									@keydown.enter.prevent="searchDocuments"
 									v-model="query"
@@ -239,7 +240,7 @@
 							检索
 							<svg
 								t="1710430252577"
-								class="w-5 h-5 mb-[-1.5px]"
+								class="w-6 h-5 ml-1 mb-[-1.5px] bg-gray-50 rounded-sm"
 								viewBox="0 0 1024 1024"
 								version="1.1"
 								xmlns="http://www.w3.org/2000/svg"
@@ -247,7 +248,7 @@
 								<path
 									d="M810.666667 256a42.666667 42.666667 0 0 0-42.666667 42.666667v170.666666a42.666667 42.666667 0 0 1-42.666667 42.666667H316.16l55.466667-55.04a42.666667 42.666667 0 0 0-60.586667-60.586667l-128 128a42.666667 42.666667 0 0 0-8.96 14.08 42.666667 42.666667 0 0 0 0 32.426667 42.666667 42.666667 0 0 0 8.96 14.08l128 128a42.666667 42.666667 0 0 0 60.586667 0 42.666667 42.666667 0 0 0 0-60.586667L316.16 597.333333H725.333333a128 128 0 0 0 128-128V298.666667a42.666667 42.666667 0 0 0-42.666666-42.666667z"
 									p-id="1922"
-									fill="#ffffff"></path>
+									fill="#000"></path>
 							</svg>
 						</template>
 					</div>
@@ -284,7 +285,7 @@
 					:key="index"
 					@click="openEditModel(index)"
 					:class="{
-						'select-none bg-gray-100 rounded-none hover:bg-gray-200':
+						'select-none bg-gray-200 rounded-none hover:bg-gray-200':
 							selectedDocuments.includes(index),
 						'hover:ring-1 hover:ring-gray-200 hover:bg-gray-50/50':
 							!selectedDocuments.includes(index),
@@ -302,6 +303,20 @@
 						class="text-gray-700 break-all whitespace-pre-wrap w-full overflow-hidden"
 						>{{ document.content || document }}</span
 					>
+					<div
+						v-if="
+							document.metadata?.categories &&
+							document.metadata.categories.length > 0
+						"
+						class="flex flex-wrap items-center gap-1.5 mt-1.5">
+						<span class="text-xs text-gray-500">分类:</span>
+						<span
+							v-for="category in document.metadata.categories"
+							:key="category"
+							class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-black text-white">
+							{{ category }}
+						</span>
+					</div>
 					<div
 						v-if="
 							document.metadata?.tags &&
@@ -355,25 +370,6 @@ const searchResults = computed(() => store.getSearchResults);
 
 const { addNotification } = useNotificationManager();
 
-onMounted(() => {
-	document.addEventListener("click", handleClickOutside);
-	const presetsKey = "presets";
-	const storedPresets = localStorage.getItem(presetsKey);
-	if (!storedPresets) {
-		const defaultPresets = JSON.stringify({
-			通用: { categories: ["通用"] },
-		});
-		localStorage.setItem(presetsKey, defaultPresets);
-		presets.value = defaultPresets;
-	} else {
-		presets.value = storedPresets;
-	}
-});
-
-onBeforeUnmount(() => {
-	document.removeEventListener("click", handleClickOutside);
-});
-
 const presets = ref("{}");
 
 const documents = ref<Document[]>(searchResults.value);
@@ -401,6 +397,36 @@ let timer: any = null;
 const selectedDocuments = ref<number[]>([]);
 let isSelecting = ref(false);
 let startDocument = ref<number | null>(null);
+
+const searchInput = ref<HTMLInputElement | null>(null);
+
+const handleKeyDown = (event: KeyboardEvent) => {
+	if (event.ctrlKey && event.key === "f") {
+		event.preventDefault();
+		searchInput.value?.focus();
+	}
+};
+
+onMounted(() => {
+	document.addEventListener("click", handleClickOutside);
+	document.addEventListener("keydown", handleKeyDown);
+	const presetsKey = "presets";
+	const storedPresets = localStorage.getItem(presetsKey);
+	if (!storedPresets) {
+		const defaultPresets = JSON.stringify({
+			通用: { categories: ["通用"] },
+		});
+		localStorage.setItem(presetsKey, defaultPresets);
+		presets.value = defaultPresets;
+	} else {
+		presets.value = storedPresets;
+	}
+});
+
+onBeforeUnmount(() => {
+	document.removeEventListener("click", handleClickOutside);
+	document.removeEventListener("keydown", handleKeyDown);
+});
 
 // 鼠标滚轮逻辑实现
 const handleWheelK = (
