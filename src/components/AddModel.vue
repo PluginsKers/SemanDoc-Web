@@ -344,17 +344,21 @@ const handleDrop = async (event: any) => {
 				message: "正在上传文件...",
 			});
 			const result = await uploadDocuments(files[0]);
-			for (let i = 0; i < result.data.length; i++) {
-				addNotification({
-					id: new Date().getTime(),
-					message: `上传成功：${result.statistics.success_count}，失败：${result.statistics.failure_count}`,
-				});
-				emit("documentAdded", result.data[i]);
+			addNotification({
+				id: new Date().getTime(),
+				message: `上传成功：${result.length} 个文档`,
+			});
+			for (let i = 0; i < result.length; i++) {
+				emit("documentAdded", result[i]);
 			}
 			emit("closeAddModel");
-			console.log("上传成功:", result.data);
+			console.log("上传成功:", result);
 		} catch (error) {
 			console.error("上传失败:", error);
+			addNotification({
+				id: new Date().getTime(),
+				message: "文件上传失败",
+			});
 		}
 	}
 };

@@ -61,15 +61,16 @@ export const addDocuments = async (
 	return response.data;
 };
 
-export const uploadDocuments = async (file: File) => {
+export const uploadDocuments = async (file: File): Promise<Document[]> => {
 	const formData = new FormData();
 	formData.append("file", file);
 
 	try {
-		const response = await http.post(`/upload/documents`, formData, {
+		const response = await http.post(`/documents/upload/xlsx`, formData, {
 			headers: {
 				"Content-Type": "multipart/form-data",
 			},
+			transformRequest: [],
 		});
 		return response.data;
 	} catch (error) {
@@ -106,7 +107,7 @@ export const updateDocument = async (
 
 export const downloadDocumentsList = async () => {
 	try {
-		const response = await http.get(`/documents/download`, {
+		const response = await http.get(`/documents/export/xlsx`, {
 			responseType: "blob",
 		});
 

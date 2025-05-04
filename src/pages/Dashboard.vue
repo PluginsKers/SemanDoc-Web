@@ -6,7 +6,7 @@
 				<div class="rounded-lg shadow-sm bg-white w-full p-4">
 					<h1 class="text-xl font-semibold">公告</h1>
 					<p>
-						该后台暂无鉴权，可以通过调用中间件实现对接OAuth和JWT鉴权。
+						这里是后台用于展示持久化公告的位置，支持富文本与Markdown内容。
 					</p>
 				</div>
 				<div class="rounded-lg shadow-sm bg-white w-full">
