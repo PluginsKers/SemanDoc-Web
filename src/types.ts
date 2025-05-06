@@ -4,7 +4,7 @@ export interface Document {
 }
 
 export interface DocumentMetadata {
-	ids?: string;
+	id?: string;
 	tags?: string[];
 	categories?: string[];
 }

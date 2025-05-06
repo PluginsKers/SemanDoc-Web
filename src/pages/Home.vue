@@ -701,7 +701,7 @@ const handleDeleteClick = async () => {
 
 const deleteSelectedDocuments = async () => {
 	const ids = selectedDocuments.value.map(
-		(index) => documents.value[index].metadata.ids,
+		(index) => documents.value[index].metadata.id,
 	);
 	try {
 		for (const id of ids) {

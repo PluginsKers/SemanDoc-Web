@@ -87,7 +87,7 @@ export const removeDocument = async (target: string[]) => {
 export const removeDocuments = async (target: string[]) => {
 	const response = await http.delete(`/documents`, {
 		data: {
-			ids: target,
+			id: target,
 		},
 	});
 	return response.data;

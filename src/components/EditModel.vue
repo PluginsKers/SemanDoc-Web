@@ -351,7 +351,7 @@ const updateDocument = async () => {
 		tags: tags.value,
 		categories: categories.value,
 	};
-	const docId = metadata["ids"];
+	const docId = metadata["id"];
 	if (!docId) {
 		modifyingStatus.value = -2;
 		addNotification({
@@ -394,7 +394,7 @@ const removeDocument = async () => {
 		return;
 	}
 	removingStatus.value = -1;
-	const docId = documents[index].metadata["ids"];
+	const docId = documents[index].metadata["id"];
 	if (!docId) {
 		removingStatus.value = -2;
 		addNotification({
